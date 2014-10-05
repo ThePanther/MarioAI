@@ -34,7 +34,7 @@ import ch.idsia.tools.MarioAIOptions;
  * Created by IntelliJ IDEA. User: Sergey Karakovskiy, sergey at idsia dot ch Date: Mar 17, 2010 Time: 8:28:00 AM
  * Package: ch.idsia.scenarios
  * 
- * 30.09.2014 (4)-test S
+ * 30.09.2014 (5)-test S
  */
 public final class Main
 {
