@@ -11,6 +11,7 @@
     <orderEntry type="library" name="jdom" level="project" />
     <orderEntry type="library" name="junit-4.8.2" level="project" />
     <orderEntry type="library" name="testng-5.0" level="project" />
+    <orderEntry type="library" name="JavaRLGlueCodec" level="project" />
   </component>
 </module>
 
