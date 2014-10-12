@@ -25,10 +25,8 @@
 
 package la.rlGlue;
 
-import org.rlcommunity.rlglue.codec.AgentInterface;
 import org.rlcommunity.rlglue.codec.util.EnvironmentLoader;
 import org.rlcommunity.rlglue.codec.util.AgentLoader;
-import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 
 /**
 *  A simple example of how can you run all components of the skeleton project from a single Java class.
@@ -40,7 +38,7 @@ import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 * were in Java, or only the agent and experiment, you could save some effort by bundling them like this, 
 * and run the final missing component from another language.
 *
-* See RunAllSkeletonNoSockets to see how you can use the new setGlue method of the RL-Glue Java Extension
+* See RunAllNoSockets to see how you can use the new setGlue method of the RL-Glue Java Extension
 * to run Java Agent/Environment/Experiment without sockets in a single program.
 */
 public class RunAllSkeleton{
@@ -61,7 +59,7 @@ public class RunAllSkeleton{
 		
 		//Run the main method of the Skeleton Experiment, using the arguments were were passed
 		//This will run the experiment in the main thread.
-		SkeletonExperiment.main(args);
+		Experiment.main(args);
 		System.out.println("RunAllSkeleton Complete");
 		
 		//Quit Java, including stopping the other threads
