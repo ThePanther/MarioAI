@@ -28,8 +28,6 @@ package la.rlGlue;
 import org.rlcommunity.rlglue.codec.LocalGlue;
 import org.rlcommunity.rlglue.codec.RLGlue;
 import org.rlcommunity.rlglue.codec.AgentInterface;
-import org.rlcommunity.rlglue.codec.util.EnvironmentLoader;
-import org.rlcommunity.rlglue.codec.util.AgentLoader;
 import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 
 /**
@@ -41,7 +39,7 @@ import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 * to how they are being used: locally or over the network.  This means they are still 100% RL-Glue
 * portable and can be used together with any other language.
 */
-public class RunAllSkeletonNoSockets{
+public class RunAllNoSockets {
 	
 	public static void main(String[] args){
 		//Create the Agent
@@ -57,8 +55,8 @@ public class RunAllSkeletonNoSockets{
 		//Run the main method of the Skeleton Experiment, using the arguments were were passed
 		//This will run the experiment in the main thread.  The Agent and Environment will run
 		//locally, without sockets.
-		SkeletonExperiment.main(args);
-		System.out.println("RunAllSkeletonNoSockets Complete");
+		Experiment.main(args);
+		System.out.println("RunAllNoSockets Complete");
 		
 	}
 
