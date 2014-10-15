@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<datenbank>
+   <dbname>marioai</dbname>
+   <host>localhost</host>
+   <username>dbuser</username>
+   <password>pass</password>
+</datenbank>
+
