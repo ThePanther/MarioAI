@@ -47,7 +47,7 @@ public class RunAllSkeleton{
 		//Create an agentLoader that will start the agent when its run method is called
 		AgentLoader theAgentLoader=new AgentLoader(new SkeletonAgent());
 		//Create an environmentloader that will start the environment when its run method is called
-		EnvironmentLoader theEnvironmentLoader=new EnvironmentLoader(new SkeletonEnvironment());
+		EnvironmentLoader theEnvironmentLoader=new EnvironmentLoader(new RLGlueEnvironment());
 		
 		//Create threads so that the agent and environment can run asynchronously 		
 		Thread agentThread=new Thread(theAgentLoader);
