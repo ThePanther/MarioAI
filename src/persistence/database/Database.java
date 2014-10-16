@@ -5,16 +5,17 @@ import persistence.importhandler.impl.DBConfig;
 public interface Database {
 		
 	// Erstellt eine neue Tabelle oder ersetzt die alte. 
-	public boolean createTable(DBConfig dbConfig);
+	public boolean createTable();
 	
-	// Gibt eine Liste von Rewards für ein bestimmten Zustand
+	// Gibt eine Liste von Rewards fï¿½r ein bestimmten Zustand
 	public double[] select(int stateId);
 	
-	// Fügt oder aktualisiert die Daten 
-	public boolean insert(int state, int action, double rewards);
-	
+	// Fuegt oder aktualisiert die Daten 
+	boolean update(int state, int action, double rewards); 	
+
 	// Speichert neuen Wissenbasis in db
-	public boolean saveAll(); 
+	public boolean saveAll();
+
 	
 
 }

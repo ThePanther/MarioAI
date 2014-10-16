@@ -8,6 +8,7 @@ import persistence.importhandler.impl.DBConfig;
 import java.sql.*;
 
 public class DatabaseImpl implements Database {
+	private DBConfig dbConfig; 
 
 	@Override
 	public double[] select(int stateId) {
@@ -17,7 +18,7 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public boolean insert(int state, int action, double rewards) {
+	public boolean update(int state, int action, double rewards) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -31,10 +32,11 @@ public class DatabaseImpl implements Database {
 	/*
 	 * 
 	 * Erstellt eine neue Tabelle 
-	 * wenn die Tabelle vorhanden ist, wird die gelöscht und dann neu erstellt.
+	 * wenn die Tabelle vorhanden ist, wird die gelï¿½scht und dann neu erstellt.
 	 * 
 	 */
-	public boolean createTable(DBConfig dbConfig) {
+	public boolean createTable() {
+		dbConfig = ((ImportHandler) ManagerFactory.getManager(ImportHandler.class)).getDBConfig();
 		System.out.println("*********************************createTable start*********************************");
 		
 		//STEP 1: Create Database, if not exist
