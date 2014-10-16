@@ -34,13 +34,16 @@ public class ImportHandlerImpl implements ImportHandler{
 				Element eElement = (Element) nNode;
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					String dbname = eElement.getElementsByTagName("dbname").item(0).getTextContent();
+					// jdbc:mysql://localhost/
 					String dbhost = eElement.getElementsByTagName("host").item(0).getTextContent();
 					String user = eElement.getElementsByTagName("username").item(0).getTextContent();
 					String password = eElement.getElementsByTagName("password").item(0).getTextContent();
 					String tablename = eElement.getElementsByTagName("tablename").item(0).getTextContent();
 					String stateName = eElement.getElementsByTagName("state").item(0).getTextContent();
 					int numberOfActions = Integer.parseInt(eElement.getElementsByTagName("numberOfActions").item(0).getTextContent());					   
-					dbConfig = new DBConfig(dbhost, dbname, user, password, tablename, stateName, numberOfActions);
+					String driver = eElement.getElementsByTagName("driver").item(0).getTextContent();
+					String url = "jdbc:mysql://"+dbhost+"/";
+					dbConfig = new DBConfig(dbhost, dbname, user, password, tablename, stateName, numberOfActions, driver, url);
 				}
 			}
 		} catch (Exception e) {

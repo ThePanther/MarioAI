@@ -5,6 +5,7 @@ import java.util.Map;
 
 import persistence.database.Database;
 import persistence.database.impl.DatabaseImpl;
+import persistence.importhandler.ImportHandler;
 import persistence.importhandler.impl.ImportHandlerImpl;
 
 //	Beispiel: Database db = ManagerFactory.getManager(Database.class); 
@@ -13,7 +14,7 @@ public class ManagerFactory {
 	
 	static {
 		ManagerFactory.managerMap.put(Database.class, new DatabaseImpl()); 
-		ManagerFactory.managerMap.put(ImportHandlerImpl.class, new ImportHandlerImpl()); 
+		ManagerFactory.managerMap.put(ImportHandler.class, new ImportHandlerImpl()); 
 	}
 	
     private ManagerFactory() {

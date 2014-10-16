@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
 <datenbank>
-   <dbname>marioai</dbname>
+   <driver>com.mysql.jdbc.Driver</driver>
+   <dbname>marioai2</dbname>
    <host>localhost</host>
-   <username>dbuser</username>
-   <password>pass</password>
+   <username>wlad</username>
+   <password>123</password>
    <tablename>knowledge</tablename>
    <state>zustand</state>
    <numberOfActions>13</numberOfActions>

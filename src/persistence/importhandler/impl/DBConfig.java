@@ -9,8 +9,10 @@ public class DBConfig {
 	private String tablename;
 	private String stateName;
 	private int numberOfActions;
+	private String driver; 
+	private String url; 
 	
-	public DBConfig(String dbhost, String dbname, String user, String password, String tablename, String stateName, int numberOfActions) {
+	public DBConfig(String dbhost, String dbname, String user, String password, String tablename, String stateName, int numberOfActions, String driver, String url) {
 		super();
 		this.dbhost = dbhost;
 		this.dbname = dbname;
@@ -19,6 +21,8 @@ public class DBConfig {
 		this.tablename = tablename; 
 		this.stateName = stateName; 
 		this.numberOfActions = numberOfActions; 
+		this.driver = driver; 
+		this.setUrl(url); 
 	}
 
 	public String getDbhost() {
@@ -75,6 +79,22 @@ public class DBConfig {
 
 	public void setNumberOfActions(int numberOfActions) {
 		this.numberOfActions = numberOfActions;
+	}
+
+	public String getDriver() {
+		return driver;
+	}
+
+	public void setDriver(String driver) {
+		this.driver = driver;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	
