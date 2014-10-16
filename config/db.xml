@@ -5,5 +5,8 @@
    <host>localhost</host>
    <username>dbuser</username>
    <password>pass</password>
+   <tablename>knowledge</tablename>
+   <state>zustand</state>
+   <numberOfActions>13</numberOfActions>
 </datenbank>
 
