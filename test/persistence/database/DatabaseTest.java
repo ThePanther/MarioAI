@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import persistence.importhandler.ImportHandler;
+import persistence.importhandler.impl.DBConfig;
 import context.ManagerFactory;
 
 public class DatabaseTest {
@@ -17,26 +18,66 @@ public class DatabaseTest {
 	public void testCreateDatabase() {
 		Database db = ManagerFactory.getManager(Database.class);
 		assertTrue(db.createDatabase());
+		assertTrue(db.createDatabase());
+		assertTrue(db.createDatabase());
+		assertTrue(db.createDatabase());	
 	}
+	
+	@Test
+	public void testSelect(){
+		Database db = ManagerFactory.getManager(Database.class);
+		db.createDatabase();  
+		double [] rewardsList = db.select(0);
+		
+		ImportHandler ih = ManagerFactory.getManager(ImportHandler.class);
+		DBConfig dbConfig = ih.getDBConfig(); 
+		
+		assertTrue(rewardsList.length == dbConfig.getNumberOfActions());
+		
+		for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
+			assertTrue(rewardsList[i] == 0.0);
+		}		
+		
+	}
+	
+	@Test 
+	public void testUpdate(){
+
+		ImportHandler ih = ManagerFactory.getManager(ImportHandler.class);
+		DBConfig dbConfig = ih.getDBConfig(); 
+		
+		
+		Database db = ManagerFactory.getManager(Database.class);
+		db.createDatabase(); 
+
+		int state = 0;
+		db.select(state); 
+		
+		int action = 1;
+		int rewards = 10;
+		boolean retValue = db.update(state, action, rewards); 
+		
+		double[] rewardsList = db.select(0);
+		assertTrue(rewardsList[action] == rewards);
+	}
+
 	
 	
 	@Test
 	public void testSaveAll() {
-		HashMap<Integer, double []> knowledges = new HashMap<Integer, double[]>(); 
-		double [] rewards1 = {1.0, 2.0, 3.0, 4.0}; 
-		double [] rewards2 = {-1.0, -2.0, -3.0, -4.0}; 
-		double [] rewards3 = {28, 15., 14.0, 4.13}; 
-		knowledges.put(1, rewards1);
-		knowledges.put(2, rewards2);
-		knowledges.put(3, rewards3);
-	    Iterator it = knowledges.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        double[] ab = (double[]) pairs.getValue(); 
-	        System.out.println(pairs.getKey() + " = " + ab[0]);
-	        it.remove(); // avoids a ConcurrentModificationException
-	    }
-		assertTrue(true);
+		Database db = ManagerFactory.getManager(Database.class);
+		db.createDatabase(); 
+		db.select(0); 
+		db.select(1); 
+		db.select(2); 
+		db.select(3); 
+		db.select(4); 
+		db.select(0); 
+		db.select(1); 
+		db.select(2); 
+		db.select(3); 
+		db.select(4); 
+		assertTrue(db.saveAll());
 	}
 	
 	
