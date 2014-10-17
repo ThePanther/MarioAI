@@ -37,6 +37,7 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
+import ch.idsia.tools.MarioAIOptions;
 
 public class RLGlueEnvironment implements EnvironmentInterface {
     private final static Environment environment = MarioEnvironment.getInstance();
@@ -61,6 +62,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         String taskSpecString = theTaskSpecObject.toTaskSpec();
 
         TaskSpec.checkTaskSpec(taskSpecString);
+
+        environment.reset(new MarioAIOptions());
 
         return taskSpecString;
     }
