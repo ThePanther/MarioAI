@@ -8,6 +8,6 @@
    <password>123</password>
    <tablename>knowledge</tablename>
    <state>zustand</state>
-   <numberOfActions>13</numberOfActions>
+   <numberOfActions>3</numberOfActions>
 </datenbank>
 

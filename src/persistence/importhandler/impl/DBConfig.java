@@ -10,9 +10,10 @@ public class DBConfig {
 	private String stateName;
 	private int numberOfActions;
 	private String driver; 
-	private String url; 
+	private String hostUrl; 
+	private String dbUrl; 
 	
-	public DBConfig(String dbhost, String dbname, String user, String password, String tablename, String stateName, int numberOfActions, String driver, String url) {
+	public DBConfig(String dbhost, String dbname, String user, String password, String tablename, String stateName, int numberOfActions, String driver, String hostUrl) {
 		super();
 		this.dbhost = dbhost;
 		this.dbname = dbname;
@@ -22,7 +23,9 @@ public class DBConfig {
 		this.stateName = stateName; 
 		this.numberOfActions = numberOfActions; 
 		this.driver = driver; 
-		this.setUrl(url); 
+		this.hostUrl =hostUrl; 
+		this.setDbUrl(hostUrl + dbname); 
+		
 	}
 
 	public String getDbhost() {
@@ -89,12 +92,20 @@ public class DBConfig {
 		this.driver = driver;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getHostUrl() {
+		return hostUrl;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setHostUrl(String hostUrl) {
+		this.hostUrl = hostUrl;
+	}
+
+	public String getDbUrl() {
+		return dbUrl;
+	}
+
+	public void setDbUrl(String dbUrl) {
+		this.dbUrl = dbUrl;
 	}
 	
 	

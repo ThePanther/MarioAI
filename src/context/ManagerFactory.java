@@ -13,8 +13,8 @@ public class ManagerFactory {
 	private static Map<Class<?>, Object> managerMap = new HashMap<Class<?>, Object>();
 	
 	static {
-		ManagerFactory.managerMap.put(Database.class, new DatabaseImpl()); 
 		ManagerFactory.managerMap.put(ImportHandler.class, new ImportHandlerImpl()); 
+		ManagerFactory.managerMap.put(Database.class, new DatabaseImpl()); 
 	}
 	
     private ManagerFactory() {
