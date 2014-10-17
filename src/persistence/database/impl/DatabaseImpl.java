@@ -97,17 +97,19 @@ public class DatabaseImpl implements Database {
 		System.out.println("*********************************selectAll \"" + dbConfig.getTablename()
 				+ "\" start*********************************");
 		Database db = ManagerFactory.getManager(Database.class);
+		Connection conn = null;
+		Statement stmt = null;
 		try {
 
 			Class.forName(dbConfig.getDriver());
-			Connection conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(),
+			conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(),
 					dbConfig.getPassword());
 			String query = "SELECT * FROM " + dbConfig.getTablename();
 			System.out.println(query);
 			// create the java statement
-			Statement st = conn.createStatement();
+			stmt = conn.createStatement();
 			// execute the query, and get a java resultset
-			ResultSet rs = st.executeQuery(query);
+			ResultSet rs = stmt.executeQuery(query);
 			// iterate through the java resultset
 			while (rs.next()) {
 				int id = rs.getInt(dbConfig.getStateName());
@@ -120,10 +122,22 @@ public class DatabaseImpl implements Database {
 			}
 			// print the results
 			printMap(knowledges);
-			st.close();
 		} catch (Exception e) {
 			System.err.println("Got an exception! ");
 			System.err.println(e.getMessage());
+		}finally {
+			// finally block used to close resources
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException se2) {
+			}// nothing we can do
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}// end finally try
 		}
 		System.out.println("*********************************selectAll \"" + dbConfig.getTablename()
 				+ "\" ende*********************************");
