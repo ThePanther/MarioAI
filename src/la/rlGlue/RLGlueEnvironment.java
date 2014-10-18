@@ -28,6 +28,7 @@ package la.rlGlue;
 import la.rlGlue.blocks.Block;
 import la.rlGlue.blocks.Type;
 import la.rlGlue.blocks.Zone;
+
 import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 import org.rlcommunity.rlglue.codec.types.Action;
 import org.rlcommunity.rlglue.codec.types.Observation;
@@ -38,6 +39,8 @@ import org.rlcommunity.rlglue.codec.taskspec.TaskSpec;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
+import ch.idsia.benchmark.mario.engine.GeneralizerLevelScene;
+import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
@@ -114,22 +117,29 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     }
 
     private Observation getObservation() {
-        Observation returnObservation = new Observation(OBSERVED_FIELDS.length, 0, 0);
+        Observation returnObservation = new Observation(3, 0, 0);
 
         int[] marioEgoPos = environment.getMarioEgoPos();
 
         byte[][] levelScene = environment.getLevelSceneObservationZ(ZLEVEL_SCENE);
         byte[][] enemies = environment.getEnemiesObservationZ(ZLEVEL_ENEMIES);
 
-        /*for(int field = 0; field < OBSERVED_FIELDS.length; field++) {
-        	int i = ZoomLevelObstacle.valueOf(levelScene[marioEgoPos[0] + OBSERVED_FIELDS[field][0]][marioEgoPos[1] + OBSERVED_FIELDS[field][1]]).getValue() * 10;
+        int[] state = observate(marioEgoPos,levelScene,enemies);
 
-        	i = i + ZoomLevelEnemy.valueOf(enemies[marioEgoPos[0] + OBSERVED_FIELDS[field][0]][marioEgoPos[1] + OBSERVED_FIELDS[field][1]]).getValue();
+        int levelSceneMultiplier = 1;
+        int enemyMultiplier = 1;
 
-        	returnObservation.intArray[field] = i;
-        }*/
+        returnObservation.intArray[0] = state[0];
 
-        int[] state = observate(marioEgoPos,levelScene,enemies); //TODO: Return state !
+        for(int i = visionField.size() - 1; i >= 0; i--) {
+        	if(visionField.get(i).getType() == Type.ENEMY || visionField.get(i).getType() == Type.DETAILEDENEMY) {
+        		returnObservation.intArray[2] += state[i + 1] * enemyMultiplier;
+        		enemyMultiplier *= 10;
+			} else if(visionField.get(i).getType() == Type.BLOCK || visionField.get(i).getType() == Type.BRIDGE) {
+        		returnObservation.intArray[1] += state[i + 1] * levelSceneMultiplier;
+        		levelSceneMultiplier *= 10;
+        	}
+		}
 
         return returnObservation;
     }
@@ -141,7 +151,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     }
 
     private int[] observate(int[] marioEgoPos, byte[][] levelScene, byte[][] enemies){
-        int[] state = new int[9];
+        int[] state = new int[1 + visionField.size()];
 
         switch (environment.getMarioMode()) {
             case 0:
@@ -163,33 +173,33 @@ public class RLGlueEnvironment implements EnvironmentInterface {
             switch (z.getType()) {
                 case BRIDGE:
                     for (Block b : z.getBlocks()) {
-                        tempRes = levelScene[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
-                        if (tempRes == -62) {
+                        tempRes = levelScene[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        if (tempRes == GeneralizerLevelScene.BORDER_HILL) {
                             res = 1; //Bridge
                         }
                     }
                 case BLOCK:
                     for (Block b : z.getBlocks()) {
-                        tempRes = levelScene[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
-                        if (tempRes == -24 || tempRes == -60) {
+                        tempRes = levelScene[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        if (tempRes == GeneralizerLevelScene.BRICK || tempRes == GeneralizerLevelScene.BORDER_CANNOT_PASS_THROUGH) {
                             res = 1; //Block
                         }
                     }
                 case ENEMY:
                     for (Block b : z.getBlocks()) {
-                        tempRes = enemies[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
-                        if (tempRes != 0) {
+                        tempRes = enemies[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        if (tempRes != Sprite.KIND_NONE) {
                             res = 1; //Enemy
                         }
                     }
                 case DETAILEDENEMY:
                     for (Block b : z.getBlocks()) {
-                        tempRes = enemies[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
-                        if (tempRes == 93) {
+                        tempRes = enemies[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        if (tempRes == Sprite.KIND_SPIKY) {
                             res = 3; //Spiky
-                        } else if (res < 3 && tempRes == 25) {
+                        } else if (res < 3 && tempRes == Sprite.KIND_FIREBALL) {
                             res = 2; //Fireball
-                        } else if (res < 2 && tempRes == 80) {
+                        } else if (res < 2 && tempRes == Sprite.KIND_GOOMBA) {
                             res = 1; //Goomba
                         }
                     }
