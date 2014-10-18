@@ -25,6 +25,9 @@
 
 package la.rlGlue;
 
+import la.rlGlue.blocks.Block;
+import la.rlGlue.blocks.Type;
+import la.rlGlue.blocks.Zone;
 import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 import org.rlcommunity.rlglue.codec.types.Action;
 import org.rlcommunity.rlglue.codec.types.Observation;
@@ -39,8 +42,12 @@ import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
 
+import java.util.ArrayList;
+
 public class RLGlueEnvironment implements EnvironmentInterface {
     private final static Environment environment = MarioEnvironment.getInstance();
+
+    private static ArrayList<Zone> visionField = new ArrayList<Zone>();
 
     private final static int OBSERVED_FIELDS[][] = {{-1, 0}, {1, 0}, {1, -1}, {2, 0}};
     private final static int ACTIONS_COUNT = 9;
@@ -64,6 +71,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         TaskSpec.checkTaskSpec(taskSpecString);
 
         environment.reset(new MarioAIOptions());
+
+        //Blocksichtfeld erzeugen
+        createVisionField();
 
         return taskSpecString;
     }
@@ -111,13 +121,15 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         byte[][] levelScene = environment.getLevelSceneObservationZ(ZLEVEL_SCENE);
         byte[][] enemies = environment.getEnemiesObservationZ(ZLEVEL_ENEMIES);
 
-        for(int field = 0; field < OBSERVED_FIELDS.length; field++) {
+        /*for(int field = 0; field < OBSERVED_FIELDS.length; field++) {
         	int i = ZoomLevelObstacle.valueOf(levelScene[marioEgoPos[0] + OBSERVED_FIELDS[field][0]][marioEgoPos[1] + OBSERVED_FIELDS[field][1]]).getValue() * 10;
 
         	i = i + ZoomLevelEnemy.valueOf(enemies[marioEgoPos[0] + OBSERVED_FIELDS[field][0]][marioEgoPos[1] + OBSERVED_FIELDS[field][1]]).getValue();
 
         	returnObservation.intArray[field] = i;
-        }
+        }*/
+
+        int[] state = observate(marioEgoPos,levelScene,enemies); //TODO: Return state !
 
         return returnObservation;
     }
@@ -127,4 +139,156 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         theLoader.run();
     }
+
+    private int[] observate(int[] marioEgoPos, byte[][] levelScene, byte[][] enemies){
+        int[] state = new int[9];
+
+        switch (environment.getMarioMode()) {
+            case 0:
+                state[0]=1;
+            case 1:
+                state[0]=2;
+            case 2:
+                state[0]=3;
+            default:
+                state[0]=0;
+        }
+
+        int i = 1;
+        for(Zone z : visionField) {
+
+            int res = 0;
+            int tempRes;
+
+            switch (z.getType()) {
+                case BRIDGE:
+                    for (Block b : z.getBlocks()) {
+                        tempRes = levelScene[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
+                        if (tempRes == -62) {
+                            res = 1; //Bridge
+                        }
+                    }
+                case BLOCK:
+                    for (Block b : z.getBlocks()) {
+                        tempRes = levelScene[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
+                        if (tempRes == -24 || tempRes == -60) {
+                            res = 1; //Block
+                        }
+                    }
+                case ENEMY:
+                    for (Block b : z.getBlocks()) {
+                        tempRes = enemies[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
+                        if (tempRes != 0) {
+                            res = 1; //Enemy
+                        }
+                    }
+                case DETAILEDENEMY:
+                    for (Block b : z.getBlocks()) {
+                        tempRes = enemies[marioEgoPos[0] + b.getY()][marioEgoPos[1] + b.getX()];
+                        if (tempRes == 93) {
+                            res = 3; //Spiky
+                        } else if (res < 3 && tempRes == 25) {
+                            res = 2; //Fireball
+                        } else if (res < 2 && tempRes == 80) {
+                            res = 1; //Goomba
+                        }
+                    }
+            }
+            state[i] = res;
+            i++;
+        }
+        return state;
+    }
+
+    private static void createVisionField(){
+
+        Block s1b1 = new Block(0,4);
+        Block s1b2 = new Block(0,3);
+        Block s1b3 = new Block(0,2);
+
+        Block s2b1 = new Block(1,1);
+        Block s2b2 = new Block(1,0);
+        Block s2b3 = new Block(2,1);
+        Block s2b4 = new Block(2,0);
+
+        Block s3b1 = new Block(1,-1);
+        Block s3b2 = new Block(1,-2);
+
+        Block s4b1 = new Block(0,-1);
+
+        Block e1b1 = new Block(0,2);
+        Block e1b2 = new Block(1,2);
+
+        Block e2b1 = new Block(1,1);
+        Block e2b2 = new Block(1,0);
+
+        Block e3b1 = new Block(2,1);
+        Block e3b2 = new Block(2,0);
+
+        Block e4b1 = new Block(0,-1);
+
+        Block e5b1 = new Block(-1,1);
+        Block e5b2 = new Block(-1,0);
+
+        ArrayList<Block> s1b = new ArrayList<Block>();
+        s1b.add(s1b1);
+        s1b.add(s1b2);
+        s1b.add(s1b3);
+
+        ArrayList<Block> s2b = new ArrayList<Block>();
+        s2b.add(s2b1);
+        s2b.add(s2b2);
+        s2b.add(s2b3);
+        s2b.add(s2b4);
+
+        ArrayList<Block> s3b = new ArrayList<Block>();
+        s3b.add(s3b1);
+        s3b.add(s3b2);
+
+        ArrayList<Block> s4b = new ArrayList<Block>();
+        s4b.add(s4b1);
+
+        ArrayList<Block> e1b = new ArrayList<Block>();
+        e1b.add(e1b1);
+        e1b.add(e1b2);
+
+        ArrayList<Block> e2b = new ArrayList<Block>();
+        e2b.add(e2b1);
+        e2b.add(e2b2);
+
+        ArrayList<Block> e3b = new ArrayList<Block>();
+        e3b.add(e3b1);
+        e3b.add(e3b2);
+
+        ArrayList<Block> e4b = new ArrayList<Block>();
+        e4b.add(e4b1);
+
+        ArrayList<Block> e5b = new ArrayList<Block>();
+        e5b.add(e5b1);
+        e5b.add(e5b2);
+
+        Zone s1 = new Zone(s1b, Type.BRIDGE);
+        Zone s2 = new Zone(s2b, Type.BLOCK);
+        Zone s3 = new Zone(s3b, Type.BLOCK);
+        Zone s4 = new Zone(s4b, Type.BLOCK);
+
+        Zone e1 = new Zone(e1b, Type.ENEMY);
+        Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
+        Zone e3 = new Zone(e3b, Type.DETAILEDENEMY);
+        Zone e4 = new Zone(e4b, Type.DETAILEDENEMY);
+        Zone e5 = new Zone(e5b, Type.ENEMY);
+
+        visionField.add(s1);
+        visionField.add(s2);
+        visionField.add(s3);
+        visionField.add(s4);
+
+        visionField.add(e1);
+        visionField.add(e2);
+        visionField.add(e3);
+        visionField.add(e4);
+        visionField.add(e5);
+
+    }
+
 }
