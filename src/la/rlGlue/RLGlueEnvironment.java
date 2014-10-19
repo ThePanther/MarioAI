@@ -41,18 +41,17 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import ch.idsia.benchmark.mario.engine.GeneralizerLevelScene;
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
-import ch.idsia.benchmark.mario.environments.Environment;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
 
 import java.util.ArrayList;
 
 public class RLGlueEnvironment implements EnvironmentInterface {
-    private final static Environment environment = MarioEnvironment.getInstance();
+    private final static MarioEnvironment environment = MarioEnvironment.getInstance();
 
     private static ArrayList<Zone> visionField = new ArrayList<Zone>();
 
-    private final static int OBSERVED_FIELDS[][] = {{-1, 0}, {1, 0}, {1, -1}, {2, 0}};
+    private final static int STATES_COUNT = 16384;
     private final static int ACTIONS_COUNT = 9;
     private final static int ZLEVEL_SCENE = 1;
     private final static int ZLEVEL_ENEMIES = 1;
@@ -65,7 +64,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         theTaskSpecObject.setEpisodic();
         theTaskSpecObject.setDiscountFactor(DISCOUNT_FACTOR);
-        theTaskSpecObject.addDiscreteObservation(new IntRange(0, (int) Math.pow(OBSERVED_FIELDS.length, ZoomLevelObstacle.count * ZoomLevelEnemy.count)));
+        theTaskSpecObject.addDiscreteObservation(new IntRange(0, STATES_COUNT));
         theTaskSpecObject.addDiscreteAction(new IntRange(0, ACTIONS_COUNT));
         theTaskSpecObject.setRewardRange(new DoubleRange(REWARD_MIN, REWARD_MAX));
 
@@ -140,6 +139,25 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         		levelSceneMultiplier *= 10;
         	}
 		}
+//        for (int x = 0; x < levelScene.length; x++) {
+//			for (int y = 0; y < levelScene[x].length; y++) {
+//				if(x == marioEgoPos[0] && y == marioEgoPos[1]) {
+//					System.out.print("   M");
+//				} else {
+//					System.out.printf("%4d", levelScene[x][y]);
+//				}
+//			}
+//			System.out.print("        ");
+//			for (int y = 0; y < enemies[x].length; y++) {
+//				if(x == marioEgoPos[0] && y == marioEgoPos[1]) {
+//					System.out.print("   M");
+//				} else {
+//					System.out.printf("%4d", enemies[x][y]);
+//				}
+//			}
+//			System.out.println("");
+//        }
+//        System.out.println(returnObservation.intArray[0] * 1000000000L + returnObservation.intArray[1] * 100000L + returnObservation.intArray[2]);
 
         return returnObservation;
     }
@@ -153,15 +171,22 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private int[] observate(int[] marioEgoPos, byte[][] levelScene, byte[][] enemies){
         int[] state = new int[1 + visionField.size()];
 
-        switch (environment.getMarioMode()) {
+        if(environment.getMario().isInvulnerable()) {
+        	state[0] = 4;
+        } else {
+            switch (environment.getMarioMode()) {
             case 0:
                 state[0]=1;
+                break;
             case 1:
                 state[0]=2;
+                break;
             case 2:
                 state[0]=3;
+                break;
             default:
                 state[0]=0;
+            }
         }
 
         int i = 1;
@@ -173,28 +198,31 @@ public class RLGlueEnvironment implements EnvironmentInterface {
             switch (z.getType()) {
                 case BRIDGE:
                     for (Block b : z.getBlocks()) {
-                        tempRes = levelScene[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        tempRes = levelScene[marioEgoPos[0] - b.getY()][marioEgoPos[1] + b.getX()];
                         if (tempRes == GeneralizerLevelScene.BORDER_HILL) {
                             res = 1; //Bridge
                         }
                     }
+                    break;
                 case BLOCK:
                     for (Block b : z.getBlocks()) {
-                        tempRes = levelScene[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        tempRes = levelScene[marioEgoPos[0] - b.getY()][marioEgoPos[1] + b.getX()];
                         if (tempRes == GeneralizerLevelScene.BRICK || tempRes == GeneralizerLevelScene.BORDER_CANNOT_PASS_THROUGH) {
                             res = 1; //Block
                         }
                     }
+                    break;
                 case ENEMY:
                     for (Block b : z.getBlocks()) {
-                        tempRes = enemies[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        tempRes = enemies[marioEgoPos[0] - b.getY()][marioEgoPos[1] + b.getX()];
                         if (tempRes != Sprite.KIND_NONE) {
                             res = 1; //Enemy
                         }
                     }
+                    break;
                 case DETAILEDENEMY:
                     for (Block b : z.getBlocks()) {
-                        tempRes = enemies[marioEgoPos[0] + b.getX()][marioEgoPos[1] + b.getY()];
+                        tempRes = enemies[marioEgoPos[0] - b.getY()][marioEgoPos[1] + b.getX()];
                         if (tempRes == Sprite.KIND_SPIKY) {
                             res = 3; //Spiky
                         } else if (res < 3 && tempRes == Sprite.KIND_FIREBALL) {
@@ -203,6 +231,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
                             res = 1; //Goomba
                         }
                     }
+                    break;
             }
             state[i] = res;
             i++;

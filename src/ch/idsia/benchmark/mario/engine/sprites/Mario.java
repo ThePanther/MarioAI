@@ -850,6 +850,11 @@ public int getStatus()
     return status;
 }
 
+public boolean isInvulnerable()
+{
+	return invulnerableTime > 0 || isMarioInvulnerable;
+}
+
 public boolean isOnGround()
 {
     return onGround;
