@@ -43,7 +43,7 @@ public class RunAllNoSockets {
 	
 	public static void main(String[] args){
 		//Create the Agent
-		AgentInterface theAgent=new SkeletonAgent();
+		AgentInterface theAgent=new SARSAAgent();
 		
 		//Create the Environment
 		EnvironmentInterface theEnvironment=new RLGlueEnvironment();

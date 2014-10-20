@@ -2,12 +2,12 @@
 <!DOCTYPE project>
 <datenbank>
    <driver>com.mysql.jdbc.Driver</driver>
-   <dbname>marioai2</dbname>
+   <dbname>marioai</dbname>
    <host>localhost</host>
-   <username>wlad</username>
+   <username>mario</username>
    <password>123</password>
    <tablename>knowledge</tablename>
    <state>zustand</state>
-   <numberOfActions>3</numberOfActions>
+   <numberOfActions>12</numberOfActions>
 </datenbank>
 
