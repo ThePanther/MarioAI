@@ -66,7 +66,7 @@ public class SARSAAgent implements AgentInterface {
         DoubleRange theRewardRange=theTaskSpec.getRewardRange();
         System.out.println("Reward range is: "+theRewardRange.getMin()+" to "+theRewardRange.getMax());
 
-        numActions = theTaskSpec.getDiscreteActionRange(0).getMax() + 1;
+        numActions = theTaskSpec.getDiscreteActionRange(0).getMax();
         sarsa_gamma=theTaskSpec.getDiscountFactor();
 
         db = ManagerFactory.getManager(Database.class);
@@ -125,6 +125,7 @@ public class SARSAAgent implements AgentInterface {
         if (!policyFrozen) {
             db.update(lastState,lastAction,new_Q_sa);
         }
+        db.saveAll();
         lastState = 0;
         lastAction = 0;
     }
@@ -182,7 +183,7 @@ public class SARSAAgent implements AgentInterface {
         }
 
         int maxIndex = 0;
-        for (int a = 1; a < numActions; a++) {
+        for (int a = 0; a < numActions; a++) {
             if (valueFunction[a] > valueFunction[maxIndex]) {
                 maxIndex = a;
             }
