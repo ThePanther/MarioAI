@@ -50,7 +50,7 @@ public class DatabaseTest {
 		Database db = ManagerFactory.getManager(Database.class);
 		db.createDatabase(); 
 
-		int state = 0;
+		long state = 0;
 		db.select(state); 
 		
 		int action = 1;

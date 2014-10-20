@@ -9,10 +9,10 @@ public interface Database {
 	public boolean createDatabase();
 	
 	// Gibt eine Liste von Rewards zurueck
-	public double[] select(int stateId);
+	public double[] select(long stateId);
 	
 	// update lokal
-	boolean update(int state, int action, double rewards); 	
+	boolean update(long state, int action, double rewards);
 
 	// Speichert neuen Wissenbasis in db
 	public boolean saveAll();

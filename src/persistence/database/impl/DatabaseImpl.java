@@ -13,12 +13,12 @@ import java.util.Map;
 
 public class DatabaseImpl implements Database {
 	private DBConfig dbConfig;
-	private HashMap<Integer, double[]> knowledges;
+	private HashMap<Long, double[]> knowledges;
 	private String driver;
 
 	public DatabaseImpl() {
 		this.dbConfig = ((ImportHandler) ManagerFactory.getManager(ImportHandler.class)).getDBConfig();
-		this.knowledges = new HashMap<Integer, double[]>();
+		this.knowledges = new HashMap<Long, double[]>();
 	}
 
 	public boolean createDatabase() {
@@ -76,7 +76,7 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public double[] select(int stateId) {
+	public double[] select(long stateId) {
 		if (knowledges.size() == 0) {
 			// die daten aus db holen
 			selectAll();
@@ -112,7 +112,7 @@ public class DatabaseImpl implements Database {
 			ResultSet rs = stmt.executeQuery(query);
 			// iterate through the java resultset
 			while (rs.next()) {
-				int id = rs.getInt(dbConfig.getStateName());
+				long id = rs.getInt(dbConfig.getStateName());
 
 				double[] rewardsList = new double[dbConfig.getNumberOfActions()];
 				for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
@@ -155,14 +155,14 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public boolean update(int state, int action, double rewards) {
+	public boolean update(long state, int action, double rewards) {
 		double[] rewardsList = knowledges.get(state);
 		rewardsList[action] = rewards;
 		knowledges.put(state, rewardsList);
 		return true;
 	}
 
-	public boolean insert(int state) {
+	public boolean insert(long state) {
 		try {
 			Class.forName(dbConfig.getDriver());
 			Connection conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(),
@@ -194,7 +194,7 @@ public class DatabaseImpl implements Database {
 
 	@Override
 	public boolean saveAll() {
-		for (Integer key : knowledges.keySet()) {
+		for (Long key : knowledges.keySet()) {
 			insert(key); 
 		    //System.out.println("Key = " + key + " - " + hm.get(key));
 		}
@@ -230,7 +230,7 @@ public class DatabaseImpl implements Database {
 
 			System.out.println("Creating table in given database: " + dbConfig.getTablename() + "...");
 			String sql = "CREATE TABLE " + dbConfig.getTablename() + "(" + dbConfig.getStateName()
-					+ "  INTEGER not NULL, ";
+					+ "  LONG not NULL, ";
 
 			for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
 				sql += " A" + (i + 1) + " DOUBLE, ";
