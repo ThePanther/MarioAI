@@ -53,7 +53,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private static ArrayList<Zone> visionField = new ArrayList<Zone>();
 
     private final static int STATES_COUNT = 16384;
-    private final static int ACTIONS_COUNT = 9;
+    private final static int ACTIONS_COUNT = 12;
     private final static int ZLEVEL_SCENE = 1;
     private final static int ZLEVEL_ENEMIES = 1;
 
