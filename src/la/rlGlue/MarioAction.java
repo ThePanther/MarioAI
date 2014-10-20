@@ -14,6 +14,8 @@ public enum MarioAction {
 	LEFT_JUMP(7),
 	JUMP(8),
 	NONE(9);
+    //TODO: SPEED/Shoot
+    //TODO: JUMP_SPEED
 
 	private final int value;
 
