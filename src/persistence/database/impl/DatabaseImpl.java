@@ -230,7 +230,7 @@ public class DatabaseImpl implements Database {
 
 			System.out.println("Creating table in given database: " + dbConfig.getTablename() + "...");
 			String sql = "CREATE TABLE " + dbConfig.getTablename() + "(" + dbConfig.getStateName()
-					+ "  INT UNSIGNED not NULL, ";
+					+ "  BIGINT not NULL, ";
 
 			for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
 				sql += " A" + (i + 1) + " DOUBLE, ";

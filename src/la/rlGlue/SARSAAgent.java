@@ -45,9 +45,9 @@ public class SARSAAgent implements AgentInterface {
     private double sarsa_stepsize = 0.1;
     private double sarsa_epsilon = 0.1;
     private double sarsa_gamma = 1.0;
-    private int marioMul = 1000000000;
-    private int sceneMul = 100000;
-    private int enemyMul = 1;
+    private long marioMul = 1000000000;
+    private long sceneMul = 100000;
+    private long enemyMul = 1;
     private int numActions;
     private double[] valueFunction;
     private boolean policyFrozen = false;
@@ -172,6 +172,7 @@ public class SARSAAgent implements AgentInterface {
     private long extractState(Observation observation) {
         long state;
         state = (observation.getInt(0)*marioMul) + (observation.getInt(1)*sceneMul) + (observation.getInt(2)*enemyMul);
+        System.out.println("State: " + state);
         return state;
     }
 
