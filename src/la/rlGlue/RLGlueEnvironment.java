@@ -53,7 +53,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private static ArrayList<Zone> visionField = new ArrayList<Zone>();
 
     private final static int STATES_COUNT = 16384;
-    private final static int ACTIONS_COUNT = 12;
+    private final static int ACTIONS_COUNT = MarioAction.values().length;
     private final static int ZLEVEL_SCENE = 1;
     private final static int ZLEVEL_ENEMIES = 1;
 
@@ -129,9 +129,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         	theReward += REWARD_KILL;
         }
 
-        if(environment.getMarioFloatPos()[0] > oldMarioFloatPos[0]) {
+        if(environment.getMarioFloatPos()[0] > oldMarioFloatPos[0] + 1) {
         	theReward += REWARD_MOVE_RIGHT;
-        } else if(environment.getMarioFloatPos()[0] < oldMarioFloatPos[0]) {
+        } else if(environment.getMarioFloatPos()[0] < oldMarioFloatPos[0] - 1) {
         	theReward += REWARD_MOVE_LEFT;
         }
 
