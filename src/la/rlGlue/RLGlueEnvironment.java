@@ -86,12 +86,6 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         TaskSpec.checkTaskSpec(taskSpecString);
 
-        environment.reset(new MarioAIOptions());
-
-        oldMarioFloatPos = environment.getMarioFloatPos();
-        oldMarioMode = environment.getMarioMode();
-        oldKillsTotal = environment.getMarioState()[6];
-
         //Blocksichtfeld erzeugen
         createVisionField();
 
@@ -99,6 +93,12 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     }
 
     public Observation env_start() {
+        environment.reset(new MarioAIOptions());
+
+        oldMarioFloatPos = environment.getMarioFloatPos();
+        oldMarioMode = environment.getMarioMode();
+        oldKillsTotal = environment.getMarioState()[6];
+
         Observation returnObservation = getObservation();
 
         return returnObservation;

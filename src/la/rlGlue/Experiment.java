@@ -72,6 +72,7 @@ public class Experiment {
 
         /* Remember that stepLimit of 0 means there is no limit at all!*/
         runEpisode(0);
+        runEpisode(0);
 
         System.out.println("\n\n----------Summary----------");
 
