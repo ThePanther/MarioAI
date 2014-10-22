@@ -3,9 +3,9 @@
 <datenbank>
    <driver>com.mysql.jdbc.Driver</driver>
    <dbname>marioai</dbname>
-   <host>localhost</host>
-   <username>mario</username>
-   <password>123</password>
+   <host>db4free.net:3306</host>
+   <username>pomarioai</username>
+   <password>sarsamario</password>
    <tablename>knowledge</tablename>
    <state>zustand</state>
    <numberOfActions>12</numberOfActions>
