@@ -33,6 +33,7 @@ import org.rlcommunity.rlglue.codec.RLGlue;
  */
 public class Experiment {
 
+    private int numOfEpisodes = 1;
     private int whichEpisode = 0;
 
     /* Run One Episode of length maximum cutOff*/
@@ -71,8 +72,9 @@ public class Experiment {
         System.out.println("\n\n----------Running episodes----------");
 
         /* Remember that stepLimit of 0 means there is no limit at all!*/
-        runEpisode(0);
-        runEpisode(0);
+        for(int i=0; i<numOfEpisodes; i++) {
+            runEpisode(0);
+        }
 
         System.out.println("\n\n----------Summary----------");
 
