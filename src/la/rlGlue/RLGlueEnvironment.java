@@ -45,6 +45,7 @@ import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RLGlueEnvironment implements EnvironmentInterface {
@@ -288,18 +289,16 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Block s1b2 = new Block(0,3);
         Block s1b3 = new Block(0,2);
 
-        Block s2b1 = new Block(1,1);
-        Block s2b2 = new Block(1,0);
-        Block s2b3 = new Block(2,1);
-        Block s2b4 = new Block(2,0);
+        Block s2b1 = new Block(1,2);
 
-        Block s3b1 = new Block(1,-1);
-        Block s3b2 = new Block(1,-2);
+        Block s3b1 = new Block(1,1);
 
-        Block s4b1 = new Block(0,-1);
+        Block s4b1 = new Block(1,0);
 
-        Block s5b1 = new Block(1,2);
-        Block s5b2 = new Block(1,3);
+        Block s5b1 = new Block(1,-1);
+        Block s5b2 = new Block(1,-2);
+
+        Block s6b1 = new Block(0,-1);
 
         Block e1b1 = new Block(0,2);
         Block e1b2 = new Block(1,2);
@@ -322,13 +321,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         ArrayList<Block> s2b = new ArrayList<Block>();
         s2b.add(s2b1);
-        s2b.add(s2b2);
-        s2b.add(s2b3);
-        s2b.add(s2b4);
 
         ArrayList<Block> s3b = new ArrayList<Block>();
         s3b.add(s3b1);
-        s3b.add(s3b2);
 
         ArrayList<Block> s4b = new ArrayList<Block>();
         s4b.add(s4b1);
@@ -336,6 +331,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         ArrayList<Block> s5b = new ArrayList<Block>();
         s5b.add(s5b1);
         s5b.add(s5b2);
+
+        ArrayList<Block> s6b = new ArrayList<Block>();
+        s6b.add(s6b1);
 
         ArrayList<Block> e1b = new ArrayList<Block>();
         e1b.add(e1b1);
@@ -361,6 +359,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Zone s3 = new Zone(s3b, Type.BLOCK);
         Zone s4 = new Zone(s4b, Type.BLOCK);
         Zone s5 = new Zone(s5b, Type.BLOCK);
+        Zone s6 = new Zone(s6b, Type.BLOCK);
 
         Zone e1 = new Zone(e1b, Type.ENEMY);
         Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
@@ -373,6 +372,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         visionField.add(s3);
         visionField.add(s4);
         visionField.add(s5);
+        visionField.add(s6);
 
         visionField.add(e1);
         visionField.add(e2);
