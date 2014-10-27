@@ -33,7 +33,7 @@ import org.rlcommunity.rlglue.codec.RLGlue;
  */
 public class Experiment {
 
-    private int numOfEpisodes = 1;
+    private int numOfEpisodes = 100;
     private int whichEpisode = 0;
 
     /* Run One Episode of length maximum cutOff*/

@@ -180,7 +180,7 @@ public class DatabaseImpl implements Database {
 			values += rewardsList[dbConfig.getNumberOfActions()-1] + ")";
 			query += values + " ON DUPLICATE KEY UPDATE A1 = 0.0, A2=0.0, A3=0.0";
 
-			System.out.println(query);
+//			System.out.println(query);
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(query); 
 			

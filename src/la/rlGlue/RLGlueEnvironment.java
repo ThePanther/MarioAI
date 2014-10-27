@@ -40,12 +40,10 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import ch.idsia.benchmark.mario.engine.GeneralizerLevelScene;
-import ch.idsia.benchmark.mario.engine.sprites.Mario;
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RLGlueEnvironment implements EnvironmentInterface {
@@ -71,7 +69,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private float[] oldMarioFloatPos;
 
     private int oldMarioMode;
-    private int oldKillsTotal;
+    private int oldKillsByStomp;
 
     public String env_init() {
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
@@ -93,11 +91,16 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     }
 
     public Observation env_start() {
-        environment.reset(new MarioAIOptions());
+    	MarioAIOptions marioAIOptions = new MarioAIOptions();
+
+//    	marioAIOptions.setVisualization(false);
+    	marioAIOptions.setFPS(10000);
+
+    	environment.reset(marioAIOptions);
 
         oldMarioFloatPos = environment.getMarioFloatPos();
         oldMarioMode = environment.getMarioMode();
-        oldKillsTotal = environment.getMarioState()[6];
+        oldKillsByStomp = environment.getMarioState()[8];
 
         Observation returnObservation = getObservation();
 
@@ -116,17 +119,17 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         environment.performAction(keys);
         environment.tick();
 
-        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
-        	theReward += REWARD_WIN;
-        } else if(environment.getMarioState()[0] == Mario.STATUS_DEAD){
-        	theReward += REWARD_DEATH;
-        }
+//        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
+//        	theReward += REWARD_WIN;
+//        } else if(environment.getMarioState()[0] == Mario.STATUS_DEAD){
+//        	theReward += REWARD_DEATH;
+//        }
 
         if(environment.getMarioMode() < oldMarioMode) {
         	theReward += REWARD_HURT;
         }
 
-        if(environment.getMarioState()[6] > oldKillsTotal) {
+        if(environment.getMarioState()[8] > oldKillsByStomp) {
         	theReward += REWARD_KILL;
         }
 
@@ -137,7 +140,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         }
 
         oldMarioMode = environment.getMarioMode();
-        oldKillsTotal = environment.getMarioState()[6];
+        oldKillsByStomp = environment.getMarioState()[8];
         oldMarioFloatPos = environment.getMarioFloatPos();
 
         episodeOver = environment.isLevelFinished();
