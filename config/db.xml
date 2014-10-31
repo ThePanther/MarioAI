@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<datenbank>
+<datenbank-configuration>
    <driver>com.mysql.jdbc.Driver</driver>
    <dbname>marioai</dbname>
-   <host>db4free.net:3306</host>
+   <host>localhost</host>
    <username>pomarioai</username>
    <password>sarsamario</password>
-   <tablename>knowledge</tablename>
-   <state>zustand</state>
-   <numberOfActions>12</numberOfActions>
-</datenbank>
+</datenbank-configuration>
 
