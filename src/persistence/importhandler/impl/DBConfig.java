@@ -6,26 +6,19 @@ public class DBConfig {
 	private String dbname;
 	private String user; 
 	private String password;
-	private String tablename;
-	private String stateName;
-	private int numberOfActions;
 	private String driver; 
 	private String hostUrl; 
 	private String dbUrl; 
 	
-	public DBConfig(String dbhost, String dbname, String user, String password, String tablename, String stateName, int numberOfActions, String driver, String hostUrl) {
+	public DBConfig(String dbhost, String dbname, String user, String password, String driver, String hostUrl) {
 		super();
 		this.dbhost = dbhost;
 		this.dbname = dbname;
 		this.user = user;
 		this.password = password;
-		this.tablename = tablename; 
-		this.stateName = stateName; 
-		this.numberOfActions = numberOfActions; 
 		this.driver = driver; 
-		this.hostUrl =hostUrl; 
-		this.setDbUrl(hostUrl + dbname); 
-		
+		this.hostUrl = hostUrl; 
+		this.setDbUrl(hostUrl + dbname); 		
 	}
 
 	public String getDbhost() {
@@ -59,31 +52,7 @@ public class DBConfig {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getTablename() {
-		return tablename;
-	}
-
-	public void setTablename(String tablename) {
-		this.tablename = tablename;
-	}
-
-	public String getStateName() {
-		return stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public int getNumberOfActions() {
-		return numberOfActions;
-	}
-
-	public void setNumberOfActions(int numberOfActions) {
-		this.numberOfActions = numberOfActions;
-	}
-
+	
 	public String getDriver() {
 		return driver;
 	}
@@ -92,6 +61,7 @@ public class DBConfig {
 		this.driver = driver;
 	}
 
+	//jdbc:mysql://localhost/
 	public String getHostUrl() {
 		return hostUrl;
 	}
@@ -99,7 +69,7 @@ public class DBConfig {
 	public void setHostUrl(String hostUrl) {
 		this.hostUrl = hostUrl;
 	}
-
+	//jdbc:mysql://localhost/marioai2
 	public String getDbUrl() {
 		return dbUrl;
 	}

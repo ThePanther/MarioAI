@@ -2,6 +2,12 @@ package persistence.database.impl;
 
 import context.ManagerFactory;
 import persistence.database.Database;
+import persistence.entities.Knowledge;
+import persistence.entities.Reward;
+import persistence.entities.RewardsGroup;
+import persistence.entities.Action;
+import persistence.entities.State;
+import persistence.entities.Try;
 import persistence.importhandler.ImportHandler;
 import persistence.importhandler.impl.DBConfig;
 
@@ -12,257 +18,77 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class DatabaseImpl implements Database {
-	private DBConfig dbConfig;
-	private HashMap<Long, double[]> knowledges;
-	private String driver;
+
+	private static final int NUM_ACTIONS = 12;
+	private Knowledge knowledge;
+	private DBCommunication dbCommunication;
 
 	public DatabaseImpl() {
-		this.dbConfig = ((ImportHandler) ManagerFactory.getManager(ImportHandler.class)).getDBConfig();
-		this.knowledges = new HashMap<Long, double[]>();
-	}
-
-	public boolean createDatabase() {
-		System.out.println("*********************************createDatabase \"" + dbConfig.getDbname()
-				+ "\" start*********************************");
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			Class.forName(dbConfig.getDriver());
-			System.out.println("Connecting to database: " + dbConfig.getHostUrl() + "...");
-			conn = DriverManager.getConnection(dbConfig.getHostUrl(), dbConfig.getUser(), dbConfig.getPassword());
-			stmt = conn.createStatement();
-			DatabaseMetaData databaseMetaData = conn.getMetaData();
-			ResultSet rs = databaseMetaData.getCatalogs();
-			boolean flag = false;
-			while (rs.next()) {
-				if (rs.getString("TABLE_CAT").equals(dbConfig.getDbname()))
-					flag = true;
-			}
-
-			if (!flag) {
-				System.out.println("Creating database...");
-				String sql = "CREATE DATABASE " + dbConfig.getDbname();
-				System.out.println(sql);
-				stmt.executeUpdate(sql);
-				System.out.print("Database created successfully");
-			} else {
-				System.out.print("Database ist vorhanden");
-			}
-			System.out.println(": " + dbConfig.getDbname() + "...");
-		} catch (SQLException se) {
-			// Handle errors for JDBC
-			se.printStackTrace();
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			e.printStackTrace();
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se2) {
-			}// nothing we can do
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				se.printStackTrace();
-			}// end finally try
-		}// end try
-		System.out.println("*********************************createDatabase \"" + dbConfig.getDbname()
-				+ "\" ende*********************************");
-
-		return createTable();
+		DBConfig dbConfig = ((ImportHandler) ManagerFactory
+				.getManager(ImportHandler.class)).getDBConfig();
+		this.dbCommunication = new DBCommunication(dbConfig);
+		this.knowledge = new Knowledge();
 	}
 
 	@Override
-	public double[] select(long stateId) {
-		if (knowledges.size() == 0) {
-			// die daten aus db holen
-			selectAll();
+	public RewardsGroup getRewardsGroup(Reward[] rewards) {
+		RewardsGroup result = null;
+		try {
+			result = dbCommunication.getRewardsGroup(rewards);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		// wenn State nocht nicht vorhanden ist
-		if (knowledges.get(stateId) == null) {
-			double[] rewardsList = new double[dbConfig.getNumberOfActions()];
-			for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
+		return result;
+	}
+
+	@Override
+	public double[] select(State state, RewardsGroup rewardsGroup) {
+		if (knowledge.isEmpty()) {
+			//System.out.println("Knowledge is empty");
+			knowledge = dbCommunication.selectKnowledge(rewardsGroup);
+		}
+	
+		if (!knowledge.isExist(state.getStateId(), rewardsGroup.getId())) {
+			double[] rewardsList = new double[NUM_ACTIONS];
+			for (int i = 0; i < NUM_ACTIONS; i++) {
 				rewardsList[i] = 0;
 			}
-			knowledges.put(stateId, rewardsList);
+			knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList);
 		}
-		return knowledges.get(stateId);
-	}
-
-	// holt alle daten aus db
-	private boolean selectAll() {
-		System.out.println("*********************************selectAll \"" + dbConfig.getTablename()
-				+ "\" start*********************************");
-		Database db = ManagerFactory.getManager(Database.class);
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-
-			Class.forName(dbConfig.getDriver());
-			conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(),
-					dbConfig.getPassword());
-			String query = "SELECT * FROM " + dbConfig.getTablename();
-			System.out.println(query);
-			// create the java statement
-			stmt = conn.createStatement();
-			// execute the query, and get a java resultset
-			ResultSet rs = stmt.executeQuery(query);
-			// iterate through the java resultset
-			while (rs.next()) {
-				long id = rs.getInt(dbConfig.getStateName());
-
-				double[] rewardsList = new double[dbConfig.getNumberOfActions()];
-				for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
-					rewardsList[i] = rs.getDouble("A" + (i + 1));
-				}
-				knowledges.put(id, rewardsList);
-			}
-			// print the results
-			printMap(knowledges);
-		} catch (Exception e) {
-			System.err.println("Got an exception! ");
-			System.err.println(e.getMessage());
-		}finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se2) {
-			}// nothing we can do
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				se.printStackTrace();
-			}// end finally try
-		}
-		System.out.println("*********************************selectAll \"" + dbConfig.getTablename()
-				+ "\" ende*********************************");
-		return true;
-	}
-
-	// print map
-	private static void printMap(Map mp) {
-		Iterator it = mp.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pairs = (Map.Entry) it.next();
-			System.out.println(pairs.getKey() + " = " + Arrays.toString((double[]) pairs.getValue()));
-			it.remove(); // avoids a ConcurrentModificationException
-		}
+		return knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId());
 	}
 
 	@Override
-	public boolean update(long state, int action, double rewards) {
-		double[] rewardsList = knowledges.get(state);
-		rewardsList[action] = rewards;
-		knowledges.put(state, rewardsList);
-		return true;
-	}
-
-	public boolean insert(long state) {
-		try {
-			Class.forName(dbConfig.getDriver());
-			Connection conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(),
-					dbConfig.getPassword());
-
-			// the mysql insert statement
-			String query = "INSERT INTO " + dbConfig.getTablename() + " (" + dbConfig.getStateName() + ", ";
-			String values = " VALUES("+state + ", ";
-			double [] rewardsList = knowledges.get(state); 
-			for (int i = 0; i < dbConfig.getNumberOfActions() - 1; i++) {
-				query += "A" + (i + 1) + ", ";
-				values += rewardsList[i] + ",";
-			}
-			query += "A" + (dbConfig.getNumberOfActions()) + ")";
-			values += rewardsList[dbConfig.getNumberOfActions()-1] + ")";
-			query += values + " ON DUPLICATE KEY UPDATE A1 = 0.0, A2=0.0, A3=0.0";
-
-//			System.out.println(query);
-			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(query); 
-			
-			conn.close();
-		} catch (Exception e) {
-			System.err.println("Got an exception!");
-			System.err.println(e.getMessage());
-		}
+	public boolean update(State state, RewardsGroup rewardsGroup, int action,
+			double value) {
+		double[] rewardsList = knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId());
+		rewardsList[action] = value;
+		knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList);
 		return true;
 	}
 
 	@Override
 	public boolean saveAll() {
-		for (Long key : knowledges.keySet()) {
-			insert(key); 
-		    //System.out.println("Key = " + key + " - " + hm.get(key));
+		
+		Iterator it = knowledge.keySet().iterator();
+		while (it.hasNext()){
+			long stateID = (Long) it.next(); 
+		    Iterator it2 = knowledge.get(stateID).keySet().iterator(); 
+		    while (it2.hasNext()){
+		    	int rgID = (Integer) it2.next(); 
+			    double[] rewardsList = knowledge.getRewardsList(stateID, rgID);
+				dbCommunication.inserKnowledge(stateID, rgID, rewardsList);			    
+		    }
 		}
+		
+		
 		return true;
 	}
 
-	public boolean createTable() {
-		System.out.println("*********************************createTable \"" + dbConfig.getTablename()
-				+ "\" start*********************************");
-		Connection conn = null;
-		Statement stmt = null;
-		try {
-			Class.forName(dbConfig.getDriver());
-			// STEP 2: Open a connection to a datebase
-			System.out.println("Connecting to a selected database: " + dbConfig.getDbname() + "...");
-			conn = DriverManager.getConnection(dbConfig.getDbUrl(), dbConfig.getUser(), dbConfig.getPassword());
-			DatabaseMetaData md = conn.getMetaData();
-			System.out.println("Connected database successfully...");
-
-			// STEP 3: Check the table. Delete Table, if exist
-			ResultSet rs = md.getTables(null, null, "%", null);
-			stmt = conn.createStatement();
-			while (rs.next()) {
-				// wenn die tabelle schon existiert
-				// dann wird die geloescht
-				if (rs.getString(3).equals(dbConfig.getTablename())) {
-					String sql = "DROP TABLE " + dbConfig.getTablename();
-					System.out.println(sql);
-					stmt.executeUpdate(sql);
-					System.out.println("Tabelle: " + dbConfig.getTablename() + " wurde geloescht...");
-				}
-			}
-
-			System.out.println("Creating table in given database: " + dbConfig.getTablename() + "...");
-			String sql = "CREATE TABLE " + dbConfig.getTablename() + "(" + dbConfig.getStateName()
-					+ "  BIGINT not NULL, ";
-
-			for (int i = 0; i < dbConfig.getNumberOfActions(); i++) {
-				sql += " A" + (i + 1) + " DOUBLE, ";
-			}
-			sql += " PRIMARY KEY ( " + dbConfig.getStateName() + " ))";
-			System.out.println(sql);
-			stmt.executeUpdate(sql);
-
-			System.out.println("Created table in given database: " + dbConfig.getTablename() + "...");
-		} catch (SQLException se) {
-			// Handle errors for JDBC
-			se.printStackTrace();
-		} catch (Exception e) {
-			// Handle errors for Class.forName
-			e.printStackTrace();
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					conn.close();
-			} catch (SQLException se) {
-			}// do nothing
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				se.printStackTrace();
-			}// end finally try
-		}// end try
-		System.out.println("*********************************createTable \"" + dbConfig.getTablename()
-				+ "\" ende*********************************");
-		return true;
+	@Override
+	public Try[] getTries(RewardsGroup rewardsGroup) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

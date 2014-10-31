@@ -1,21 +1,24 @@
 package persistence.database;
 
+import java.util.HashMap;
+
+import persistence.entities.Knowledge;
+import persistence.entities.Reward;
+import persistence.entities.RewardsGroup;
+import persistence.entities.State;
+import persistence.entities.Try;
 import persistence.importhandler.impl.DBConfig;
 
 public interface Database {
-		
-	// Erstellt eine neue Datenbank, wenn die DB nicht existiert
-	// und (erzeugt)/(ersetzt die alte) Tabelle
-	public boolean createDatabase();
 	
-	// Gibt eine Liste von Rewards zurueck
-	public double[] select(long stateId);
+	public RewardsGroup getRewardsGroup(Reward[] rewards); 
 	
-	// update lokal
-	boolean update(long state, int action, double rewards);
-
-	// Speichert neuen Wissenbasis in db
+	public double[] select(State state, RewardsGroup rewardsGroup);
+	
+	boolean update(State state, RewardsGroup rewardsGroup, int action, double value);
+	
 	public boolean saveAll();
 	
+	public Try[] getTries(RewardsGroup rewardsGroup); 
 
 }

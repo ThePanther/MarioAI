@@ -28,6 +28,7 @@ package la.rlGlue;
 import java.util.Random;
 
 import context.ManagerFactory;
+
 import org.rlcommunity.rlglue.codec.AgentInterface;
 import org.rlcommunity.rlglue.codec.types.Action;
 import org.rlcommunity.rlglue.codec.types.Observation;
@@ -35,13 +36,17 @@ import org.rlcommunity.rlglue.codec.util.AgentLoader;
 import org.rlcommunity.rlglue.codec.taskspec.TaskSpec;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
+
 import persistence.database.Database;
+import persistence.entities.Reward;
+import persistence.entities.RewardsGroup;
+import persistence.entities.State;
 
 public class SARSAAgent implements AgentInterface {
 
     private Random randGenerator = new Random();
     private int lastAction;
-    private long lastState;
+    private State lastState;
     private double sarsa_stepsize = 0.1;
     private double sarsa_epsilon = 0.1;
     private double sarsa_gamma = 1.0;
@@ -76,9 +81,24 @@ public class SARSAAgent implements AgentInterface {
         //that they are all specified and that they are all nice numbers.
     }
 
+    public Reward[] getRewardList(){
+    	Reward[] rewardsList = new Reward[7];
+        rewardsList[0] = new Reward("Sieg", 1000);
+        rewardsList[1] = new Reward("Niederlage", -1000);
+        rewardsList[2] = new Reward("Verletzung", -500);
+        rewardsList[3] = new Reward("Toeten eines Gegners", 50);
+        rewardsList[4] = new Reward("Pro Frame", -1);
+        rewardsList[5] = new Reward("Nach rechts gehen", +1);
+        rewardsList[6] = new Reward("Nach links gehen", -2);
+        return rewardsList;
+    }
     public Action agent_start(Observation observation) {
-        long state = extractState(observation);
-        valueFunction = db.select(state);
+        State state = extractState(observation);        
+        
+        Reward[] rewardsList = getRewardList(); 
+		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+        valueFunction = db.select(state, rewardsGroup); 
+        
         int theIntAction = egreedy(valueFunction);
 
         Action returnAction = new Action(1, 0, 0);
@@ -91,8 +111,12 @@ public class SARSAAgent implements AgentInterface {
     }
 
     public Action agent_step(double reward, Observation observation) {
-        long newState = extractState(observation);
-        double[] newValueFunction = db.select(newState);
+        State newState = extractState(observation);
+        
+        Reward[] rewardsList = getRewardList(); 
+		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+        
+        double[] newValueFunction = db.select(newState, rewardsGroup);
 
         int newActionInt = egreedy(newValueFunction);
 
@@ -102,7 +126,7 @@ public class SARSAAgent implements AgentInterface {
         double new_Q_sa = Q_sa + sarsa_stepsize * (reward + sarsa_gamma * Q_sprime_aprime - Q_sa);
         /*	Only update the value function if the policy is not frozen */
         if (!policyFrozen) {
-            db.update(lastState,lastAction,new_Q_sa);
+            db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
 
         /* Creating the action a different way to showcase variety */
@@ -116,23 +140,26 @@ public class SARSAAgent implements AgentInterface {
     }
 
     public void agent_end(double reward) {
-        valueFunction = db.select(lastState);
+        Reward[] rewardsList = getRewardList(); 
+    	RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+            
+        valueFunction = db.select(lastState, rewardsGroup);
 
         double Q_sa = valueFunction[lastAction];
         double new_Q_sa = Q_sa + sarsa_stepsize * (reward - Q_sa);
 
         /*	Only update the value function if the policy is not frozen */
         if (!policyFrozen) {
-            db.update(lastState,lastAction,new_Q_sa);
+            db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
         db.saveAll();
-        lastState = 0;
+        lastState = new State(0);
         lastAction = 0;
     }
 
     public void agent_cleanup() {
         lastAction = 0;
-        lastState = 0;
+        lastState = new State(0);
         valueFunction = null;
     }
 
@@ -169,10 +196,10 @@ public class SARSAAgent implements AgentInterface {
         theLoader.run();
     }
 
-    private long extractState(Observation observation) {
-        long state;
-        state = (observation.getInt(0)*marioMul) + (observation.getInt(1)*sceneMul) + (observation.getInt(2)*enemyMul);
-//        System.out.println("State: " + state);
+    private State extractState(Observation observation) {
+        State state = new State(observation.getInt(0), observation.getInt(1), observation.getInt(2));
+        //state = (observation.getInt(0)*marioMul) + (observation.getInt(1)*sceneMul) + (observation.getInt(2)*enemyMul);
+        //System.out.println("State: " + state);
         return state;
     }
 

@@ -15,10 +15,7 @@ public class ImportHandlerTest {
 		assertNotNull(ih.getDBConfig().getDbhost());
 		assertNotNull(ih.getDBConfig().getDbname());
 		assertNotNull(ih.getDBConfig().getDriver());
-		assertNotNull(ih.getDBConfig().getNumberOfActions());
 		assertNotNull(ih.getDBConfig().getPassword());
-		assertNotNull(ih.getDBConfig().getStateName());
-		assertNotNull(ih.getDBConfig().getTablename());
 		assertNotNull(ih.getDBConfig().getUser());
 	}
 
