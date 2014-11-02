@@ -40,6 +40,7 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import ch.idsia.benchmark.mario.engine.GeneralizerLevelScene;
+import ch.idsia.benchmark.mario.engine.sprites.Mario;
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.tools.MarioAIOptions;
@@ -58,18 +59,21 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
     private final static double DISCOUNT_FACTOR = 1.0;
 
-    private final static double REWARD_WIN = 1000;
-    private final static double REWARD_DEATH = -1000;
-    private final static double REWARD_HURT = -500;
-    private final static double REWARD_KILL = 50;
+//    private final static double REWARD_WIN = 1000;
+    private final static double REWARD_DEATH = -2000;
+    private final static double REWARD_HURT = -1000;
+    private final static double REWARD_KILL = 100;
     private final static double REWARD_ELAPSED_FRAME = -1;
     private final static double REWARD_MOVE_RIGHT = 1;
     private final static double REWARD_MOVE_LEFT = -2;
+    private final static double REWARD_MOVE_UP = 2;
+//    private final static double REWARD_MOVE_DOWN = -2;
 
-    private float[] oldMarioFloatPos;
+    private float[] oldMarioFloatPos = new float[2];
 
     private int oldMarioMode;
     private int oldKillsByStomp;
+    private int oldEnemyState;
 
     public String env_init() {
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
@@ -78,7 +82,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         theTaskSpecObject.setDiscountFactor(DISCOUNT_FACTOR);
         theTaskSpecObject.addDiscreteObservation(new IntRange(0, STATES_COUNT));
         theTaskSpecObject.addDiscreteAction(new IntRange(0, ACTIONS_COUNT));
-        theTaskSpecObject.setRewardRange(new DoubleRange(REWARD_DEATH, REWARD_WIN));
+//        theTaskSpecObject.setRewardRange(new DoubleRange(REWARD_DEATH, REWARD_WIN));
+        theTaskSpecObject.setRewardRange(new DoubleRange(REWARD_DEATH, REWARD_KILL));
 
         String taskSpecString = theTaskSpecObject.toTaskSpec();
 
@@ -94,13 +99,14 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     	MarioAIOptions marioAIOptions = new MarioAIOptions();
 
 //    	marioAIOptions.setVisualization(false);
-    	marioAIOptions.setFPS(10000);
+    	marioAIOptions.setFPS(1000);
 
     	environment.reset(marioAIOptions);
 
-        oldMarioFloatPos = environment.getMarioFloatPos();
         oldMarioMode = environment.getMarioMode();
         oldKillsByStomp = environment.getMarioState()[8];
+        oldMarioFloatPos[0] = environment.getMarioFloatPos()[0];
+        oldMarioFloatPos[1] = environment.getMarioFloatPos()[1];
 
         Observation returnObservation = getObservation();
 
@@ -119,11 +125,17 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         environment.performAction(keys);
         environment.tick();
 
+        returnObservation = getObservation();
+
 //        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
 //        	theReward += REWARD_WIN;
 //        } else if(environment.getMarioState()[0] == Mario.STATUS_DEAD){
 //        	theReward += REWARD_DEATH;
 //        }
+
+        if(environment.getMarioState()[0] == Mario.STATUS_DEAD && environment.getTimeLeft() > 0) {
+        	theReward += REWARD_DEATH;
+        }
 
         if(environment.getMarioMode() < oldMarioMode) {
         	theReward += REWARD_HURT;
@@ -139,9 +151,18 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         	theReward += REWARD_MOVE_LEFT;
         }
 
+        if((returnObservation.intArray[1] / 100) % 100 > 0) {
+        	if(environment.getMarioFloatPos()[1] < oldMarioFloatPos[1]) {
+            	theReward += REWARD_MOVE_UP;
+//        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
+//        		theReward += REWARD_MOVE_DOWN;
+        	}
+        }
+
         oldMarioMode = environment.getMarioMode();
         oldKillsByStomp = environment.getMarioState()[8];
-        oldMarioFloatPos = environment.getMarioFloatPos();
+        oldMarioFloatPos[0] = environment.getMarioFloatPos()[0];
+        oldMarioFloatPos[1] = environment.getMarioFloatPos()[1];
 
         episodeOver = environment.isLevelFinished();
 
@@ -186,7 +207,20 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         		levelSceneMultiplier *= 10;
         	}
 		}
-//        for (int x = 0; x < levelScene.length; x++) {
+
+        if(!environment.getMario().isInvulnerable()) {
+            if(enemies[marioEgoPos[0]][marioEgoPos[1]] != Sprite.KIND_NONE || enemies[marioEgoPos[0] - 1][marioEgoPos[1]] != Sprite.KIND_NONE) {
+            	if(returnObservation.intArray[2] == 0) {
+            		returnObservation.intArray[2] = oldEnemyState;
+            	}
+            }
+    	}
+
+        if(returnObservation.intArray[2] != 0){
+            oldEnemyState = returnObservation.intArray[2];
+    	}
+
+//      for (int x = 0; x < levelScene.length; x++) {
 //			for (int y = 0; y < levelScene[x].length; y++) {
 //				if(x == marioEgoPos[0] && y == marioEgoPos[1]) {
 //					System.out.print("   M");
@@ -203,9 +237,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 //				}
 //			}
 //			System.out.println("");
-//        }
-//        System.out.println(returnObservation.intArray[0] * 1000000000L + returnObservation.intArray[1] * 100000L + returnObservation.intArray[2]);
-
+//      }
+//      System.out.println(returnObservation.intArray[0] * 100000000000L + returnObservation.intArray[1] * 100000L + returnObservation.intArray[2]);
         return returnObservation;
     }
 
