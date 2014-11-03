@@ -3,10 +3,12 @@ package context;
 import java.util.HashMap;
 import java.util.Map;
 
-import persistence.database.Database;
-import persistence.database.impl.DatabaseImpl;
-import persistence.importhandler.ImportHandler;
-import persistence.importhandler.impl.ImportHandlerImpl;
+import la.rlGlue.application.Fassade.RLGlueService;
+import la.rlGlue.application.Fassade.impl.Fassade;
+import la.rlGlue.persistence.database.Database;
+import la.rlGlue.persistence.database.impl.DatabaseImpl;
+import la.rlGlue.persistence.importhandler.ImportHandler;
+import la.rlGlue.persistence.importhandler.impl.ImportHandlerImpl;
 
 //	Beispiel: Database db = ManagerFactory.getManager(Database.class); 
 public class ManagerFactory {
@@ -14,7 +16,8 @@ public class ManagerFactory {
 	
 	static {
 		ManagerFactory.managerMap.put(ImportHandler.class, new ImportHandlerImpl()); 
-		ManagerFactory.managerMap.put(Database.class, new DatabaseImpl()); 
+		ManagerFactory.managerMap.put(Database.class, new DatabaseImpl());
+        ManagerFactory.managerMap.put(RLGlueService.class, new Fassade());
 	}
 	
     private ManagerFactory() {

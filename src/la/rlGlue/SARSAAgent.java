@@ -37,10 +37,10 @@ import org.rlcommunity.rlglue.codec.taskspec.TaskSpec;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
-import persistence.database.Database;
-import persistence.entities.Reward;
-import persistence.entities.RewardsGroup;
-import persistence.entities.State;
+import la.rlGlue.persistence.database.Database;
+import la.rlGlue.common.Reward;
+import la.rlGlue.common.RewardsGroup;
+import la.rlGlue.common.State;
 
 public class SARSAAgent implements AgentInterface {
 
