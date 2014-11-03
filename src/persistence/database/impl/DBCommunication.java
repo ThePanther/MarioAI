@@ -69,7 +69,7 @@ public class DBCommunication {
 			System.out.println("Attempt to create table");
 			newTables();
 			System.out.println("DB Configuration successful");
-//			closeDB();
+			// closeDB();
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} catch (Exception e) {
@@ -97,6 +97,23 @@ public class DBCommunication {
 		newTableRewardsGroup();
 		newTableKnowledge();
 		newTableReward();
+	}
+
+	public void dropTables() {
+		// String sql = "DROP DATABASE IF EXISTS " + dbname;
+		String sql1 = " DROP TABLE IF EXISTS " + TABLE_KNOWLEDGE;
+		String sql2 = " DROP TABLE IF EXISTS " + TABLE_REWARD;
+		String sql3 = " DROP TABLE IF EXISTS " + TABLE_TRY;
+		String sql4 = " DROP TABLE IF EXISTS " + TABLE_REWARDSGROUP;
+
+		try {
+			stmt.executeUpdate(sql1);
+			stmt.executeUpdate(sql2);
+			stmt.executeUpdate(sql3);
+			stmt.executeUpdate(sql4);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void newTableRewardsGroup() throws SQLException {
@@ -133,7 +150,7 @@ public class DBCommunication {
 	}
 
 	public RewardsGroup getRewardsGroup(Reward[] rewards) throws SQLException {
-//		openDB();
+		// openDB();
 		Set<Integer> result = new HashSet<Integer>();
 		for (int i = 0; i < rewards.length; i++) {
 			if (i == 0)
@@ -155,7 +172,7 @@ public class DBCommunication {
 		for (int i = 0; i < rewards.length; i++) {
 			insertReward(newRewardsGroup.getRewards()[i], rewardsGroupId);
 		}
-//		closeDB();
+		// closeDB();
 		return newRewardsGroup;
 	}
 
@@ -182,42 +199,35 @@ public class DBCommunication {
 			double[] rewardsList) {
 		PreparedStatement pstmt;
 		try {
-//			openDB();
-			//REPLACE INTO knowledge SET state=2, rgid=2 ,a1=1000
-			String sql = "REPLACE INTO "
-					+ TABLE_KNOWLEDGE
-					+ " SET "
-					+ " state= " +stateId + ", "
-					+ " rgid= " + rewardsGroupId + ", " 
-					+ " a1 = " + rewardsList[0] + ", "
-					+ " a2 = " + rewardsList[1] + ", "
-					+ " a3 = " + rewardsList[2] + ", "
-					+ " a4 = " + rewardsList[3] + ", "
-					+ " a5 = " + rewardsList[4] + ", "
-					+ " a6 = " + rewardsList[5] + ", "
-					+ " a7 = " + rewardsList[6] + ", "
-					+ " a8 = " + rewardsList[7] + ", "
-					+ " a9 = " + rewardsList[8] + ", "
-					+ " a10 = " + rewardsList[9] + ", "
-					+ " a11 = " + rewardsList[10] + ", "
-					+ " a12 = " + rewardsList[11];
+			// openDB();
+			// REPLACE INTO knowledge SET state=2, rgid=2 ,a1=1000
+			String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " SET "
+					+ " state= " + stateId + ", " + " rgid= " + rewardsGroupId
+					+ ", " + " a1 = " + rewardsList[0] + ", " + " a2 = "
+					+ rewardsList[1] + ", " + " a3 = " + rewardsList[2] + ", "
+					+ " a4 = " + rewardsList[3] + ", " + " a5 = "
+					+ rewardsList[4] + ", " + " a6 = " + rewardsList[5] + ", "
+					+ " a7 = " + rewardsList[6] + ", " + " a8 = "
+					+ rewardsList[7] + ", " + " a9 = " + rewardsList[8] + ", "
+					+ " a10 = " + rewardsList[9] + ", " + " a11 = "
+					+ rewardsList[10] + ", " + " a12 = " + rewardsList[11];
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//			pstmt.setLong(1, stateId);
-//			pstmt.setInt(2, rewardsGroupId);
-//			String rest = ""; 
-//			for (int i = 0; i < rewardsList.length; i++) {
-////				pstmt.setDouble(i + 3, rewardsList[i]);
-//				if (i+1 == rewardsList.length){
-//					rest += "a"+(i+1)+"= VALUES(a"+(i+1)+") ;";
-//				}else{
-//					rest += "a"+(i+1)+"= VALUES(a"+(i+1)+"), "; 
-//				}
-//			}
-			//sql +=  " ON DUPLICATE KEY UPDATE " + rest; 
-			//System.out.println("*****************" + sql);
-		//INSERT INTO `marioai2`.`reward` (`rid`, `rgid`, `name`, `reward`) 
-		//VALUES ('1', '1', 'rechts', '1') 
-		//ON DUPLICATE KEY UPDATE name='jooo'
+			// pstmt.setLong(1, stateId);
+			// pstmt.setInt(2, rewardsGroupId);
+			// String rest = "";
+			// for (int i = 0; i < rewardsList.length; i++) {
+			// // pstmt.setDouble(i + 3, rewardsList[i]);
+			// if (i+1 == rewardsList.length){
+			// rest += "a"+(i+1)+"= VALUES(a"+(i+1)+") ;";
+			// }else{
+			// rest += "a"+(i+1)+"= VALUES(a"+(i+1)+"), ";
+			// }
+			// }
+			// sql += " ON DUPLICATE KEY UPDATE " + rest;
+			// System.out.println("*****************" + sql);
+			// INSERT INTO `marioai2`.`reward` (`rid`, `rgid`, `name`, `reward`)
+			// VALUES ('1', '1', 'rechts', '1')
+			// ON DUPLICATE KEY UPDATE name='jooo'
 			int affectedRows = pstmt.executeUpdate();
 			if (affectedRows == 0) {
 				throw new SQLException(
@@ -285,7 +295,7 @@ public class DBCommunication {
 	public Knowledge selectKnowledge(RewardsGroup rewardsGroup) {
 		Knowledge knowledge = new Knowledge();
 		try {
-//			openDB();
+			// openDB();
 			String sql = " SELECT * FROM " + TABLE_KNOWLEDGE + " WHERE rgid="
 					+ rewardsGroup.getId();
 			// System.out.println(sql);
@@ -301,7 +311,7 @@ public class DBCommunication {
 						actionValues);
 
 			}
-//			closeDB();
+			// closeDB();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

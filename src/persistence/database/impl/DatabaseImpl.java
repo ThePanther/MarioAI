@@ -91,4 +91,9 @@ public class DatabaseImpl implements Database {
 		return null;
 	}
 
+	@Override
+	public void reset() {
+		dbCommunication.dropTables();
+	}
+
 }

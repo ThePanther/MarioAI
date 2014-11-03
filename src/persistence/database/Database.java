@@ -20,5 +20,7 @@ public interface Database {
 	public boolean saveAll();
 	
 	public Try[] getTries(RewardsGroup rewardsGroup); 
+	
+	public void reset(); 
 
 }
