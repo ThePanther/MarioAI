@@ -59,15 +59,15 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
     private final static double DISCOUNT_FACTOR = 1.0;
 
-//    private final static double REWARD_WIN = 1000;
-    private final static double REWARD_DEATH = -2000;
-    private final static double REWARD_HURT = -1000;
-    private final static double REWARD_KILL = 100;
-    private final static double REWARD_ELAPSED_FRAME = -1;
-    private final static double REWARD_MOVE_RIGHT = 1;
-    private final static double REWARD_MOVE_LEFT = -2;
-    private final static double REWARD_MOVE_UP = 2;
-//    private final static double REWARD_MOVE_DOWN = -2;
+//    private final static double REWARD_WIN = 10.0;
+    private final static double REWARD_DEATH = -10.0;
+    private final static double REWARD_HURT = -9.0;
+    private final static double REWARD_KILL = 3.8;
+    private final static double REWARD_ELAPSED_FRAME = -3.2;
+    private final static double REWARD_MOVE_RIGHT = 3.0;
+    private final static double REWARD_MOVE_LEFT = -2.4;
+    private final static double REWARD_MOVE_UP = 3.4;
+    private final static double REWARD_MOVE_DOWN = -0.9;
 
     private float[] oldMarioFloatPos = new float[2];
 
@@ -132,6 +132,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 //        } else if(environment.getMarioState()[0] == Mario.STATUS_DEAD){
 //        	theReward += REWARD_DEATH;
 //        }
+        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
+        	System.out.println("Gewonnen:");
+        }
 
         if(environment.getMarioState()[0] == Mario.STATUS_DEAD && environment.getTimeLeft() > 0) {
         	theReward += REWARD_DEATH;
@@ -154,8 +157,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         if((returnObservation.intArray[1] / 100) % 100 > 0) {
         	if(environment.getMarioFloatPos()[1] < oldMarioFloatPos[1]) {
             	theReward += REWARD_MOVE_UP;
-//        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
-//        		theReward += REWARD_MOVE_DOWN;
+        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
+        		theReward += REWARD_MOVE_DOWN;
         	}
         }
 
@@ -350,6 +353,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Block e5b1 = new Block(-1,1);
         Block e5b2 = new Block(-1,0);
 
+//        Block e6b1 = new Block(0,0);
+//        Block e6b2 = new Block(0,1);
+
         ArrayList<Block> s1b = new ArrayList<Block>();
         s1b.add(s1b1);
         s1b.add(s1b2);
@@ -390,6 +396,10 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         e5b.add(e5b1);
         e5b.add(e5b2);
 
+//        ArrayList<Block> e6b = new ArrayList<Block>();
+//        e5b.add(e6b1);
+//        e5b.add(e6b2);
+
         Zone s1 = new Zone(s1b, Type.BRIDGE);
         Zone s2 = new Zone(s2b, Type.BLOCK);
         Zone s3 = new Zone(s3b, Type.BLOCK);
@@ -402,6 +412,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Zone e3 = new Zone(e3b, Type.DETAILEDENEMY);
         Zone e4 = new Zone(e4b, Type.DETAILEDENEMY);
         Zone e5 = new Zone(e5b, Type.ENEMY);
+//        Zone e6 = new Zone(e6b, Type.ENEMY);
 
         visionField.add(s1);
         visionField.add(s2);
@@ -415,6 +426,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         visionField.add(e3);
         visionField.add(e4);
         visionField.add(e5);
+//        visionField.add(e6);
 
     }
 
