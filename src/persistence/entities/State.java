@@ -5,7 +5,7 @@ package persistence.entities;
  */
 public class State {
     private static final long MARIO_MUL = 100000000000L;
-    private static final long ENVIROMENT_MU =   100000;
+    private static final long ENVIRONMENT_MUL =   100000;
     private static final long ENEMY_MUL = 1;
 
     private long marioState;
@@ -17,7 +17,7 @@ public class State {
         this.marioState = marioState;
         this.enviromentState = enviromentState;
         this.enemyState = enemyState;
-        this.setStateId((marioState*MARIO_MUL) + (enviromentState*ENVIROMENT_MU) + (enemyState*ENEMY_MUL));
+        this.setStateId((marioState*MARIO_MUL) + (enviromentState*ENVIRONMENT_MUL) + (enemyState*ENEMY_MUL));
     }
 
     public State(long stateId) {

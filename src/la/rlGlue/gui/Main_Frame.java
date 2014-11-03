@@ -20,6 +20,7 @@ public class Main_Frame {
     private JButton stateviewerButton;
     private JButton setRewardsButton;
     private JButton statisticsButton;
+    private JTabbedPane tabbedPane1;
 
     public Main_Frame() {
 

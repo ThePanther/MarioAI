@@ -4,7 +4,7 @@
    <driver>com.mysql.jdbc.Driver</driver>
    <dbname>marioai</dbname>
    <host>localhost</host>
-   <username>pomarioai</username>
-   <password>sarsamario</password>
+   <username>mario</username>
+   <password>123</password>
 </datenbank-configuration>
 
