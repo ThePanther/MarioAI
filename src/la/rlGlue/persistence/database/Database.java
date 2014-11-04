@@ -1,5 +1,7 @@
 package la.rlGlue.persistence.database;
 
+import java.util.List;
+
 import la.rlGlue.common.Reward;
 import la.rlGlue.common.RewardsGroup;
 import la.rlGlue.common.State;
@@ -15,7 +17,9 @@ public interface Database {
 	
 	public boolean saveAll();
 	
-	public Try[] getTries(RewardsGroup rewardsGroup); 
+	public List<Try> getTries(); 
+	
+	public RewardsGroup getLastRewardsGroup(); 
 	
 	public void reset(); 
 

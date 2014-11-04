@@ -12,6 +12,7 @@ import la.rlGlue.persistence.importhandler.impl.DBConfig;
 
 import java.sql.*;
 import java.util.Iterator;
+import java.util.List;
 
 public class DatabaseImpl implements Database {
 
@@ -31,6 +32,7 @@ public class DatabaseImpl implements Database {
 		RewardsGroup result = null;
 		try {
 			result = dbCommunication.getRewardsGroup(rewards);
+			//result.setTries(dbCom);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +75,7 @@ public class DatabaseImpl implements Database {
 		    while (it2.hasNext()){
 		    	int rgID = (Integer) it2.next(); 
 			    double[] rewardsList = knowledge.getRewardsList(stateID, rgID);
-				dbCommunication.inserKnowledge(stateID, rgID, rewardsList);			    
+				dbCommunication.inserKnowledge(stateID, rgID, rewardsList);		
 		    }
 		}
 		
@@ -82,14 +84,20 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public Try[] getTries(RewardsGroup rewardsGroup) {
+	public void reset() {
+		dbCommunication.dropTables();
+	}
+
+	@Override
+	public List<Try> getTries() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void reset() {
-		dbCommunication.dropTables();
+	public RewardsGroup getLastRewardsGroup() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -97,6 +97,7 @@ public class DBCommunication {
 		newTableRewardsGroup();
 		newTableKnowledge();
 		newTableReward();
+		newTableTry(); 
 	}
 
 	public void dropTables() {
@@ -115,6 +116,7 @@ public class DBCommunication {
 			e.printStackTrace();
 		}
 	}
+
 
 	private void newTableRewardsGroup() throws SQLException {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_REWARDSGROUP
@@ -137,7 +139,18 @@ public class DBCommunication {
 		System.out.println(sql);
 		stmt.executeUpdate(sql);
 	}
-
+	private void newTableTry() throws SQLException {
+		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TRY
+				+ "(tid INT NOT NULL AUTO_INCREMENT, "
+				+ " win INT, "
+				+ " rewards DOUBLE, "
+				+ " steps INT, "
+				+ " rgid INT NOT NULL,  PRIMARY KEY ( tid, rgid ), " 
+				+ " CONSTRAINT FOREIGN KEY (rgid) REFERENCES `"+ TABLE_REWARDSGROUP + "` (rgid) ) ";
+		System.out.println(sql);
+		stmt.executeUpdate(sql);
+		
+	}
 	private void newTableReward() throws SQLException {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_REWARD
 				+ "(rid INT NOT NULL AUTO_INCREMENT, "
@@ -189,12 +202,6 @@ public class DBCommunication {
 		return result;
 	}
 
-	/*
-	 * INSERT INTO `marioai`.`knowledge` (`state`, `rgid`, `a1`, `a2`, `a3`,
-	 * `a4`, `a5`, `a6`, `a7`, `a8`, `a9`, `a10`, `a11`, `a12`) VALUES
-	 * ('100000100002', '2', '12', '12', '1212', '12', '12', '12', '12', '12',
-	 * '121', '21', '12', '21');
-	 */
 	public void inserKnowledge(long stateId, int rewardsGroupId,
 			double[] rewardsList) {
 		PreparedStatement pstmt;
@@ -212,22 +219,6 @@ public class DBCommunication {
 					+ " a10 = " + rewardsList[9] + ", " + " a11 = "
 					+ rewardsList[10] + ", " + " a12 = " + rewardsList[11];
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			// pstmt.setLong(1, stateId);
-			// pstmt.setInt(2, rewardsGroupId);
-			// String rest = "";
-			// for (int i = 0; i < rewardsList.length; i++) {
-			// // pstmt.setDouble(i + 3, rewardsList[i]);
-			// if (i+1 == rewardsList.length){
-			// rest += "a"+(i+1)+"= VALUES(a"+(i+1)+") ;";
-			// }else{
-			// rest += "a"+(i+1)+"= VALUES(a"+(i+1)+"), ";
-			// }
-			// }
-			// sql += " ON DUPLICATE KEY UPDATE " + rest;
-			// System.out.println("*****************" + sql);
-			// INSERT INTO `marioai2`.`reward` (`rid`, `rgid`, `name`, `reward`)
-			// VALUES ('1', '1', 'rechts', '1')
-			// ON DUPLICATE KEY UPDATE name='jooo'
 			int affectedRows = pstmt.executeUpdate();
 			if (affectedRows == 0) {
 				throw new SQLException(
