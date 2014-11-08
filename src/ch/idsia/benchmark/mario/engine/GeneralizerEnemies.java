@@ -83,8 +83,8 @@ public static byte ZLevelGeneralization(byte el, int ZLevel)
                 case (Sprite.KIND_ENEMY_FLOWER):
                 case (Sprite.KIND_SPIKY_WINGED):
                     return Sprite.KIND_SPIKY;
-                /*case (Sprite.KIND_PRINCESS):
-                    return Sprite.KIND_PRINCESS;*/
+                case (Sprite.KIND_PRINCESS):
+                    return Sprite.KIND_PRINCESS;
             }
             System.err.println("Z1 UNKOWN el = " + el);
             return el;

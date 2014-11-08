@@ -77,7 +77,14 @@ public class Main_Frame {
         DBResetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: DB Reset Button
+                JFrame frame = new JFrame();
+                int confirm = JOptionPane.showOptionDialog(frame,
+                        "Are you sure you want to reset the DB?",
+                        "Reset Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    //TODO: DB Reset Button
+                }
             }
         });
         exportButton.addActionListener(new ActionListener() {

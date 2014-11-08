@@ -9,15 +9,24 @@ public class State {
     private static final long ENEMY_MUL = 1;
 
     private long marioState;
-    private long enviromentState;
+    private long environmentState;
     private long enemyState;
     private long stateId; 
 
     public State(long marioState, long enviromentState, long enemyState){
-        this.marioState = marioState;
-        this.enviromentState = enviromentState;
+        int enemyFlag = 0;
+
+        if (enemyState != 0) {
+            enemyFlag = 1;
+        }
+
+        this.marioState = ((marioState*enemyFlag)+1);
+        this.environmentState = enviromentState;
         this.enemyState = enemyState;
-        this.setStateId((marioState*MARIO_MUL) + (enviromentState*ENVIRONMENT_MUL) + (enemyState*ENEMY_MUL));
+
+        long id = (marioState*MARIO_MUL) + (environmentState*ENVIRONMENT_MUL) + (enemyState*ENEMY_MUL);
+
+        this.setStateId(id);
     }
 
     public State(long stateId) {
@@ -32,8 +41,8 @@ public class State {
         return marioState;
     }
 
-    public long getEnviromentState() {
-        return enviromentState;
+    public long getEnvironmentState() {
+        return environmentState;
     }
 
     public long getEnemyState() {
@@ -44,8 +53,8 @@ public class State {
         this.marioState = marioState;
     }
 
-    public void setEnviromentState(long enviromentState) {
-        this.enviromentState = enviromentState;
+    public void setEnvironmentState(long enviromentState) {
+        this.environmentState = enviromentState;
     }
 
     public void setEnemyState(long enemyState) {

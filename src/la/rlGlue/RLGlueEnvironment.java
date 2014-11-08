@@ -302,12 +302,17 @@ public class RLGlueEnvironment implements EnvironmentInterface {
                         if (tempRes != Sprite.KIND_NONE) {
                             res = 1; //Enemy
                         }
+                        if (tempRes == Sprite.KIND_PRINCESS) {
+                            res = 2; //Princess
+                        }
                     }
                     break;
                 case DETAILEDENEMY:
                     for (Block b : z.getBlocks()) {
                         tempRes = enemies[marioEgoPos[0] - b.getY()][marioEgoPos[1] + b.getX()];
-                        if (tempRes == Sprite.KIND_SPIKY) {
+                        if (tempRes == Sprite.KIND_PRINCESS) {
+                            res = 4; //Princess
+                        } else if (res < 4 && tempRes == Sprite.KIND_SPIKY) {
                             res = 3; //Spiky
                         } else if (res < 3 && tempRes == Sprite.KIND_FIREBALL) {
                             res = 2; //Fireball

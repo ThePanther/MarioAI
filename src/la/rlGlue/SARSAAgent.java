@@ -198,7 +198,6 @@ public class SARSAAgent implements AgentInterface {
 
     private State extractState(Observation observation) {
         State state = new State(observation.getInt(0), observation.getInt(1), observation.getInt(2));
-        //state = (observation.getInt(0)*marioMul) + (observation.getInt(1)*sceneMul) + (observation.getInt(2)*enemyMul);
         //System.out.println("State: " + state);
         return state;
     }
