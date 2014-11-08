@@ -1,5 +1,7 @@
 package la.rlGlue.gui;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,10 +19,34 @@ public class Main_Frame {
     private JButton playButton;
     private JLabel difficulty;
     private JTextField seedTextField;
-    private JButton stateviewerButton;
-    private JButton setRewardsButton;
-    private JButton statisticsButton;
     private JTabbedPane tabbedPane1;
+    private JTextField winTextField;
+    private JTextField lossTextField;
+    private JTextField hitTextField;
+    private JTextField rightTextField;
+    private JTextField leftTextField;
+    private JTextField stompTextField;
+    private JTextField frameTextField;
+    private JTextField modeTextField;
+    private JTextField sceneTextField;
+    private JTextField enemyTextField;
+    private JButton saveButton;
+    private JTextField a1TextField;
+    private JTextField a2TextField;
+    private JTextField a3TextField;
+    private JTextField a4TextField;
+    private JTextField a5TextField;
+    private JTextField a6TextField;
+    private JTextField a7TextField;
+    private JTextField a8TextField;
+    private JTextField a9TextField;
+    private JTextField a10TextField;
+    private JTextField a11TextField;
+    private JTextField a12TextField;
+    private JButton lookupButton;
+    private JButton DBResetButton;
+    private JTextField pathTextField;
+    private JButton exportButton;
 
     public Main_Frame() {
 
@@ -36,22 +62,28 @@ public class Main_Frame {
                 //TODO: play Button
             }
         });
-        stateviewerButton.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                State_Frame.main(null);
+                //TODO: Reward save Button
             }
         });
-        setRewardsButton.addActionListener(new ActionListener() {
+        lookupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Reward_Frame.main(null);
+                //TODO: Lookup State Button
             }
         });
-        statisticsButton.addActionListener(new ActionListener() {
+        DBResetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Statistic_Frame.main(null);
+                //TODO: DB Reset Button
+            }
+        });
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //TODO: Export Statistic Button
             }
         });
     }
