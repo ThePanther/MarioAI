@@ -25,6 +25,8 @@
 
 package la.rlGlue;
 
+import la.rlGlue.application.rlmarioaimanagement.Config;
+
 import org.rlcommunity.rlglue.codec.LocalGlue;
 import org.rlcommunity.rlglue.codec.RLGlue;
 import org.rlcommunity.rlglue.codec.AgentInterface;
@@ -43,7 +45,13 @@ public class RunAllNoSockets {
 	
 	public static void main(String[] args){
 		//Create the Agent
-		AgentInterface theAgent=new SARSAAgent();
+		AgentInterface theAgent;
+
+		if(Config.AGENT.equals(SARSAAgent.NAME)) {
+			theAgent=new SARSAAgent();
+		} else {
+			theAgent=new SkeletonAgent();
+		}
 		
 		//Create the Environment
 		EnvironmentInterface theEnvironment=new RLGlueEnvironment();

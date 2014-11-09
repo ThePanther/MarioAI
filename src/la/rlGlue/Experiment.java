@@ -25,6 +25,8 @@
 
 package la.rlGlue;
 
+import la.rlGlue.application.rlmarioaimanagement.Config;
+
 import org.rlcommunity.rlglue.codec.RLGlue;
 
 /**
@@ -33,7 +35,7 @@ import org.rlcommunity.rlglue.codec.RLGlue;
  */
 public class Experiment {
 
-    private int numOfEpisodes = 100;
+    private int numOfEpisodes = Config.EDISODES;
     private int whichEpisode = 0;
 
     /* Run One Episode of length maximum cutOff*/

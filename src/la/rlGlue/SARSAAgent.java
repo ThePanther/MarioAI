@@ -38,11 +38,13 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import la.rlGlue.persistence.database.Database;
+import la.rlGlue.application.rlmarioaimanagement.Config;
 import la.rlGlue.common.Reward;
 import la.rlGlue.common.RewardsGroup;
 import la.rlGlue.common.State;
 
 public class SARSAAgent implements AgentInterface {
+	public static final String NAME = "SARSA";
 
     private Random randGenerator = new Random();
     private int lastAction;
@@ -55,8 +57,6 @@ public class SARSAAgent implements AgentInterface {
     private long enemyMul = 1;
     private int numActions;
     private double[] valueFunction;
-    private boolean policyFrozen = false;
-    private boolean exploringFrozen = false;
     private Database db;
 
     public void agent_init(String taskSpecification) {
@@ -125,7 +125,7 @@ public class SARSAAgent implements AgentInterface {
 
         double new_Q_sa = Q_sa + sarsa_stepsize * (reward + sarsa_gamma * Q_sprime_aprime - Q_sa);
         /*	Only update the value function if the policy is not frozen */
-        if (!policyFrozen) {
+        if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
 
@@ -149,7 +149,7 @@ public class SARSAAgent implements AgentInterface {
         double new_Q_sa = Q_sa + sarsa_stepsize * (reward - Q_sa);
 
         /*	Only update the value function if the policy is not frozen */
-        if (!policyFrozen) {
+        if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
         db.saveAll();
@@ -168,19 +168,19 @@ public class SARSAAgent implements AgentInterface {
             return "my name is skeleton_agent, Java edition!";
         }
         if (message.equals("freeze learning")) {
-            policyFrozen = true;
+        	Config.FREEZE_POLICY = true;
             return "message understood, policy frozen";
         }
         if (message.equals("unfreeze learning")) {
-            policyFrozen = false;
+        	Config.FREEZE_POLICY = false;
             return "message understood, policy unfrozen";
         }
         if (message.equals("freeze exploring")) {
-            exploringFrozen = true;
+        	Config.FREEZE_EXPLORATION = true;
             return "message understood, exploring frozen";
         }
         if (message.equals("unfreeze exploring")) {
-            exploringFrozen = false;
+        	Config.FREEZE_EXPLORATION = false;
             return "message understood, exploring unfrozen";
         }
         return "I don't know how to respond to your message";
@@ -203,7 +203,7 @@ public class SARSAAgent implements AgentInterface {
     }
 
     private int egreedy(double[] valueFunction) {
-        if (!exploringFrozen) {
+        if (!Config.FREEZE_EXPLORATION) {
             if (randGenerator.nextDouble() <= sarsa_epsilon) {
                 return randGenerator.nextInt(numActions);
             }
