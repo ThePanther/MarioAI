@@ -22,7 +22,7 @@ public class Main_Frame {
     private JTabbedPane tabbedPane1;
     private JTextField winTextField;
     private JTextField lossTextField;
-    private JTextField hitTextField;
+    private JTextField hurtTextField;
     private JTextField rightTextField;
     private JTextField leftTextField;
     private JTextField stompTextField;
@@ -47,6 +47,8 @@ public class Main_Frame {
     private JButton DBResetButton;
     private JTextField pathTextField;
     private JButton exportButton;
+    private JTextField upTextField;
+    private JTextField downTextField;
 
     public Main_Frame() {
 
