@@ -117,6 +117,7 @@ public class SARSAAgent implements AgentInterface {
 		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
         
         double[] newValueFunction = db.select(newState, rewardsGroup);
+        valueFunction = db.select(lastState, rewardsGroup);
 
         int newActionInt = egreedy(newValueFunction);
 
