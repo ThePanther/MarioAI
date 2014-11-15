@@ -27,7 +27,7 @@ public class Fassade implements RLGlueService {
         return agentNameArr;
     }
 
-    public void startAgent(){
+    public static void startAgent(){
         // TODO: starte Agenten
     }
 

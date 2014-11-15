@@ -37,7 +37,9 @@ public interface RLGlueService {
      * Startet das Spiel mit einem bestimmten Agenten
      *
      */
-    public void startAgent( );
+    public static void startAgent(){
+        //TODO
+    }
 
     /**
      * Startet das Spiel ohne Agenten

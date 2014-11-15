@@ -1,6 +1,12 @@
 package la.rlGlue.gui;
 
+import ch.idsia.scenarios.Play;
 import com.sun.xml.internal.bind.v2.TODO;
+import la.rlGlue.application.Fassade.RLGlueService;
+import la.rlGlue.application.rlmarioaimanagement.Config;
+import la.rlGlue.common.State;
+import la.rlGlue.persistence.database.Database;
+import la.rlGlue.persistence.database.impl.DatabaseImpl;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,8 +18,8 @@ public class Main_Frame {
     private JCheckBox visualisationCheckBox;
     private JComboBox startmodeComboBox;
     private JTextField episodesTextField;
-    private JComboBox difficultyComboBox; //= new JComboBox(difficulties);
-    private JComboBox agentComboBox; //= new JComboBox(agents);
+    private JComboBox difficultyComboBox;
+    private JComboBox agentComboBox;
     private JCheckBox freezPolicyCheckBox;
     private JCheckBox noExplorationCheckBox;
     private JButton playButton;
@@ -55,13 +61,23 @@ public class Main_Frame {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: start Button
+                Config.VISUALIZATION = visualisationCheckBox.isSelected();
+                Config.FREEZE_POLICY = freezPolicyCheckBox.isSelected();
+                Config.FREEZE_EXPLORATION = noExplorationCheckBox.isSelected();
+                Config.MARIO_STARTMODE = startmodeComboBox.getSelectedIndex();
+                Config.DIFFICULTY = difficultyComboBox.getSelectedIndex();
+                Config.AGENT = (String) agentComboBox.getSelectedItem();
+                Config.EDISODES = Integer.getInteger(episodesTextField.getText());
+                Config.LEVEL_SEED = Integer.getInteger(seedTextField.getText());
+
+                RLGlueService.startAgent();
             }
         });
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: play Button
+                String[] args = new String[0];
+                Play.main(args);
             }
         });
         saveButton.addActionListener(new ActionListener() {
@@ -73,7 +89,21 @@ public class Main_Frame {
         lookupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: Lookup State Button
+                State state = new State(Long.getLong(modeTextField.getText()),Long.getLong(sceneTextField.getText()),Long.getLong(enemyTextField.getText()));
+                DatabaseImpl db = new DatabaseImpl();
+                double[] values = db.select(state,db.getLastRewardsGroup());
+                a1TextField.setText(""+values[0]);
+                a2TextField.setText(""+values[1]);
+                a3TextField.setText(""+values[2]);
+                a4TextField.setText(""+values[3]);
+                a5TextField.setText(""+values[4]);
+                a6TextField.setText(""+values[5]);
+                a7TextField.setText(""+values[6]);
+                a8TextField.setText(""+values[7]);
+                a9TextField.setText(""+values[8]);
+                a10TextField.setText(""+values[9]);
+                a11TextField.setText(""+values[10]);
+                a12TextField.setText(""+values[11]);
             }
         });
         DBResetButton.addActionListener(new ActionListener() {
@@ -85,7 +115,8 @@ public class Main_Frame {
                         "Reset Confirmation", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    //TODO: DB Reset Button
+                    DatabaseImpl db = new DatabaseImpl();
+                    db.reset();
                 }
             }
         });
