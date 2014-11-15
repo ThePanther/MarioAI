@@ -7,6 +7,7 @@ import la.rlGlue.persistence.entities.Knowledge;
 import la.rlGlue.common.Reward;
 import la.rlGlue.common.RewardsGroup;
 import la.rlGlue.common.State;
+import la.rlGlue.common.Try;
 import la.rlGlue.persistence.importhandler.impl.DBConfig;
 
 public class DBCommunication {
@@ -97,7 +98,7 @@ public class DBCommunication {
 		newTableRewardsGroup();
 		newTableKnowledge();
 		newTableReward();
-		newTableTry(); 
+		newTableTry();
 	}
 
 	public void dropTables() {
@@ -117,11 +118,10 @@ public class DBCommunication {
 		}
 	}
 
-
 	private void newTableRewardsGroup() throws SQLException {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_REWARDSGROUP
 				+ "(rgid INT NOT NULL AUTO_INCREMENT, "
-				+ " PRIMARY KEY ( rgid )) ";
+				+ "	lastTime TIMESTAMP, " + " PRIMARY KEY ( rgid )) ";
 		System.out.println(sql);
 		stmt.executeUpdate(sql);
 	}
@@ -139,18 +139,19 @@ public class DBCommunication {
 		System.out.println(sql);
 		stmt.executeUpdate(sql);
 	}
+
 	private void newTableTry() throws SQLException {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TRY
-				+ "(tid INT NOT NULL AUTO_INCREMENT, "
-				+ " win INT, "
-				+ " rewards DOUBLE, "
-				+ " steps INT, "
-				+ " rgid INT NOT NULL,  PRIMARY KEY ( tid, rgid ), " 
-				+ " CONSTRAINT FOREIGN KEY (rgid) REFERENCES `"+ TABLE_REWARDSGROUP + "` (rgid) ) ";
+				+ "(tid INT NOT NULL AUTO_INCREMENT, " + " win INT, "
+				+ " rewards DOUBLE, " + " steps INT, "
+				+ " rgid INT NOT NULL,  PRIMARY KEY ( tid, rgid ), "
+				+ " CONSTRAINT FOREIGN KEY (rgid) REFERENCES `"
+				+ TABLE_REWARDSGROUP + "` (rgid) ) ";
 		System.out.println(sql);
 		stmt.executeUpdate(sql);
-		
+
 	}
+
 	private void newTableReward() throws SQLException {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_REWARD
 				+ "(rid INT NOT NULL AUTO_INCREMENT, "
@@ -162,15 +163,16 @@ public class DBCommunication {
 		stmt.executeUpdate(sql);
 	}
 
-	public RewardsGroup getRewardsGroup(Reward[] rewards) throws SQLException {
+	public RewardsGroup getRewardsGroup(List<Reward> rewards)
+			throws SQLException {
 		// openDB();
 		Set<Integer> result = new HashSet<Integer>();
-		for (int i = 0; i < rewards.length; i++) {
+		for (int i = 0; i < rewards.size(); i++) {
 			if (i == 0)
-				result.addAll(getRewardsGroups(rewards[i].getName(),
-						rewards[i].getReward()));
-			result.retainAll(getRewardsGroups(rewards[i].getName(),
-					rewards[i].getReward()));
+				result.addAll(getRewardsGroups(rewards.get(i).getName(),
+						rewards.get(i).getReward()));
+			result.retainAll(getRewardsGroups(rewards.get(i).getName(), rewards
+					.get(i).getReward()));
 		}
 		int rewardsGroupId = 0;
 		if (result.size() != 0) {
@@ -182,8 +184,8 @@ public class DBCommunication {
 		}
 		rewardsGroupId = insertRewardGroup();
 		RewardsGroup newRewardsGroup = new RewardsGroup(rewardsGroupId, rewards);
-		for (int i = 0; i < rewards.length; i++) {
-			insertReward(newRewardsGroup.getRewards()[i], rewardsGroupId);
+		for (int i = 0; i < rewards.size(); i++) {
+			insertReward(newRewardsGroup.getRewards().get(i), rewardsGroupId);
 		}
 		// closeDB();
 		return newRewardsGroup;
@@ -231,6 +233,27 @@ public class DBCommunication {
 		}
 	}
 
+	public void updateRewardsGroup(RewardsGroup rewardsGroup) {
+		// TODO Auto-generated method stub
+		// UPDATE `marioai`.`rewardsGroup` SET `lastTime` = now() WHERE
+		// `rewardsGroup`.`rgid` = 1;
+		try {
+			String sql = "UPDATE " + TABLE_REWARDSGROUP
+					+ " SET lastTime = now() WHERE rgid = "
+					+ rewardsGroup.getId();
+			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);;
+			int affectedRows;
+			affectedRows = pstmt.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException("Creating user failed, no rows affected.");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	private synchronized int insertRewardGroup() {
 		int rewardGroupID = 0;
 		PreparedStatement pstmt;
@@ -258,6 +281,31 @@ public class DBCommunication {
 			e.printStackTrace();
 		}
 		return rewardGroupID;
+	}
+
+	synchronized void insertTry(Try aTry, RewardsGroup rewardsGroup) {
+		PreparedStatement pstmt;
+		try {
+			String sql = "INSERT INTO "
+					+ TABLE_TRY
+					+ " (tid, win, rewards, steps, rgid) VALUES (NULL, ?, ?, ?, ?)";
+			// System.out.println(sql);
+			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, aTry.getWin());
+			pstmt.setDouble(2, aTry.getRewards());
+			pstmt.setInt(3, aTry.getSteps());
+			pstmt.setInt(4, rewardsGroup.getId());
+
+			int affectedRows = pstmt.executeUpdate();
+			if (affectedRows == 0) {
+				throw new SQLException(
+						"Creating user failed, no rows affected.");
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private synchronized void insertReward(Reward reward, int rewardsGroupId) {
@@ -308,6 +356,33 @@ public class DBCommunication {
 			e.printStackTrace();
 		}
 		return knowledge;
+	}
+
+	public RewardsGroup getLastRewardsGroup() throws SQLException {
+		RewardsGroup result = null;
+		List<Reward> rewardsList = new ArrayList<Reward>();
+		// SELECT * FROM reward WHERE rgid =(
+		// SELECT rgid
+		// FROM rewardsGroup
+		// WHERE lastTime=(
+		// SELECT max(lastTime) FROM rewardsGroup
+		// )
+		// )
+		String sql = " SELECT * FROM " + TABLE_REWARD
+				+ " WHERE rgid =( SELECT rgid FROM " + TABLE_REWARDSGROUP
+				+ " WHERE lastTime=( SELECT max(lastTime) FROM "
+				+ TABLE_REWARDSGROUP + " ))";
+		System.out.println(sql);
+		ResultSet rs = stmt.executeQuery(sql);
+		int rgid = 0;
+		while (rs.next()) {
+			rgid = rs.getInt(2);
+			String name = rs.getString(3);
+			int reward = rs.getInt(4);
+			rewardsList.add(new Reward(name, reward));
+		}
+		result = new RewardsGroup(rgid, rewardsList);
+		return result;
 	}
 
 }

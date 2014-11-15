@@ -9,15 +9,15 @@ import la.rlGlue.common.Try;
 
 public interface Database {
 	
-	public RewardsGroup getRewardsGroup(Reward[] rewards); 
+	public RewardsGroup getRewardsGroup(List<Reward> rewards); 
 	
 	public double[] select(State state, RewardsGroup rewardsGroup);
 	
 	boolean update(State state, RewardsGroup rewardsGroup, int action, double value);
 	
-	public boolean saveAll();
+	public boolean saveAll(Try aTry, RewardsGroup rewardsGroup);
 	
-	public List<Try> getTries(); 
+	public List<Try> getTries(RewardsGroup rewardsGroup); 
 	
 	public RewardsGroup getLastRewardsGroup(); 
 	

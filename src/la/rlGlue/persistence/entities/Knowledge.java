@@ -8,7 +8,8 @@ import java.util.Set;
 
 public class Knowledge {
 	
-	private HashMap<Long, Map<Integer, double[]>> knowledes; 
+	// state -> {rewardsGroup -> {}}
+	private HashMap<Long, Map<Integer, double[]>> knowledes;  
 	
 	public Knowledge() {
 		knowledes = new HashMap<Long, Map<Integer,double[]>>();

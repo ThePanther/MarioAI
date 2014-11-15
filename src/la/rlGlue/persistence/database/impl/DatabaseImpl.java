@@ -28,15 +28,15 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public RewardsGroup getRewardsGroup(Reward[] rewards) {
-		RewardsGroup result = null;
-		try {
-			result = dbCommunication.getRewardsGroup(rewards);
-			//result.setTries(dbCom);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+	public RewardsGroup getRewardsGroup(List<Reward> rewards) {
+			RewardsGroup result = null;
+			try {
+				result = dbCommunication.getRewardsGroup(rewards);
+				//result.setTries(dbCom);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return result;
 	}
 
 	@Override
@@ -66,8 +66,10 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public boolean saveAll() {
+	public boolean saveAll(Try aTry, RewardsGroup rewardsGroup) {
 		
+		dbCommunication.insertTry(aTry, rewardsGroup); 
+		dbCommunication.updateRewardsGroup(rewardsGroup);
 		Iterator it = knowledge.keySet().iterator();
 		while (it.hasNext()){
 			long stateID = (Long) it.next(); 
@@ -89,15 +91,22 @@ public class DatabaseImpl implements Database {
 	}
 
 	@Override
-	public List<Try> getTries() {
+	public List<Try> getTries(RewardsGroup rewardsGroup) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public RewardsGroup getLastRewardsGroup() {
-		// TODO Auto-generated method stub
-		return null;
+		RewardsGroup result = null;
+		try {
+			result = dbCommunication.getLastRewardsGroup();
+			//result.setTries(dbCom);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
+
 
 }

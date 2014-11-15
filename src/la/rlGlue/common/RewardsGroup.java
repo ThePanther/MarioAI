@@ -1,14 +1,15 @@
 package la.rlGlue.common;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class RewardsGroup {
 	private int id; 
-	private Reward [] rewards; 
-	private Try [] tries; 
-	public RewardsGroup(int id, Reward[] rewards) {
-		this.id = id; 
-		this.rewards = rewards; 
+	private List<Reward> rewards;
+	public RewardsGroup(int id, List<Reward> rewards) {
+		super();
+		this.id = id;
+		this.rewards = rewards;
 	}
 	public int getId() {
 		return id;
@@ -16,20 +17,12 @@ public class RewardsGroup {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Reward[] getRewards() {
+	public List<Reward> getRewards() {
 		return rewards;
 	}
-	public void setRewards(Reward[] rewards) {
+	public void setRewards(List<Reward> rewards) {
 		this.rewards = rewards;
-	}
-	public Try[] getTries() {
-		return tries;
-	}
-	public void setTries(Try[] tries) {
-		this.tries = tries;
-	}
-	@Override
-	public String toString() {
-		return " id = " + id + " " + Arrays.toString(rewards);
-	}
+	} 
+	
+	
 }

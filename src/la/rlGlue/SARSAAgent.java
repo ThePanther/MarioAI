@@ -25,11 +25,14 @@
 
 package la.rlGlue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import context.ManagerFactory;
 
 import org.rlcommunity.rlglue.codec.AgentInterface;
+import org.rlcommunity.rlglue.codec.RLGlue;
 import org.rlcommunity.rlglue.codec.types.Action;
 import org.rlcommunity.rlglue.codec.types.Observation;
 import org.rlcommunity.rlglue.codec.util.AgentLoader;
@@ -42,6 +45,7 @@ import la.rlGlue.application.rlmarioaimanagement.Config;
 import la.rlGlue.common.Reward;
 import la.rlGlue.common.RewardsGroup;
 import la.rlGlue.common.State;
+import la.rlGlue.common.Try;
 
 public class SARSAAgent implements AgentInterface {
 	public static final String NAME = "SARSA";
@@ -81,21 +85,21 @@ public class SARSAAgent implements AgentInterface {
         //that they are all specified and that they are all nice numbers.
     }
 
-    public Reward[] getRewardList(){
-    	Reward[] rewardsList = new Reward[7];
-        rewardsList[0] = new Reward("Sieg", 1000);
-        rewardsList[1] = new Reward("Niederlage", -1000);
-        rewardsList[2] = new Reward("Verletzung", -500);
-        rewardsList[3] = new Reward("Toeten eines Gegners", 50);
-        rewardsList[4] = new Reward("Pro Frame", -1);
-        rewardsList[5] = new Reward("Nach rechts gehen", +1);
-        rewardsList[6] = new Reward("Nach links gehen", -2);
+    public List<Reward> getRewardList(){
+    	List<Reward> rewardsList = new ArrayList<Reward>(); 
+    	rewardsList.add(new Reward("Sieg", 1000));
+    	rewardsList.add(new Reward("Niederlage", -1000));
+    	rewardsList.add(new Reward("Verletzung", -500));
+    	rewardsList.add(new Reward("Toeten eines Gegners", 50));
+    	rewardsList.add(new Reward("Pro Frame", -1));
+    	rewardsList.add(new Reward("Nach rechts gehen", +1));
+    	rewardsList.add(new Reward("Nach links gehen", -2));
         return rewardsList;
     }
     public Action agent_start(Observation observation) {
         State state = extractState(observation);        
         
-        Reward[] rewardsList = getRewardList(); 
+        List<Reward> rewardsList = getRewardList(); 
 		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
         valueFunction = db.select(state, rewardsGroup); 
         
@@ -113,7 +117,7 @@ public class SARSAAgent implements AgentInterface {
     public Action agent_step(double reward, Observation observation) {
         State newState = extractState(observation);
         
-        Reward[] rewardsList = getRewardList(); 
+        List<Reward> rewardsList = getRewardList(); 
 		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
         
         double[] newValueFunction = db.select(newState, rewardsGroup);
@@ -141,7 +145,7 @@ public class SARSAAgent implements AgentInterface {
     }
 
     public void agent_end(double reward) {
-        Reward[] rewardsList = getRewardList(); 
+    	List<Reward> rewardsList = getRewardList(); 
     	RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
             
         valueFunction = db.select(lastState, rewardsGroup);
@@ -153,7 +157,9 @@ public class SARSAAgent implements AgentInterface {
         if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
-        db.saveAll();
+        
+        
+        db.saveAll(new Try(1, 2, RLGlue.RL_num_steps()), rewardsGroup);
         lastState = new State(0);
         lastAction = 0;
     }
