@@ -25,7 +25,7 @@
 
 package la.rlGlue;
 
-import la.rlGlue.application.rlmarioaimanagement.Config;
+import la.rlGlue.application.configManagement.Config;
 
 import org.rlcommunity.rlglue.codec.LocalGlue;
 import org.rlcommunity.rlglue.codec.RLGlue;

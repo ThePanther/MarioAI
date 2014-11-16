@@ -1,11 +1,9 @@
 package la.rlGlue.gui;
 
-import ch.idsia.scenarios.Play;
-import com.sun.xml.internal.bind.v2.TODO;
+import context.ManagerFactory;
 import la.rlGlue.application.Fassade.RLGlueService;
-import la.rlGlue.application.rlmarioaimanagement.Config;
+import la.rlGlue.application.configManagement.Config;
 import la.rlGlue.common.State;
-import la.rlGlue.persistence.database.Database;
 import la.rlGlue.persistence.database.impl.DatabaseImpl;
 
 import javax.swing.*;
@@ -55,29 +53,32 @@ public class Main_Frame {
     private JButton exportButton;
     private JTextField upTextField;
     private JTextField downTextField;
+    private RLGlueService rlGlueService;
 
     public Main_Frame() {
+        rlGlueService = ManagerFactory.getManager(RLGlueService.class);
+        episodesTextField.setText("10");
+        seedTextField.setText("1");
 
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Config.VISUALIZATION = visualisationCheckBox.isSelected();
-                Config.FREEZE_POLICY = freezPolicyCheckBox.isSelected();
-                Config.FREEZE_EXPLORATION = noExplorationCheckBox.isSelected();
-                Config.MARIO_STARTMODE = startmodeComboBox.getSelectedIndex();
-                Config.DIFFICULTY = difficultyComboBox.getSelectedIndex();
-                Config.AGENT = (String) agentComboBox.getSelectedItem();
-                Config.EDISODES = Integer.getInteger(episodesTextField.getText());
-                Config.LEVEL_SEED = Integer.getInteger(seedTextField.getText());
+                rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
+                rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
+                rlGlueService.setExploration(noExplorationCheckBox.isSelected());
+                rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());
+                rlGlueService.setDifficult(difficultyComboBox.getSelectedIndex());
+                rlGlueService.setAgent(agentComboBox.getSelectedItem().toString());
+                rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
+                rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
 
-                RLGlueService.startAgent();
+                rlGlueService.startAgent();
             }
         });
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String[] args = new String[0];
-                Play.main(args);
+                rlGlueService.playMario();
             }
         });
         saveButton.addActionListener(new ActionListener() {
@@ -123,7 +124,7 @@ public class Main_Frame {
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO: Export Statistic Button
+                rlGlueService.exportToPath(pathTextField.getText());
             }
         });
     }
@@ -138,9 +139,10 @@ public class Main_Frame {
 
 
     private void createUIComponents() {
-        String[] modes = {"Small","Large","Fire","Invincible"};
-        Integer[] difficulties = {0,1,2,3};
-        String[] agents = {"SARSA"};
+        RLGlueService rlGlueService = ManagerFactory.getManager(RLGlueService.class);
+        String[] modes = rlGlueService.getAllMarioModes(); //{"Small","Large","Fire","Invincible"};
+        Integer[] difficulties = rlGlueService.getAllDifficulties();//{0,1,2,3};
+        String[] agents = rlGlueService.getAllAgents(); //{"SARSA"};
 
         startmodeComboBox = new JComboBox(modes);
         difficultyComboBox = new JComboBox(difficulties);

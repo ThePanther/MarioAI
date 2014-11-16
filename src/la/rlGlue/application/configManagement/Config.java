@@ -1,8 +1,13 @@
-package la.rlGlue.application.rlmarioaimanagement;
+package la.rlGlue.application.configManagement;
 
 import la.rlGlue.SARSAAgent;
 
 public class Config {
+
+    private final static String[] MODES = {"Small","Large","Fire","Invincible"};
+    private final static Integer[] DIFFICULTIES = {0,1,2,3};
+    private final static String[] AGENTS = {"SARSA"};
+
 	public static String AGENT = SARSAAgent.NAME;
 
 	public static boolean VISUALIZATION = true;
@@ -24,4 +29,9 @@ public class Config {
 	public static double REWARD_MOVE_LEFT = -2.4;
 	public static double REWARD_MOVE_UP = 3.4;
 	public static double REWARD_MOVE_DOWN = -0.9;
+
+    public static String[] getAllMarioModes(){ return MODES;}
+    public static Integer[] getAllDifficulties(){ return DIFFICULTIES;}
+    public static String[] getAllAgents(){ return AGENTS;}
+
 }

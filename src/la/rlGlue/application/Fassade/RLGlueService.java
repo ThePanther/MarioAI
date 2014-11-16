@@ -12,6 +12,20 @@ public interface RLGlueService {
      * Mario AI Starter
      ********************************/
 
+    public void setVisualisation(boolean isVisual);
+    public void  setFreezPolicy(boolean isFreezPolicy);
+    public void  setExploration(boolean isExploration);
+    public void  setStartMode(int mode);
+    public void  setDifficult(int difficult);
+    public void  setAgent(String agentName);
+    public void  setEpisodes(int episodes);
+    public void  setLevelSeed(int seed);
+
+    public String[] getAllMarioModes();
+    public Integer[] getAllDifficulties();
+    public String[] getAllAgents();
+
+
     /**
      * liefert alle moeglichen Mario-Startzustaende
      *
@@ -37,9 +51,7 @@ public interface RLGlueService {
      * Startet das Spiel mit einem bestimmten Agenten
      *
      */
-    public static void startAgent(){
-        //TODO
-    }
+    public void startAgent();
 
     /**
      * Startet das Spiel ohne Agenten
@@ -71,11 +83,12 @@ public interface RLGlueService {
      */
     public void setRewards(Reward[] rewards);
 
+
     /********************************
      * Statistiks
      ********************************/
 
-    // TODO: Statistik Interfaces
+    public void exportToPath(String path);
 
 
     /********************************

@@ -41,7 +41,7 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import la.rlGlue.persistence.database.Database;
-import la.rlGlue.application.rlmarioaimanagement.Config;
+import la.rlGlue.application.configManagement.Config;
 import la.rlGlue.common.Reward;
 import la.rlGlue.common.RewardsGroup;
 import la.rlGlue.common.State;

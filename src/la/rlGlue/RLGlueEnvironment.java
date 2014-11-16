@@ -25,7 +25,7 @@
 
 package la.rlGlue;
 
-import la.rlGlue.application.rlmarioaimanagement.Config;
+import la.rlGlue.application.configManagement.Config;
 import la.rlGlue.common.Block;
 import la.rlGlue.common.Type;
 import la.rlGlue.common.Zone;
