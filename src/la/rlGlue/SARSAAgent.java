@@ -154,9 +154,8 @@ public class SARSAAgent implements AgentInterface {
         if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
-        
-        
-        db.saveAll(new Try(1, 2, RLGlue.RL_num_steps()), rewardsGroup);
+
+        db.saveAll(new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario dead?")), RLGlue.RL_return(), RLGlue.RL_num_steps()), rewardsGroup);
         lastState = new State(0);
         lastAction = 0;
     }

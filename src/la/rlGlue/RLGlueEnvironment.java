@@ -136,6 +136,13 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         if(message.equals("what is your name?"))
             return "my name is skeleton_environment, Java edition!";
 
+        if(message.equals("is Mario dead?")) {
+        	if(environment.getMarioState()[0] == Mario.STATUS_DEAD)
+                return "0";
+        	else
+                return "1";
+        }
+
         return "I don't know how to respond to your message";
     }
 
