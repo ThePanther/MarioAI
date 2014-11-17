@@ -112,10 +112,10 @@ public class ExportManager {
 		}
 
 		for (int i = 0; i < tries.size(); i++) {
-			addCaption(sheet, 0, 4+i, tries.get(i).getId() + "");
-			addCaption(sheet, 1, 4+i, tries.get(i).getWin() + "");
-			addCaption(sheet, 2, 4+i, tries.get(i).getRewards() + "");
-			addCaption(sheet, 3, 4+i, tries.get(i).getSteps() + "");			
+			addNumber(sheet, 0, 4+i, tries.get(i).getId());
+			addNumber(sheet, 1, 4+i, tries.get(i).getWin());
+			addNumber(sheet, 2, 4+i, tries.get(i).getRewards());
+			addNumber(sheet, 3, 4+i, tries.get(i).getSteps());			
 		}
 		
 	}
@@ -162,6 +162,12 @@ public class ExportManager {
 			Integer integer) throws WriteException, RowsExceededException {
 		Number number;
 		number = new Number(column, row, integer, times);
+		sheet.addCell(number);
+	}
+	private void addNumber(WritableSheet sheet, int column, int row,
+			double rewards) throws WriteException, RowsExceededException {
+		Number number;
+		number = new Number(column, row, rewards, times);
 		sheet.addCell(number);
 	}
 
