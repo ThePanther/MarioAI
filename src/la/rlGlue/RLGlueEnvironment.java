@@ -54,7 +54,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
     private static ArrayList<Zone> visionField = new ArrayList<Zone>();
 
-    private final static int STATES_COUNT = 16384;
+    private final static int STATES_COUNT = 16384; // TODO
     private final static int ACTIONS_COUNT = MarioAction.values().length;
     private final static int ZLEVEL_SCENE = 1;
     private final static int ZLEVEL_ENEMIES = 1;
@@ -65,7 +65,6 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
     private int oldMarioMode;
     private int oldKillsByStomp;
-    private int oldEnemyState;
 
     public String env_init() {
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
@@ -165,18 +164,6 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         	}
 		}
 
-        if(!environment.getMario().isInvulnerable()) {
-            if(enemies[marioEgoPos[0]][marioEgoPos[1]] != Sprite.KIND_NONE || enemies[marioEgoPos[0] - 1][marioEgoPos[1]] != Sprite.KIND_NONE) {
-            	if(returnObservation.intArray[2] == 0) {
-            		returnObservation.intArray[2] = oldEnemyState;
-            	}
-            }
-    	}
-
-        if(returnObservation.intArray[2] != 0){
-            oldEnemyState = returnObservation.intArray[2];
-    	}
-
 //      for (int x = 0; x < levelScene.length; x++) {
 //			for (int y = 0; y < levelScene[x].length; y++) {
 //				if(x == marioEgoPos[0] && y == marioEgoPos[1]) {
@@ -195,7 +182,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 //			}
 //			System.out.println("");
 //      }
-//      System.out.println(returnObservation.intArray[0] * 100000000000L + returnObservation.intArray[1] * 100000L + returnObservation.intArray[2]);
+//      System.out.println(returnObservation.intArray[0] * 1000000000000L + returnObservation.intArray[1] * 1000000L + returnObservation.intArray[2]);
         return returnObservation;
     }
 
@@ -231,8 +218,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         if((observation.intArray[1] / 100) % 100 > 0) {
         	if(environment.getMarioFloatPos()[1] < oldMarioFloatPos[1]) {
             	theReward += Config.REWARD_MOVE_UP;
-        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
-        		theReward += Config.REWARD_MOVE_DOWN;
+//        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
+//        		theReward += Config.REWARD_MOVE_DOWN;
         	}
         }
 
@@ -312,8 +299,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
                             res = 4; //Princess
                         } else if (res < 4 && tempRes == Sprite.KIND_SPIKY) {
                             res = 3; //Spiky
-                        } else if (res < 3 && tempRes == Sprite.KIND_FIREBALL) {
-                            res = 2; //Fireball
+//                        } else if (res < 3 && tempRes == Sprite.KIND_FIREBALL) {
+//                            res = 2; //Fireball
                         } else if (res < 2 && tempRes == Sprite.KIND_GOOMBA) {
                             res = 1; //Goomba
                         }
@@ -348,17 +335,19 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         Block e2b1 = new Block(1,1);
         Block e2b2 = new Block(1,0);
+        Block e2b3 = new Block(1,-1);
 
         Block e3b1 = new Block(2,1);
         Block e3b2 = new Block(2,0);
+        Block e3b3 = new Block(2,-1);
 
         Block e4b1 = new Block(0,-1);
 
         Block e5b1 = new Block(-1,1);
         Block e5b2 = new Block(-1,0);
 
-//        Block e6b1 = new Block(0,0);
-//        Block e6b2 = new Block(0,1);
+        Block e6b1 = new Block(0,0);
+        Block e6b2 = new Block(0,1);
 
         ArrayList<Block> s1b = new ArrayList<Block>();
         s1b.add(s1b1);
@@ -388,10 +377,12 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         ArrayList<Block> e2b = new ArrayList<Block>();
         e2b.add(e2b1);
         e2b.add(e2b2);
+        e2b.add(e2b3);
 
         ArrayList<Block> e3b = new ArrayList<Block>();
         e3b.add(e3b1);
         e3b.add(e3b2);
+        e3b.add(e3b3);
 
         ArrayList<Block> e4b = new ArrayList<Block>();
         e4b.add(e4b1);
@@ -400,9 +391,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         e5b.add(e5b1);
         e5b.add(e5b2);
 
-//        ArrayList<Block> e6b = new ArrayList<Block>();
-//        e5b.add(e6b1);
-//        e5b.add(e6b2);
+        ArrayList<Block> e6b = new ArrayList<Block>();
+        e5b.add(e6b1);
+        e5b.add(e6b2);
 
         Zone s1 = new Zone(s1b, Type.BRIDGE);
         Zone s2 = new Zone(s2b, Type.BLOCK);
@@ -416,7 +407,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Zone e3 = new Zone(e3b, Type.DETAILEDENEMY);
         Zone e4 = new Zone(e4b, Type.DETAILEDENEMY);
         Zone e5 = new Zone(e5b, Type.ENEMY);
-//        Zone e6 = new Zone(e6b, Type.ENEMY);
+        Zone e6 = new Zone(e6b, Type.ENEMY);
 
         visionField.add(s1);
         visionField.add(s2);
@@ -430,7 +421,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         visionField.add(e3);
         visionField.add(e4);
         visionField.add(e5);
-//        visionField.add(e6);
+        visionField.add(e6);
 
     }
 

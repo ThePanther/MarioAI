@@ -56,9 +56,6 @@ public class SARSAAgent implements AgentInterface {
     private double sarsa_stepsize = 0.1;
     private double sarsa_epsilon = 0.1;
     private double sarsa_gamma = 1.0;
-    private long marioMul = 100000000000L;
-    private long sceneMul = 100000;
-    private long enemyMul = 1;
     private int numActions;
     private double[] valueFunction;
     private Database db;

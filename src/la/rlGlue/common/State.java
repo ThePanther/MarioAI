@@ -4,8 +4,8 @@ package la.rlGlue.common;
  * Created by Alex on 29.10.2014.
  */
 public class State {
-    private static final long MARIO_MUL = 100000000000L;
-    private static final long ENVIRONMENT_MUL =   100000;
+    private static final long MARIO_MUL = 1000000000000L;
+    private static final long ENVIRONMENT_MUL = 1000000L;
     private static final long ENEMY_MUL = 1;
 
     private long marioState;
