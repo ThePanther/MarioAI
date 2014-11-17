@@ -5,6 +5,13 @@ public class Try {
 	private int win; 
 	private double rewards; 
 	private int steps;
+	public Try(int id, int win, double rewards, int steps) {
+		super();
+		this.id = id;
+		this.win = win;
+		this.rewards = rewards;
+		this.steps = steps;
+	}
 	public Try(int win, double rewards, int steps) {
 		super();
 		this.id = -1;
@@ -12,6 +19,7 @@ public class Try {
 		this.rewards = rewards;
 		this.steps = steps;
 	}
+
 	public int getId() {
 		return id;
 	}

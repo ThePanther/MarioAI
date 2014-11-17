@@ -92,8 +92,7 @@ public class DatabaseImpl implements Database {
 
 	@Override
 	public List<Try> getTries(RewardsGroup rewardsGroup) {
-		// TODO Auto-generated method stub
-		return null;
+		return dbCommunication.selectTries(rewardsGroup);
 	}
 
 	@Override

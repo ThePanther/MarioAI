@@ -357,6 +357,32 @@ public class DBCommunication {
 		}
 		return knowledge;
 	}
+	
+	public List<Try> selectTries(RewardsGroup rewardsGroup){
+		List<Try> tries = new ArrayList<Try>();
+		try {
+			// openDB();
+			String sql = " SELECT * FROM " + TABLE_TRY + " WHERE rgid="+
+					+ rewardsGroup.getId();
+			// System.out.println(sql);
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int win = rs.getInt(2);
+				double rewards = rs.getDouble(3);
+				int steps = rs.getInt(4);
+				//Try(int id, int win, double rewards, int steps)
+				Try aTry = new Try(id, win, rewards, steps); 
+				tries.add(aTry);
+
+			}
+			// closeDB();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tries;	
+	}
 
 	public RewardsGroup getLastRewardsGroup() throws SQLException {
 		RewardsGroup result = null;
