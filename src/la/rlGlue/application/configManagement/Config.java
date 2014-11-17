@@ -6,16 +6,16 @@ public class Config {
 
     private final static String[] MODES = {"Small","Large","Fire","Invincible"};
     private final static Integer[] DIFFICULTIES = {0,1,2,3};
-    private final static String[] AGENTS = {"SARSA"};
 
 	public static String AGENT = SARSAAgent.NAME;
+	private final static String[] AGENTS = {AGENT};
 
 	public static boolean VISUALIZATION = true;
 	public static boolean FREEZE_EXPLORATION = false;
 	public static boolean FREEZE_POLICY = false;
 
 	public static int FPS = 1000;
-	public static int EDISODES = 100;
+	public static int EDISODES = 1;
 	public static int MARIO_STARTMODE = 2; // 0 = small, 1 = large, 2 = fire
 	public static int LEVEL_SEED = 0; // TODO
 	public static int DIFFICULTY = 0; // TODO

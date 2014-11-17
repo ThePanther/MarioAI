@@ -60,6 +60,19 @@ public class Main_Frame {
         episodesTextField.setText("10");
         seedTextField.setText("1");
 
+        for(String s: rlGlueService.getAllMarioModes()) {
+            startmodeComboBox.addItem(s);
+        }
+
+        for(int i : rlGlueService.getAllDifficulties()) {
+            difficultyComboBox.addItem(i);
+        }
+
+        for(String s : rlGlueService.getAllAgents()) {
+            agentComboBox.addItem(s);
+        }
+
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,7 +103,10 @@ public class Main_Frame {
         lookupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                State state = new State(Long.getLong(modeTextField.getText()),Long.getLong(sceneTextField.getText()),Long.getLong(enemyTextField.getText()));
+                State state = new State(
+                        Long.parseLong(modeTextField.getText()),
+                        Long.parseLong(sceneTextField.getText()),
+                        Long.parseLong(enemyTextField.getText()));
                 DatabaseImpl db = new DatabaseImpl();
                 double[] values = db.select(state,db.getLastRewardsGroup());
                 a1TextField.setText(""+values[0]);
@@ -135,17 +151,5 @@ public class Main_Frame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-    }
-
-
-    private void createUIComponents() {
-        RLGlueService rlGlueService = ManagerFactory.getManager(RLGlueService.class);
-        String[] modes = rlGlueService.getAllMarioModes(); //{"Small","Large","Fire","Invincible"};
-        Integer[] difficulties = rlGlueService.getAllDifficulties();//{0,1,2,3};
-        String[] agents = rlGlueService.getAllAgents(); //{"SARSA"};
-
-        startmodeComboBox = new JComboBox(modes);
-        difficultyComboBox = new JComboBox(difficulties);
-        agentComboBox = new JComboBox(agents);
     }
 }

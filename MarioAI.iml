@@ -14,6 +14,6 @@
     <orderEntry type="library" name="testng-5.0" level="project" />
     <orderEntry type="library" name="JavaRLGlueCodec" level="project" />
     <orderEntry type="library" name="mysql-connector-java-5.1.33-bin" level="project" />
+    <orderEntry type="library" name="jxl" level="project" />
   </component>
 </module>
-

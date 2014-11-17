@@ -37,12 +37,12 @@ public class Play extends Thread{
        Play p = new Play(args);
        p.start();
 
-        Thread t = new Thread(new Runnable() {
+        /*Thread t = new Thread(new Runnable() {
            @Override
            public void run() {
                while (true) {
                    try {
-                       System.out.println("Sleep Alive:"+p.isAlive());
+                       //System.out.println("Sleep Alive:"+p.isAlive());
                        Thread.sleep(3000);
                    } catch (InterruptedException e) {
                        e.printStackTrace();
@@ -51,7 +51,7 @@ public class Play extends Thread{
            }
        });
         t.start();
-
+*/
 
     }
 }
