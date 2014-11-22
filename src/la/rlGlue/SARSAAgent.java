@@ -40,12 +40,12 @@ import org.rlcommunity.rlglue.codec.taskspec.TaskSpec;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
-import la.rlGlue.persistence.database.Database;
-import la.rlGlue.application.configManagement.Config;
-import la.rlGlue.common.Reward;
-import la.rlGlue.common.RewardsGroup;
-import la.rlGlue.common.State;
-import la.rlGlue.common.Try;
+import la.persistence.database.Database;
+import la.application.configManagement.Config;
+import la.common.Reward;
+import la.common.RewardsGroup;
+import la.common.State;
+import la.common.Try;
 
 public class SARSAAgent implements AgentInterface {
 	public static final String NAME = "SARSA";

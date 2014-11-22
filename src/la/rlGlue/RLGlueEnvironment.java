@@ -25,11 +25,11 @@
 
 package la.rlGlue;
 
-import la.rlGlue.application.configManagement.Config;
-import la.rlGlue.common.Block;
-import la.rlGlue.common.Type;
-import la.rlGlue.common.Zone;
-import la.rlGlue.common.MarioAction;
+import la.application.configManagement.Config;
+import la.common.Block;
+import la.common.Type;
+import la.common.Zone;
+import la.common.MarioAction;
 
 import org.rlcommunity.rlglue.codec.EnvironmentInterface;
 import org.rlcommunity.rlglue.codec.types.Action;
