@@ -8,6 +8,7 @@ import la.persistence.database.impl.DatabaseImpl;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class Main_Frame {
     private JButton startButton;
@@ -52,6 +53,7 @@ public class Main_Frame {
     private JButton exportButton;
     private JTextField upTextField;
     private JTextField downTextField;
+    private JButton randomSeedButton;
     private RLGlueService rlGlueService;
 
     public Main_Frame() {
@@ -139,6 +141,13 @@ public class Main_Frame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 rlGlueService.exportToPath(pathTextField.getText());
+            }
+        });
+        randomSeedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Random generator = new Random();
+                seedTextField.setText(""+generator.nextInt());
             }
         });
     }
