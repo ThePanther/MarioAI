@@ -7,6 +7,7 @@ import la.application.starter.MarioAIStarter;
 import la.application.starter.Play;
 import la.common.Reward;
 import la.common.RewardsGroup;
+import la.persistence.database.impl.DatabaseImpl;
 
 /**
  * Created by Alex on 31.10.2014.
@@ -74,7 +75,8 @@ public class Fassade implements RLGlueService {
 
     @Override
     public void resetDB() {
-
+        DatabaseImpl db = new DatabaseImpl();
+        db.reset();
     }
 
     @Override

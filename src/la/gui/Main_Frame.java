@@ -57,7 +57,7 @@ public class Main_Frame {
     public Main_Frame() {
         rlGlueService = ManagerFactory.getManager(RLGlueService.class);
         episodesTextField.setText("10");
-        seedTextField.setText("1");
+        seedTextField.setText("0");
 
         for(String s: rlGlueService.getAllMarioModes()) {
             startmodeComboBox.addItem(s);
@@ -131,8 +131,7 @@ public class Main_Frame {
                         "Reset Confirmation", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, null, null);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    DatabaseImpl db = new DatabaseImpl();
-                    db.reset();
+                    rlGlueService.resetDB();
                 }
             }
         });

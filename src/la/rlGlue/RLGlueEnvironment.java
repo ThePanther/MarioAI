@@ -92,6 +92,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     	marioAIOptions.setVisualization(Config.VISUALIZATION);
     	marioAIOptions.setFPS(Config.FPS);
     	marioAIOptions.setMarioMode(Config.MARIO_STARTMODE);
+        marioAIOptions.setLevelDifficulty(Config.DIFFICULTY);
+        marioAIOptions.setLevelRandSeed(Config.LEVEL_SEED);
 
     	environment.reset(marioAIOptions);
 
