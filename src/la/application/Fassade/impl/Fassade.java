@@ -1,5 +1,6 @@
 package la.application.Fassade.impl;
 
+import context.ManagerFactory;
 import la.application.Fassade.RLGlueService;
 import la.application.configManagement.Config;
 import la.application.exportManagement.ExportManager;
@@ -7,12 +8,17 @@ import la.application.starter.MarioAIStarter;
 import la.application.starter.Play;
 import la.common.Reward;
 import la.common.RewardsGroup;
+import la.persistence.database.Database;
 import la.persistence.database.impl.DatabaseImpl;
+
+import java.util.List;
 
 /**
  * Created by Alex on 31.10.2014.
  */
 public class Fassade implements RLGlueService {
+
+    Database db = ManagerFactory.getManager(Database.class);
 
     @Override
     public void setVisualisation(boolean isVisual) {Config.VISUALIZATION = isVisual;}
@@ -42,6 +48,12 @@ public class Fassade implements RLGlueService {
     public String[] getAllMarioModes(){return Config.getAllMarioModes();}
     public Integer[] getAllDifficulties(){return Config.getAllDifficulties();}
     public String[] getAllAgents(){return Config.getAllAgents();}
+
+    @Override
+    public void saveRewards(List<Reward> rewards) {
+        // TODO: SaveRewards
+        // db.saveRewards(rewards);
+    }
 
     public String[] getMarioStartState(){
         // TODO: getMarioStartState
@@ -75,7 +87,6 @@ public class Fassade implements RLGlueService {
 
     @Override
     public void resetDB() {
-        DatabaseImpl db = new DatabaseImpl();
         db.reset();
     }
 

@@ -2,7 +2,7 @@ package la.application.Fassade;
 
 import la.common.Reward;
 import la.common.RewardsGroup;
-
+import java.util.List;
 /**
  * Created by Alex on 31.10.2014.
  */
@@ -24,6 +24,8 @@ public interface RLGlueService {
     public String[] getAllMarioModes();
     public Integer[] getAllDifficulties();
     public String[] getAllAgents();
+
+    public void saveRewards(List<Reward> rewards);
 
 
     /**

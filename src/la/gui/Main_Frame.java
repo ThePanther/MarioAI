@@ -2,13 +2,17 @@ package la.gui;
 
 import context.ManagerFactory;
 import la.application.Fassade.RLGlueService;
+import la.common.Reward;
 import la.common.State;
 import la.persistence.database.impl.DatabaseImpl;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
 
 public class Main_Frame {
     private JButton startButton;
@@ -97,8 +101,44 @@ public class Main_Frame {
         });
         saveButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO: Reward save Button
+            public void actionPerformed(ActionEvent e)  {
+                String winsString  = winTextField.getText();
+                String lossString  = lossTextField.getText();
+                String hurtsString = hurtTextField.getText();
+                String stompString = stompTextField.getText();
+                String frameString = frameTextField.getText();
+                String rightString = rightTextField.getText();
+                String leftString  = leftTextField.getText();
+                String upString    = upTextField.getText();
+                String downString  = downTextField.getText();
+
+                try {
+                    int winsInt  = Integer.parseInt(winTextField.getText());
+                    int lossInt  = Integer.parseInt(lossTextField.getText());
+                    int hurtInt  = Integer.parseInt(hurtTextField.getText());
+                    int stompInt = Integer.parseInt(stompTextField.getText());
+                    int frameInt = Integer.parseInt(frameTextField.getText());
+                    int rightInt = Integer.parseInt(rightTextField.getText());
+                    int leftInt  = Integer.parseInt(leftTextField.getText());
+                    int upInt    = Integer.parseInt(upTextField.getText());
+                    int downInt  = Integer.parseInt(downTextField.getText());
+
+                    List<Reward> rewards = new ArrayList<>();
+                    rewards.add(new Reward(winsString,winsInt));
+                    rewards.add(new Reward(lossString,lossInt));
+                    rewards.add(new Reward(hurtsString,hurtInt));
+                    rewards.add(new Reward(stompString,stompInt));
+                    rewards.add(new Reward(frameString,frameInt));
+                    rewards.add(new Reward(rightString,rightInt));
+                    rewards.add(new Reward(leftString,leftInt));
+                    rewards.add(new Reward(upString,upInt));
+                    rewards.add(new Reward(downString,downInt));
+
+                    rlGlueService.saveRewards(rewards);
+                }catch (NumberFormatException nfe){
+
+                }
+
             }
         });
         lookupButton.addActionListener(new ActionListener() {
