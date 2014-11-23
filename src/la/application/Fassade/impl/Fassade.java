@@ -44,6 +44,8 @@ public class Fassade implements RLGlueService {
     @Override
     public void setLevelSeed(int seed) {Config.LEVEL_SEED=seed;}
 
+    @Override
+    public void setFPS(int fps) {Config.FPS=fps;}
 
     public String[] getAllMarioModes(){return Config.getAllMarioModes();}
     public Integer[] getAllDifficulties(){return Config.getAllDifficulties();}

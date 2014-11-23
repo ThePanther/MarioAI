@@ -13,13 +13,14 @@ public interface RLGlueService {
      ********************************/
 
     public void setVisualisation(boolean isVisual);
-    public void  setFreezPolicy(boolean isFreezPolicy);
-    public void  setExploration(boolean isExploration);
-    public void  setStartMode(int mode);
-    public void  setDifficult(int difficult);
-    public void  setAgent(String agentName);
-    public void  setEpisodes(int episodes);
-    public void  setLevelSeed(int seed);
+    public void setFreezPolicy(boolean isFreezPolicy);
+    public void setExploration(boolean isExploration);
+    public void setStartMode(int mode);
+    public void setDifficult(int difficult);
+    public void setAgent(String agentName);
+    public void setEpisodes(int episodes);
+    public void setLevelSeed(int seed);
+    public void setFPS(int fps);
 
     public String[] getAllMarioModes();
     public Integer[] getAllDifficulties();
