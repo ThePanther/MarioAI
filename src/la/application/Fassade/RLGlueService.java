@@ -26,7 +26,7 @@ public interface RLGlueService {
     public Integer[] getAllDifficulties();
     public String[] getAllAgents();
 
-    public void saveRewards(List<Reward> rewards);
+    public RewardsGroup saveRewards(List<Reward> rewards);
 
 
     /**

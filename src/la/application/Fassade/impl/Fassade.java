@@ -52,9 +52,8 @@ public class Fassade implements RLGlueService {
     public String[] getAllAgents(){return Config.getAllAgents();}
 
     @Override
-    public void saveRewards(List<Reward> rewards) {
-        // TODO: SaveRewards
-        // db.saveRewards(rewards);
+    public RewardsGroup saveRewards(List<Reward> rewards) {
+        return db.getRewardsGroup(rewards);
     }
 
     public String[] getMarioStartState(){
