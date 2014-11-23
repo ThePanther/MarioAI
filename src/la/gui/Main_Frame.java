@@ -54,12 +54,14 @@ public class Main_Frame {
     private JTextField upTextField;
     private JTextField downTextField;
     private JButton randomSeedButton;
+    private JTextField fpsTextField;
     private RLGlueService rlGlueService;
 
     public Main_Frame() {
         rlGlueService = ManagerFactory.getManager(RLGlueService.class);
         episodesTextField.setText("10");
         seedTextField.setText("0");
+        fpsTextField.setText("1000");
 
         for(String s: rlGlueService.getAllMarioModes()) {
             startmodeComboBox.addItem(s);
@@ -85,6 +87,7 @@ public class Main_Frame {
                 rlGlueService.setAgent(agentComboBox.getSelectedItem().toString());
                 rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
                 rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
+                rlGlueService.setFPS(Integer.parseInt(fpsTextField.getText()));
 
                 rlGlueService.startAgent();
             }
