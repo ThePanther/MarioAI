@@ -59,6 +59,14 @@ public class Main_Frame {
     private JTextField downTextField;
     private JButton randomSeedButton;
     private JTextField fpsTextField;
+    private JLabel winLable;
+    private JLabel lossLable;
+    private JLabel hurtLable;
+    private JLabel stompLable;
+    private JLabel frameLable;
+    private JLabel rightLable;
+    private JLabel leftLable;
+    private JLabel upLable;
     private RLGlueService rlGlueService;
 
     public Main_Frame() {

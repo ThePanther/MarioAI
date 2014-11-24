@@ -192,7 +192,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="1aab" class="javax.swing.JLabel">
+              <component id="1aab" class="javax.swing.JLabel" binding="winLable">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -200,7 +200,7 @@
                   <text value="Win"/>
                 </properties>
               </component>
-              <component id="6834a" class="javax.swing.JLabel">
+              <component id="6834a" class="javax.swing.JLabel" binding="lossLable">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -208,7 +208,7 @@
                   <text value="Loss"/>
                 </properties>
               </component>
-              <component id="33c1f" class="javax.swing.JLabel">
+              <component id="33c1f" class="javax.swing.JLabel" binding="hurtLable">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -216,7 +216,7 @@
                   <text value="Hurt"/>
                 </properties>
               </component>
-              <component id="e4b03" class="javax.swing.JLabel">
+              <component id="e4b03" class="javax.swing.JLabel" binding="rightLable">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -224,7 +224,7 @@
                   <text value="Move Right"/>
                 </properties>
               </component>
-              <component id="5822e" class="javax.swing.JLabel">
+              <component id="5822e" class="javax.swing.JLabel" binding="leftLable">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -285,7 +285,7 @@
                   <text value="Save"/>
                 </properties>
               </component>
-              <component id="28f43" class="javax.swing.JLabel">
+              <component id="28f43" class="javax.swing.JLabel" binding="stompLable">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -301,7 +301,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="9b8fb" class="javax.swing.JLabel">
+              <component id="9b8fb" class="javax.swing.JLabel" binding="frameLable">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -317,7 +317,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="c08b4" class="javax.swing.JLabel">
+              <component id="c08b4" class="javax.swing.JLabel" binding="upLable">
                 <constraints>
                   <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
