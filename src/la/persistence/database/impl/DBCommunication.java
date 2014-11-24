@@ -221,11 +221,10 @@ public class DBCommunication {
 		// openDB();
 		Set<Integer> result = new HashSet<Integer>();
 		for (int i = 0; i < rewards.size(); i++) {
-			if (i == 0)
-				result.addAll(getRewardsGroups(rewards.get(i).getName(),
-						rewards.get(i).getReward()));
-			result.retainAll(getRewardsGroups(rewards.get(i).getName(), rewards
-					.get(i).getReward()));
+			if (i == 0){
+				result.addAll(getRewardsGroups(rewards.get(i).getName(),rewards.get(i).getReward()));
+			}
+			result.retainAll(getRewardsGroups(rewards.get(i).getName(), rewards.get(i).getReward()));
 		}
 		int rewardsGroupId = 0;
 		if (result.size() != 0) {
@@ -312,7 +311,7 @@ public class DBCommunication {
 		PreparedStatement pstmt;
 		try {
 			String sql = "INSERT INTO " + TABLE_REWARDSGROUP
-					+ " (rgid) VALUES (now())";
+					+ " (rgid) VALUES (NULL)";
 			// System.out.println(sql);
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			int affectedRows = pstmt.executeUpdate();
@@ -328,6 +327,8 @@ public class DBCommunication {
 							"Creating user failed, no ID obtained.");
 				}
 			}
+			RewardsGroup rw = new RewardsGroup(rewardGroupID, null); 
+			updateRewardsGroup(rw); 
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} catch (Exception e) {
