@@ -70,6 +70,7 @@ public class Main_Frame {
     private JLabel rightLable;
     private JLabel leftLable;
     private JLabel upLable;
+    private JLabel downLable;
     private RLGlueService rlGlueService;
 
     private Database db;
