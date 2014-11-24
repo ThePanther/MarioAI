@@ -452,7 +452,7 @@ public class DBCommunication {
 				+ " WHERE rgid =( SELECT rgid FROM " + TABLE_REWARDSGROUP
 				+ " WHERE lastTime=( SELECT max(lastTime) FROM "
 				+ TABLE_REWARDSGROUP + " ))";
-		System.out.println(sql);
+//		System.out.println(sql);
 		ResultSet rs = stmt.executeQuery(sql);
 		int rgid = 0;
 		while (rs.next()) {

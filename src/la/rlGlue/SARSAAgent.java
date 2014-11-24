@@ -82,22 +82,22 @@ public class SARSAAgent implements AgentInterface {
         //that they are all specified and that they are all nice numbers.
     }
 
-    public List<Reward> getRewardList(){
-    	List<Reward> rewardsList = new ArrayList<Reward>(); 
-    	rewardsList.add(new Reward("Sieg", 1000));
-    	rewardsList.add(new Reward("Niederlage", -1000));
-    	rewardsList.add(new Reward("Verletzung", -500));
-    	rewardsList.add(new Reward("Toeten eines Gegners", 50));
-    	rewardsList.add(new Reward("Pro Frame", -1));
-    	rewardsList.add(new Reward("Nach rechts gehen", +1));
-    	rewardsList.add(new Reward("Nach links gehen", -2));
-        return rewardsList;
-    }
+//    public List<Reward> getRewardList(){
+//    	List<Reward> rewardsList = new ArrayList<Reward>(); 
+//    	rewardsList.add(new Reward("Sieg", 1000));
+//    	rewardsList.add(new Reward("Niederlage", -1000));
+//    	rewardsList.add(new Reward("Verletzung", -500));
+//    	rewardsList.add(new Reward("Toeten eines Gegners", 50));
+//    	rewardsList.add(new Reward("Pro Frame", -1));
+//    	rewardsList.add(new Reward("Nach rechts gehen", +1));
+//    	rewardsList.add(new Reward("Nach links gehen", -2));
+//        return rewardsList;
+//    }
     public Action agent_start(Observation observation) {
         State state = extractState(observation);        
         
-        List<Reward> rewardsList = getRewardList(); 
-		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+//        List<Reward> rewardsList = db.getLastRewardsGroup(); 
+		RewardsGroup rewardsGroup = db.getLastRewardsGroup();
         valueFunction = db.select(state, rewardsGroup); 
         
         int theIntAction = egreedy(valueFunction);
@@ -114,8 +114,7 @@ public class SARSAAgent implements AgentInterface {
     public Action agent_step(double reward, Observation observation) {
         State newState = extractState(observation);
         
-        List<Reward> rewardsList = getRewardList(); 
-		RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+		RewardsGroup rewardsGroup = db.getLastRewardsGroup(); 
         
         double[] newValueFunction = db.select(newState, rewardsGroup);
         valueFunction = db.select(lastState, rewardsGroup);
@@ -142,8 +141,8 @@ public class SARSAAgent implements AgentInterface {
     }
 
     public void agent_end(double reward) {
-    	List<Reward> rewardsList = getRewardList(); 
-    	RewardsGroup rewardsGroup = db.getRewardsGroup(rewardsList);
+//    	List<Reward> rewardsList = getRewardList(); 
+    	RewardsGroup rewardsGroup = db.getLastRewardsGroup();
             
         valueFunction = db.select(lastState, rewardsGroup);
 
