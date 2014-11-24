@@ -149,15 +149,15 @@ public class Main_Frame {
                     int downInt  = Integer.parseInt(downTextField.getText());
 
                     List<Reward> rewards = new ArrayList<>();
-                    rewards.add(new Reward(winsString,winsInt));
-                    rewards.add(new Reward(lossString,lossInt));
-                    rewards.add(new Reward(hurtsString,hurtInt));
-                    rewards.add(new Reward(stompString,stompInt));
-                    rewards.add(new Reward(frameString,frameInt));
-                    rewards.add(new Reward(rightString,rightInt));
-                    rewards.add(new Reward(leftString,leftInt));
-                    rewards.add(new Reward(upString,upInt));
-                    rewards.add(new Reward(downString,downInt));
+                    rewards.add(new Reward(winLable.getName(),winsInt));
+                    rewards.add(new Reward(lossLable.getName(),lossInt));
+                    rewards.add(new Reward(hurtLable.getName(),hurtInt));
+                    rewards.add(new Reward(stompLable.getName(),stompInt));
+                    rewards.add(new Reward(frameLable.getName(),frameInt));
+                    rewards.add(new Reward(rightLable.getName(),rightInt));
+                    rewards.add(new Reward(leftLable.getName(),leftInt));
+                    rewards.add(new Reward(upLable.getName(),upInt));
+                    rewards.add(new Reward(winLable.getName(),downInt));
 
                     rlGlueService.saveRewards(rewards);
                     rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
