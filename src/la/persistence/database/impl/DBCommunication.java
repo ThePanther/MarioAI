@@ -113,6 +113,59 @@ public class DBCommunication {
 			stmt.executeUpdate(sql2);
 			stmt.executeUpdate(sql3);
 			stmt.executeUpdate(sql4);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			try {
+				Class.forName(driver);
+				System.out.println("Connecting to database...");
+				System.out.println("at " + hostUrl);
+				System.out.println("Checking if database " + dbname + " exists...");
+				conn = DriverManager.getConnection(hostUrl, user, password);
+				if (!databaseExists(dbname)) {
+					// if not exists create a new DB
+					System.out.println("Not Exists. Creating a new DB...");
+					stmt = conn.createStatement();
+					newDatabase(dbname);
+				}
+				closeDB();
+				System.out
+						.println("Updating URL and reconnecting to DB..." + dbUrl);
+
+				openDB();
+				System.out.println("Connection successful.");
+				System.out.println("Attempt to create table");
+				newTables();
+				System.out.println("DB Configuration successful");
+				// closeDB();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -259,7 +312,7 @@ public class DBCommunication {
 		PreparedStatement pstmt;
 		try {
 			String sql = "INSERT INTO " + TABLE_REWARDSGROUP
-					+ " (rgid) VALUES (NULL)";
+					+ " (rgid) VALUES (now())";
 			// System.out.println(sql);
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			int affectedRows = pstmt.executeUpdate();
