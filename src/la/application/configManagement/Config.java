@@ -1,14 +1,15 @@
 package la.application.configManagement;
 
+import la.rlGlue.QLearningAgent;
 import la.rlGlue.SARSAAgent;
 
 public class Config {
 
     private final static String[] MODES = {"Small","Large","Fire","Invincible"};
     private final static Integer[] DIFFICULTIES = {0,1,2,3};
+	private final static String[] AGENTS = {SARSAAgent.NAME, QLearningAgent.NAME};
 
 	public static String AGENT = SARSAAgent.NAME;
-	private final static String[] AGENTS = {AGENT};
 
 	public static boolean VISUALIZATION = true;
 	public static boolean FREEZE_EXPLORATION = false;
