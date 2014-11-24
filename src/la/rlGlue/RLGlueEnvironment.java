@@ -339,6 +339,12 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         Block s6b1 = new Block(0,-1);
 
+        Block s7b1 = new Block(-1,2);
+
+        Block s8b1 = new Block(0,2);
+
+        Block s9b1 = new Block(1,2);
+
         Block e1b1 = new Block(0,2);
         Block e1b2 = new Block(1,2);
 
@@ -358,49 +364,58 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Block e6b1 = new Block(0,0);
         Block e6b2 = new Block(0,1);
 
-        ArrayList<Block> s1b = new ArrayList<Block>();
+        ArrayList<Block> s1b = new ArrayList<>();
         s1b.add(s1b1);
         s1b.add(s1b2);
         s1b.add(s1b3);
 
-        ArrayList<Block> s2b = new ArrayList<Block>();
+        ArrayList<Block> s2b = new ArrayList<>();
         s2b.add(s2b1);
 
-        ArrayList<Block> s3b = new ArrayList<Block>();
+        ArrayList<Block> s3b = new ArrayList<>();
         s3b.add(s3b1);
 
-        ArrayList<Block> s4b = new ArrayList<Block>();
+        ArrayList<Block> s4b = new ArrayList<>();
         s4b.add(s4b1);
 
-        ArrayList<Block> s5b = new ArrayList<Block>();
+        ArrayList<Block> s5b = new ArrayList<>();
         s5b.add(s5b1);
         s5b.add(s5b2);
 
-        ArrayList<Block> s6b = new ArrayList<Block>();
+        ArrayList<Block> s6b = new ArrayList<>();
         s6b.add(s6b1);
 
-        ArrayList<Block> e1b = new ArrayList<Block>();
+        ArrayList<Block> s7b = new ArrayList<>();
+        s7b.add(s7b1);
+
+        ArrayList<Block> s8b = new ArrayList<>();
+        s8b.add(s8b1);
+
+        ArrayList<Block> s9b = new ArrayList<>();
+        s9b.add(s9b1);
+
+        ArrayList<Block> e1b = new ArrayList<>();
         e1b.add(e1b1);
         e1b.add(e1b2);
 
-        ArrayList<Block> e2b = new ArrayList<Block>();
+        ArrayList<Block> e2b = new ArrayList<>();
         e2b.add(e2b1);
         e2b.add(e2b2);
         e2b.add(e2b3);
 
-        ArrayList<Block> e3b = new ArrayList<Block>();
+        ArrayList<Block> e3b = new ArrayList<>();
         e3b.add(e3b1);
         e3b.add(e3b2);
         e3b.add(e3b3);
 
-        ArrayList<Block> e4b = new ArrayList<Block>();
+        ArrayList<Block> e4b = new ArrayList<>();
         e4b.add(e4b1);
 
-        ArrayList<Block> e5b = new ArrayList<Block>();
+        ArrayList<Block> e5b = new ArrayList<>();
         e5b.add(e5b1);
         e5b.add(e5b2);
 
-        ArrayList<Block> e6b = new ArrayList<Block>();
+        ArrayList<Block> e6b = new ArrayList<>();
         e5b.add(e6b1);
         e5b.add(e6b2);
 
@@ -410,6 +425,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         Zone s4 = new Zone(s4b, Type.BLOCK);
         Zone s5 = new Zone(s5b, Type.BLOCK);
         Zone s6 = new Zone(s6b, Type.BLOCK);
+        Zone s7 = new Zone(s7b, Type.BLOCK);
+        Zone s8 = new Zone(s8b, Type.BLOCK);
+        Zone s9 = new Zone(s9b, Type.BLOCK);
 
         Zone e1 = new Zone(e1b, Type.ENEMY);
         Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
@@ -424,6 +442,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         visionField.add(s4);
         visionField.add(s5);
         visionField.add(s6);
+        visionField.add(s7);
+        visionField.add(s8);
+        visionField.add(s9);
 
         visionField.add(e1);
         visionField.add(e2);
