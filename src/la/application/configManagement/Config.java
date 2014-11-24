@@ -31,15 +31,15 @@ public class Config {
 	public static int REWARD_MOVE_UP = 2;
 	public static int REWARD_MOVE_DOWN = -2;
 
-	public static String REWARD_NAME_WIN = "Sieg";
-	public static String REWARD_NAME_DEATH = "Niederlage";
-	public static String REWARD_NAME_HURT = "Verletzung";
-	public static String REWARD_NAME_KILL = "Toeten eines Gegners";
-	public static String REWARD_NAME_ELAPSED_FRAME = "Pro Frame";
-	public static String REWARD_NAME_MOVE_RIGHT = "Nach rechts bewegen";
-	public static String REWARD_NAME_MOVE_LEFT = "Nach links bewegen";
-	public static String REWARD_NAME_MOVE_UP = "Nach oben bewegen";
-	public static String REWARD_NAME_MOVE_DOWN = "Nach unten bewegen";
+	public static String REWARD_NAME_WIN = "Win";
+	public static String REWARD_NAME_DEATH = "Loss";
+	public static String REWARD_NAME_HURT = "Hurt";
+	public static String REWARD_NAME_KILL = "Stomp Enemy";
+	public static String REWARD_NAME_ELAPSED_FRAME = "per Frame";
+	public static String REWARD_NAME_MOVE_RIGHT = "Move Right";
+	public static String REWARD_NAME_MOVE_LEFT = "Move Left";
+	public static String REWARD_NAME_MOVE_UP = "Move Up";
+	public static String REWARD_NAME_MOVE_DOWN = "Move Down";
 
     public static String[] getAllMarioModes(){ return MODES;}
     public static Integer[] getAllDifficulties(){ return DIFFICULTIES;}

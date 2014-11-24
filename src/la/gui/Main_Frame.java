@@ -127,16 +127,6 @@ public class Main_Frame {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)  {
-                String winsString  = winTextField.getText();
-                String lossString  = lossTextField.getText();
-                String hurtsString = hurtTextField.getText();
-                String stompString = stompTextField.getText();
-                String frameString = frameTextField.getText();
-                String rightString = rightTextField.getText();
-                String leftString  = leftTextField.getText();
-                String upString    = upTextField.getText();
-                String downString  = downTextField.getText();
-
                 try {
                     int winsInt  = Integer.parseInt(winTextField.getText());
                     int lossInt  = Integer.parseInt(lossTextField.getText());
@@ -157,7 +147,7 @@ public class Main_Frame {
                     rewards.add(new Reward(rightLable.getName(),rightInt));
                     rewards.add(new Reward(leftLable.getName(),leftInt));
                     rewards.add(new Reward(upLable.getName(),upInt));
-                    rewards.add(new Reward(winLable.getName(),downInt));
+                    rewards.add(new Reward(downLable.getName(),downInt));
 
                     rlGlueService.saveRewards(rewards);
                     rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
