@@ -2,11 +2,14 @@ package la.gui;
 
 import context.ManagerFactory;
 import la.application.Fassade.RLGlueService;
+import la.application.configManagement.Config;
 import la.common.Reward;
 import la.common.State;
+import la.persistence.database.Database;
 import la.persistence.database.impl.DatabaseImpl;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -69,11 +72,21 @@ public class Main_Frame {
     private JLabel upLable;
     private RLGlueService rlGlueService;
 
+    private Database db;
+
     public Main_Frame() {
         rlGlueService = ManagerFactory.getManager(RLGlueService.class);
         episodesTextField.setText("10");
         seedTextField.setText("0");
         fpsTextField.setText("1000");
+
+        db = ManagerFactory.getManager(Database.class);
+
+        if(db.getLastRewardsGroup() == null) {
+            rlGlueService.saveRewards(rlGlueService.getRewards());
+        }
+
+        rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
 
         for(String s: rlGlueService.getAllMarioModes()) {
             startmodeComboBox.addItem(s);
@@ -146,6 +159,7 @@ public class Main_Frame {
                     rewards.add(new Reward(downString,downInt));
 
                     rlGlueService.saveRewards(rewards);
+                    rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
                 }catch (NumberFormatException nfe){
 
                 }

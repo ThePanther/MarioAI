@@ -84,8 +84,9 @@ public interface RLGlueService {
      *
      * @param rewards
      */
-    public void setRewards(Reward[] rewards);
+    public void setRewards(List<Reward> rewards);
 
+    public List<Reward> getRewards();
 
     /********************************
      * Statistiks

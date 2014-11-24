@@ -9,8 +9,8 @@ import la.application.starter.Play;
 import la.common.Reward;
 import la.common.RewardsGroup;
 import la.persistence.database.Database;
-import la.persistence.database.impl.DatabaseImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,8 +97,44 @@ public class Fassade implements RLGlueService {
     }
 
     @Override
-    public void setRewards(Reward[] rewards) {
+    public void setRewards(List<Reward> rewards) {
+    	for(Reward reward : rewards) {
+    		if(reward.getName().equals(Config.REWARD_NAME_WIN)) {
+    			Config.REWARD_WIN = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_DEATH)) {
+    			Config.REWARD_DEATH = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_HURT)) {
+    			Config.REWARD_HURT = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_KILL)) {
+    			Config.REWARD_KILL = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_ELAPSED_FRAME)) {
+    			Config.REWARD_ELAPSED_FRAME = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_MOVE_RIGHT)) {
+    			Config.REWARD_MOVE_RIGHT = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_MOVE_LEFT)) {
+    			Config.REWARD_MOVE_LEFT = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_MOVE_UP)) {
+    			Config.REWARD_MOVE_UP = reward.getReward();
+    		} else if(reward.getName().equals(Config.REWARD_NAME_MOVE_DOWN)) {
+    			Config.REWARD_MOVE_DOWN = reward.getReward();
+    		}
+    	}
+    }
 
+    @Override
+    public List<Reward> getRewards() {
+    	List<Reward> rewards = new ArrayList<>();
+        rewards.add(new Reward(Config.REWARD_NAME_WIN, Config.REWARD_WIN));
+        rewards.add(new Reward(Config.REWARD_NAME_DEATH, Config.REWARD_DEATH));
+        rewards.add(new Reward(Config.REWARD_NAME_HURT, Config.REWARD_HURT));
+        rewards.add(new Reward(Config.REWARD_NAME_KILL, Config.REWARD_KILL));
+        rewards.add(new Reward(Config.REWARD_NAME_ELAPSED_FRAME, Config.REWARD_ELAPSED_FRAME));
+        rewards.add(new Reward(Config.REWARD_NAME_MOVE_RIGHT, Config.REWARD_MOVE_RIGHT));
+        rewards.add(new Reward(Config.REWARD_NAME_MOVE_LEFT, Config.REWARD_MOVE_LEFT));
+        rewards.add(new Reward(Config.REWARD_NAME_MOVE_UP, Config.REWARD_MOVE_UP));
+        rewards.add(new Reward(Config.REWARD_NAME_MOVE_DOWN, Config.REWARD_MOVE_DOWN));
+
+    	return rewards;
     }
 
 
