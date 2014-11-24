@@ -49,6 +49,8 @@ public class RunAllNoSockets {
 
 		if(Config.AGENT.equals(SARSAAgent.NAME)) {
 			theAgent=new SARSAAgent();
+		} else if(Config.AGENT.equals(QLearningAgent.NAME)) {
+			theAgent=new QLearningAgent();
 		} else {
 			theAgent=new SkeletonAgent();
 		}
