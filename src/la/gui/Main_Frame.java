@@ -71,6 +71,7 @@ public class Main_Frame {
     private JLabel leftLable;
     private JLabel upLable;
     private JLabel downLable;
+    private JCheckBox randomLevelsCheckBox;
     private RLGlueService rlGlueService;
 
     private Database db;
@@ -106,6 +107,7 @@ public class Main_Frame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
+                //TODO: randomLevelsCheckBox.isSelected()
                 rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
                 rlGlueService.setExploration(noExplorationCheckBox.isSelected());
                 rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());
@@ -114,6 +116,7 @@ public class Main_Frame {
                 rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
                 rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
                 rlGlueService.setFPS(Integer.parseInt(fpsTextField.getText()));
+
 
                 rlGlueService.startAgent();
             }
