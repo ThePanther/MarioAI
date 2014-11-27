@@ -17,17 +17,20 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 import la.common.Reward;
 import la.common.RewardsGroup;
 import la.common.Try;
 import la.persistence.database.Database;
 
 public class ExportManager {
+    private final String PATH = "statistik";
+    private final String FILENAME_HEAD = "/statistic_";
+    private final String FILENAME_ENDING = ".csv";
+    private final String SHEET_VALUES = "Werte";
+    private final String SHEET_STATISTICS = "Statistik";
 
-	private String path;
-	private WritableCellFormat timesBoldUnderline;
-	private WritableCellFormat times;
+    private String path = PATH;
+
 	private Database db = ManagerFactory.getManager(Database.class);
 
 	private int rewardGroupID;
@@ -40,7 +43,11 @@ public class ExportManager {
 	private List<Try> tries;
 
 	public ExportManager(String path) {
-		this.path = path;
+
+        if (path.isEmpty())
+            this.path = PATH;
+        else
+            this.path = path;
 
 		try {
 			createCSVFile();
@@ -58,11 +65,16 @@ public class ExportManager {
 		WorkbookSettings wbSettings = new WorkbookSettings();
 		wbSettings.setLocale(new Locale("de", "DE"));
 		WritableWorkbook workbook = Workbook.createWorkbook(file, wbSettings);
-		workbook.createSheet("Statistik", 0);
-		WritableSheet excelSheet = workbook.getSheet(0);
+		workbook.createSheet(SHEET_VALUES, 0);
+        workbook.createSheet(SHEET_STATISTICS, 1);
+        WritableSheet sheetValues = workbook.getSheet(0);
+        WritableSheet sheetStatistics = workbook.getSheet(1);
 
-		createLabel(excelSheet);
-		createContent(excelSheet);
+        CSVSheetFormat csvSheetFormat = new CSVSheetFormat();
+        csvSheetFormat.createLabelValues(sheetValues,rewards);
+        csvSheetFormat.createContentValues(sheetValues,rewardGroupID,rewards,tries);
+        csvSheetFormat.createLabelStatistics(sheetStatistics);
+        csvSheetFormat.createContentStatistics(sheetValues,sheetStatistics,tries.size());
 
 		workbook.write();
 		workbook.close();
@@ -73,7 +85,6 @@ public class ExportManager {
 		rewards = currentRewardGroup.getRewards();
 		tries = db.getTries(currentRewardGroup);
 		rewardGroupID = currentRewardGroup.getId();
-		// TODO: aus DB lesen
 		tryCount = tries.size();
 		for (int i = 0; i < tryCount; i++) {
 			Try t = tries.get(i);
@@ -83,102 +94,30 @@ public class ExportManager {
 		}
 		rewardDiff = rewardSum / tryCount;
 
-		System.out.println("CSV DATEI: \nREWARD GROUP: "
-				+ currentRewardGroup.getId() + "\n");
+        /* // AUSGABE
+		System.out.println("CSV DATEI: \nREWARD GROUP: "+ currentRewardGroup.getId() + "\n");
 		for (int i = 0; i < rewards.size(); i++) {
 			Reward r = rewards.get(i);
 			System.out.println("R " + r.getName() + ": " + r.getReward());
 		}
-		System.out.println("Anzahl Versuche: " + tryCount + "\n"
-				+ "Anzahl Siege: " + wins + "\n" + "Anzahl Steps: " + steps
-				+ "\n" + "Durchschnittliche Rewards: " + rewardDiff);
+		System.out.println("Anzahl Versuche: " + tryCount + "\n"+ "Anzahl Siege: " + wins + "\n" + "Anzahl Steps: " + steps+ "\n" + "Durchschnittliche Rewards: " + rewardDiff);
+		*/
 	}
 
 	/***************************************************************************************************************/
 
 	private File createFile() {
-		String fileName = "/statistic_" + System.currentTimeMillis() + ".csv";
+		String fileName = FILENAME_HEAD + System.currentTimeMillis() + FILENAME_ENDING;
+
 		File file = new File(path + fileName);
 		return file;
 	}
 
-	private void createContent(WritableSheet sheet) throws WriteException,
-			RowsExceededException {
-		addNumber(sheet, 0, 1, rewardGroupID);
-		for (int i = 0; i < rewards.size(); i++) {
-			addNumber(sheet, i + 1, 1, rewards.get(i).getReward());
-//			System.out.println("> R=" + rewards.size() + " i=" + i + " :="+ (rewards.size() - i));
-		}
 
-		for (int i = 0; i < tries.size(); i++) {
-			addNumber(sheet, 0, 4+i, tries.get(i).getId());
-			addNumber(sheet, 1, 4+i, tries.get(i).getWin());
-			addNumber(sheet, 2, 4+i, tries.get(i).getRewards());
-			addNumber(sheet, 3, 4+i, tries.get(i).getSteps());			
-		}
-		
-	}
-
-	private void createLabel(WritableSheet sheet) throws WriteException {
-		WritableFont times10pt = new WritableFont(WritableFont.TIMES, 10);
-		times = new WritableCellFormat(times10pt);
-		times.setWrap(true);
-
-		WritableFont times10ptBoldUnderline = new WritableFont(
-				WritableFont.TIMES, 10, WritableFont.BOLD, false,
-				UnderlineStyle.SINGLE);
-		timesBoldUnderline = new WritableCellFormat(times10ptBoldUnderline);
-		timesBoldUnderline.setWrap(true);
-
-		CellView cv = new CellView();
-		cv.setFormat(times);
-		cv.setFormat(timesBoldUnderline);
-		cv.setAutosize(true);
-
-		// Die Reward Gruppe
-		addCaption(sheet, 0, 0, "RewardsGroup");
-		// Alle Rewards
-		for (int i = 0; i < rewards.size(); i++) {
-			addCaption(sheet, i + 1, 0, rewards.get(i).getName());
-		}
-		// leere Spalte
-		addCaption(sheet, rewards.size() + 1, 0, "");
-		addCaption(sheet, 0, 3, "ID");
-		addCaption(sheet, 1, 3, "Win");
-		addCaption(sheet, 2, 3, "Rewards");
-		addCaption(sheet, 3, 3, "Steps");
-
-	}
-
-	private void addCaption(WritableSheet sheet, int column, int row, String s)
-			throws RowsExceededException, WriteException {
-		Label label;
-		label = new Label(column, row, s, timesBoldUnderline);
-		sheet.addCell(label);
-	}
-
-	private void addNumber(WritableSheet sheet, int column, int row,
-			Integer integer) throws WriteException, RowsExceededException {
-		Number number;
-		number = new Number(column, row, integer, times);
-		sheet.addCell(number);
-	}
-	private void addNumber(WritableSheet sheet, int column, int row,
-			double rewards) throws WriteException, RowsExceededException {
-		Number number;
-		number = new Number(column, row, rewards, times);
-		sheet.addCell(number);
-	}
-
-	private void addLabel(WritableSheet sheet, int column, int row, String s)
-			throws WriteException, RowsExceededException {
-		Label label;
-		label = new Label(column, row, s, times);
-		sheet.addCell(label);
-	}
 
 	public static void main(String[] args) {
-		new ExportManager(".");
+
+        new ExportManager("");
 	}
 
 }
