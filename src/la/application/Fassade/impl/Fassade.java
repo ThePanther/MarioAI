@@ -24,6 +24,9 @@ public class Fassade implements RLGlueService {
     public void setVisualisation(boolean isVisual) {Config.VISUALIZATION = isVisual;}
 
     @Override
+    public void setRandomLevels(boolean isRandom) {Config.RANDOM_LEVELS = isRandom;}
+
+    @Override
     public void setFreezPolicy(boolean isFreezPolicy) {Config.FREEZE_POLICY=isFreezPolicy;}
 
     @Override

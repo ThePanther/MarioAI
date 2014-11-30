@@ -13,6 +13,7 @@ public interface RLGlueService {
      ********************************/
 
     public void setVisualisation(boolean isVisual);
+    public void setRandomLevels(boolean isRandom);
     public void setFreezPolicy(boolean isFreezPolicy);
     public void setExploration(boolean isExploration);
     public void setStartMode(int mode);

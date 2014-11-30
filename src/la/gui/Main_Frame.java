@@ -107,7 +107,7 @@ public class Main_Frame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
-                //TODO: randomLevelsCheckBox.isSelected()
+                rlGlueService.setRandomLevels(randomLevelsCheckBox.isSelected());
                 rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
                 rlGlueService.setExploration(noExplorationCheckBox.isSelected());
                 rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());

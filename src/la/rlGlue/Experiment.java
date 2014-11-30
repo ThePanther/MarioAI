@@ -25,6 +25,8 @@
 
 package la.rlGlue;
 
+import java.util.Random;
+
 import la.application.configManagement.Config;
 
 import org.rlcommunity.rlglue.codec.RLGlue;
@@ -35,11 +37,16 @@ import org.rlcommunity.rlglue.codec.RLGlue;
  */
 public class Experiment {
 
-    private int numOfEpisodes = Config.EDISODES;
+	private Random randGenerator = new Random();
+
+	private int numOfEpisodes = Config.EDISODES;
     private int whichEpisode = 0;
 
     /* Run One Episode of length maximum cutOff*/
     private void runEpisode(int stepLimit) {
+    	if(Config.RANDOM_LEVELS) {
+        	Config.LEVEL_SEED = randGenerator.nextInt();
+    	}
 
         //Starten der Episode
         int terminal = RLGlue.RL_episode(stepLimit);

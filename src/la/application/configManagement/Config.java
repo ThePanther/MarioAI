@@ -12,14 +12,15 @@ public class Config {
 	public static String AGENT = SARSAAgent.NAME;
 
 	public static boolean VISUALIZATION = true;
+	public static boolean RANDOM_LEVELS = true;
 	public static boolean FREEZE_EXPLORATION = false;
 	public static boolean FREEZE_POLICY = false;
 
 	public static int FPS = 1000;
 	public static int EDISODES = 1;
 	public static int MARIO_STARTMODE = 2; // 0 = small, 1 = large, 2 = fire
-	public static int LEVEL_SEED = 0; // TODO
-	public static int DIFFICULTY = 0; // TODO
+	public static int LEVEL_SEED = 0;
+	public static int DIFFICULTY = 0;
 
 	public static int REWARD_WIN = 1000;
 	public static int REWARD_DEATH = -1000;
