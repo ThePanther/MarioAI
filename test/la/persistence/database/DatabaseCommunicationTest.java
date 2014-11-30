@@ -1,5 +1,6 @@
 package la.persistence.database;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import context.ManagerFactory;
@@ -11,7 +12,6 @@ public class DatabaseCommunicationTest {
 	
 	@Test 
 	public void dropDabaseTest(){
-		
 		ImportHandler ih = ManagerFactory.getManager(ImportHandler.class); 
 		DBCommunication dbCommunication = new DBCommunication(ih.getDBConfig());
 		dbCommunication.dropTables();

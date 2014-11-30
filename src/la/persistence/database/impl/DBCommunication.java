@@ -197,7 +197,17 @@ public class DBCommunication {
 		String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_TRY
 				+ "(tid INT NOT NULL AUTO_INCREMENT, " + " win INT, "
 				+ " rewards DOUBLE, " + " steps INT, "
-				+ " rgid INT NOT NULL,  PRIMARY KEY ( tid, rgid ), "
+				+ " rgid INT NOT NULL,  "
+				+ " reward_win_count INT DEFAULT 0," 
+				+ " reward_death_count INT DEFAULT 0,"
+		        + " reward_hurt_count INT DEFAULT 0,"
+		        + " reward_kill_count INT DEFAULT 0,"
+		        + " reward_elapsed_frame_count INT DEFAULT 0," 
+		        + " reward_move_right_count INT DEFAULT 0,"
+		        + " reward_move_left_count INT DEFAULT 0,"
+		        + " reward_move_up_count INT DEFAULT 0,"
+		        + " reward_move_down_count INT DEFAULT 0,"
+				+ "PRIMARY KEY ( tid, rgid ), "
 				+ " CONSTRAINT FOREIGN KEY (rgid) REFERENCES `"
 				+ TABLE_REWARDSGROUP + "` (rgid) ) ";
 		System.out.println(sql);
@@ -340,16 +350,38 @@ public class DBCommunication {
 	synchronized void insertTry(Try aTry, RewardsGroup rewardsGroup) {
 		PreparedStatement pstmt;
 		try {
+			/*
+			 * 	private int reward_win_count;
+	private int reward_death_count;
+	private int reward_hurt_count;
+	private int reward_kill_count; 
+	private int reward_elapsed_frame_count;
+	private int reward_move_right_count;
+	private int reward_move_left_count;
+	private int reward_move_up_count;
+	private int reward_move_down_count;
+			 */
 			String sql = "INSERT INTO "
 					+ TABLE_TRY
-					+ " (tid, win, rewards, steps, rgid) VALUES (NULL, ?, ?, ?, ?)";
+					+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "
+					+ "reward_kill_count, reward_elapsed_frame_count, reward_move_right_count, reward_move_left_count, "
+					+ "reward_move_up_count, reward_move_down_count) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			// System.out.println(sql);
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, aTry.getWin());
 			pstmt.setDouble(2, aTry.getRewards());
 			pstmt.setInt(3, aTry.getSteps());
 			pstmt.setInt(4, rewardsGroup.getId());
-
+			pstmt.setInt(5, aTry.getReward_win_count());
+			pstmt.setInt(6, aTry.getReward_death_count());
+			pstmt.setInt(7, aTry.getReward_hurt_count());
+			pstmt.setInt(8, aTry.getReward_kill_count());
+			pstmt.setInt(9, aTry.getReward_elapsed_frame_count()); 
+			pstmt.setInt(10, aTry.getReward_move_right_count()); 
+			pstmt.setInt(11, aTry.getReward_move_left_count());
+			pstmt.setInt(12, aTry.getReward_move_up_count());
+			pstmt.setInt(13, aTry.getReward_move_down_count());
+																					
 			int affectedRows = pstmt.executeUpdate();
 			if (affectedRows == 0) {
 				throw new SQLException(

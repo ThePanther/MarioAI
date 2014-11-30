@@ -11,6 +11,7 @@ import la.persistence.importhandler.ImportHandler;
 import la.persistence.importhandler.impl.DBConfig;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class DatabaseImpl implements Database {
 
 	@Override
 	public RewardsGroup getRewardsGroup(List<Reward> rewards) {
+			if (rewards == null)
+				return null; 
+			if (rewards.size() == 0)
+				return null; 
+			
 			RewardsGroup result = null;
 			try {
 				result = dbCommunication.getRewardsGroup(rewards);
@@ -41,6 +47,11 @@ public class DatabaseImpl implements Database {
 
 	@Override
 	public double[] select(State state, RewardsGroup rewardsGroup) {
+		if (state == null)
+			return null; 
+		if (rewardsGroup == null)
+			return null;
+		
 		if (knowledge.isEmpty()) {
 			//System.out.println("Knowledge is empty");
 			knowledge = dbCommunication.selectKnowledge(rewardsGroup);
