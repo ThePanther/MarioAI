@@ -457,8 +457,28 @@ public class DBCommunication {
 				int win = rs.getInt(2);
 				double rewards = rs.getDouble(3);
 				int steps = rs.getInt(4);
+				/*
+				 * private int reward_win_count;
+	private int reward_death_count;
+	private int reward_hurt_count;
+	private int reward_kill_count; 
+	private int reward_elapsed_frame_count;
+	private int reward_move_right_count;
+	private int reward_move_left_count;
+	private int reward_move_up_count;
+	private int reward_move_down_count;
+				 */
 				//Try(int id, int win, double rewards, int steps)
 				Try aTry = new Try(id, win, rewards, steps); 
+				aTry.setReward_win_count(rs.getInt(5));
+				aTry.setReward_death_count(rs.getInt(6));
+				aTry.setReward_hurt_count(rs.getInt(7));
+				aTry.setReward_kill_count(rs.getInt(8));
+				aTry.setReward_elapsed_frame_count(rs.getInt(9));
+				aTry.setReward_move_right_count(rs.getInt(10));
+				aTry.setReward_move_left_count(rs.getInt(11));
+				aTry.setReward_move_up_count(rs.getInt(12));
+				aTry.setReward_move_down_count(rs.getInt(13));
 				tries.add(aTry);
 
 			}
