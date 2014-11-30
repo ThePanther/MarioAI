@@ -66,6 +66,16 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private int oldMarioMode;
     private int oldKillsByStomp;
 
+    private int reward_win_count;
+    private int reward_death_count;
+    private int reward_hurt_count;
+    private int reward_kill_count;
+    private int reward_elapsed_frame_count;
+    private int reward_move_right_count;
+    private int reward_move_left_count;
+    private int reward_move_up_count;
+    private int reward_move_down_count;
+
     public String env_init() {
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
 
@@ -101,6 +111,16 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         oldKillsByStomp = environment.getMarioState()[8];
         oldMarioFloatPos[0] = environment.getMarioFloatPos()[0];
         oldMarioFloatPos[1] = environment.getMarioFloatPos()[1];
+
+        reward_win_count = 0;
+        reward_death_count = 0;
+        reward_hurt_count = 0;
+        reward_kill_count = 0;
+        reward_elapsed_frame_count = 0;
+        reward_move_right_count = 0;
+        reward_move_left_count = 0;
+        reward_move_up_count = 0;
+        reward_move_down_count = 0;
 
         Observation returnObservation = getObservation();
 
@@ -143,6 +163,42 @@ public class RLGlueEnvironment implements EnvironmentInterface {
                 return "1";
         	else
                 return "0";
+        }
+
+        if(message.equals("reward win count")) {
+            return Integer.toString(reward_win_count);
+        }
+
+        if(message.equals("reward death count")) {
+            return Integer.toString(reward_death_count);
+        }
+
+        if(message.equals("reward hurt count")) {
+            return Integer.toString(reward_hurt_count);
+        }
+
+        if(message.equals("reward kill count")) {
+            return Integer.toString(reward_kill_count);
+        }
+
+        if(message.equals("reward elapsed frame count")) {
+            return Integer.toString(reward_elapsed_frame_count);
+        }
+
+        if(message.equals("reward move right count")) {
+            return Integer.toString(reward_move_right_count);
+        }
+
+        if(message.equals("reward move left count")) {
+            return Integer.toString(reward_move_left_count);
+        }
+
+        if(message.equals("reward move up count")) {
+            return Integer.toString(reward_move_up_count);
+        }
+
+        if(message.equals("reward move down count")) {
+            return Integer.toString(reward_move_down_count);
         }
 
         return "I don't know how to respond to your message";
@@ -197,38 +253,45 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
     private double calculateReward() {
         double theReward = Config.REWARD_ELAPSED_FRAME;
+        reward_elapsed_frame_count++;
 
         Observation observation = getObservation();
 
 //        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
 //        	theReward += Config.REWARD_WIN;
-//        } else if(environment.getMarioState()[0] == Mario.STATUS_DEAD){
-//        	theReward += Config.REWARD_DEATH;
+//        	reward_win_count++;
 //        }
 
         if(environment.getMarioState()[0] == Mario.STATUS_DEAD && environment.getTimeLeft() > 0) {
         	theReward += Config.REWARD_DEATH;
+        	reward_death_count++;
         }
 
         if(environment.getMarioMode() < oldMarioMode) {
         	theReward += Config.REWARD_HURT;
+        	reward_hurt_count++;
         }
 
         if(environment.getMarioState()[8] > oldKillsByStomp) {
         	theReward += Config.REWARD_KILL;
+        	reward_kill_count++;
         }
 
         if(environment.getMarioFloatPos()[0] > oldMarioFloatPos[0] + 1) {
         	theReward += Config.REWARD_MOVE_RIGHT;
+        	reward_move_right_count++;
         } else if(environment.getMarioFloatPos()[0] < oldMarioFloatPos[0] - 1) {
         	theReward += Config.REWARD_MOVE_LEFT;
+        	reward_move_left_count++;
         }
 
         if((observation.intArray[1] / 100) % 100 > 0) {
         	if(environment.getMarioFloatPos()[1] < oldMarioFloatPos[1]) {
             	theReward += Config.REWARD_MOVE_UP;
+            	reward_move_up_count++;
 //        	} else if(environment.getMarioFloatPos()[1] > oldMarioFloatPos[1]) {
 //        		theReward += Config.REWARD_MOVE_DOWN;
+//            	reward_move_down_count++;
         	}
         }
 
