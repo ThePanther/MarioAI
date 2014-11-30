@@ -1,7 +1,10 @@
 package la.application.configManagement;
 
+import la.common.Zone;
 import la.rlGlue.QLearningAgent;
 import la.rlGlue.SARSAAgent;
+
+import java.util.ArrayList;
 
 public class Config {
 
@@ -41,6 +44,13 @@ public class Config {
 	public static String REWARD_NAME_MOVE_LEFT = "Move Left";
 	public static String REWARD_NAME_MOVE_UP = "Move Up";
 	public static String REWARD_NAME_MOVE_DOWN = "Move Down";
+
+	public static ArrayList<Zone> VISIONFIELD = new ArrayList<>();
+
+	public static long MARIO_MUL = 1000000000000L;
+	public static long ENVIRONMENT_MUL = 1000000L;
+	public static long ENEMY_MUL = 1;
+
 
     public static String[] getAllMarioModes(){ return MODES;}
     public static Integer[] getAllDifficulties(){ return DIFFICULTIES;}

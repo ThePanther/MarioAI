@@ -8,6 +8,7 @@ import la.application.starter.MarioAIStarter;
 import la.application.starter.Play;
 import la.common.Reward;
 import la.common.RewardsGroup;
+import la.common.Zone;
 import la.persistence.database.Database;
 
 import java.util.ArrayList;
@@ -145,4 +146,36 @@ public class Fassade implements RLGlueService {
         new ExportManager(path);
     }
 
+    @Override
+    public void setVisionField(ArrayList<Zone> visionField) {
+        Config.VISIONFIELD = visionField;
+    }
+
+    public ArrayList<Zone> getVisionField() {
+        return Config.VISIONFIELD;
+    }
+
+    public void setMarioMul(long l){
+        Config.MARIO_MUL = l;
+    }
+
+    public long getMarioMul() {
+        return Config.MARIO_MUL;
+    }
+
+    public void setEnvironmentMul(long l) {
+        Config.ENVIRONMENT_MUL = l;
+    }
+
+    public long getEnvironmentMul() {
+        return Config.ENVIRONMENT_MUL;
+    }
+
+    public void setEnemyMul(long l) {
+        Config.ENEMY_MUL = l;
+    }
+
+    public long getEnemyMul() {
+        return Config.ENEMY_MUL;
+    }
 }
