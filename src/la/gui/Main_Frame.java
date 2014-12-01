@@ -314,6 +314,535 @@ public class Main_Frame {
 
         rlGlueService.setVisionField(createDefaultVisionField());
 
+        setTextFieldNames();
+        setTextFieldLists();
+
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
+                rlGlueService.setRandomLevels(randomLevelsCheckBox.isSelected());
+                rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
+                rlGlueService.setExploration(noExplorationCheckBox.isSelected());
+                rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());
+                rlGlueService.setDifficult(difficultyComboBox.getSelectedIndex());
+                rlGlueService.setAgent(agentComboBox.getSelectedItem().toString());
+                rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
+                rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
+                rlGlueService.setFPS(Integer.parseInt(fpsTextField.getText()));
+
+
+                rlGlueService.startAgent();
+            }
+        });
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rlGlueService.playMario();
+            }
+        });
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)  {
+                try {
+                    int winsInt  = Integer.parseInt(winTextField.getText());
+                    int lossInt  = Integer.parseInt(lossTextField.getText());
+                    int hurtInt  = Integer.parseInt(hurtTextField.getText());
+                    int stompInt = Integer.parseInt(stompTextField.getText());
+                    int frameInt = Integer.parseInt(frameTextField.getText());
+                    int rightInt = Integer.parseInt(rightTextField.getText());
+                    int leftInt  = Integer.parseInt(leftTextField.getText());
+                    int upInt    = Integer.parseInt(upTextField.getText());
+                    int downInt  = Integer.parseInt(downTextField.getText());
+
+                    List<Reward> rewards = new ArrayList<>();
+                    rewards.add(new Reward(winLable.getText(),winsInt));
+                    rewards.add(new Reward(lossLable.getText(),lossInt));
+                    rewards.add(new Reward(hurtLable.getText(),hurtInt));
+                    rewards.add(new Reward(stompLable.getText(),stompInt));
+                    rewards.add(new Reward(frameLable.getText(),frameInt));
+                    rewards.add(new Reward(rightLable.getText(),rightInt));
+                    rewards.add(new Reward(leftLable.getText(),leftInt));
+                    rewards.add(new Reward(upLable.getText(),upInt));
+                    rewards.add(new Reward(downLable.getText(),downInt));
+
+                    rlGlueService.saveRewards(rewards);
+                    rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
+                }catch (NumberFormatException nfe){
+
+                }
+
+            }
+        });
+        lookupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                State state = new State(
+                        Long.parseLong(modeTextField.getText()),
+                        Long.parseLong(sceneTextField.getText()),
+                        Long.parseLong(enemyTextField.getText()));
+                DatabaseImpl db = new DatabaseImpl();
+                double[] values = db.select(state,db.getLastRewardsGroup());
+                a1TextField.setText(""+values[0]);
+                a2TextField.setText(""+values[1]);
+                a3TextField.setText(""+values[2]);
+                a4TextField.setText(""+values[3]);
+                a5TextField.setText(""+values[4]);
+                a6TextField.setText(""+values[5]);
+                a7TextField.setText(""+values[6]);
+                a8TextField.setText(""+values[7]);
+                a9TextField.setText(""+values[8]);
+                a10TextField.setText(""+values[9]);
+                a11TextField.setText(""+values[10]);
+                a12TextField.setText(""+values[11]);
+            }
+        });
+        DBResetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame();
+                int confirm = JOptionPane.showOptionDialog(frame,
+                        "Are you sure you want to reset the DB?",
+                        "Reset Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    rlGlueService.resetDB();
+                }
+            }
+        });
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rlGlueService.exportToPath(pathTextField.getText());
+            }
+        });
+        randomSeedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Random generator = new Random();
+                seedTextField.setText(""+generator.nextInt());
+            }
+        });
+        saveVisionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Zone> visionField = new ArrayList<Zone>();
+                visionField = createVisionField();
+
+                rlGlueService.setVisionField(visionField);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Main_Frame");
+        frame.setContentPane(new Main_Frame().main_frame);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private ArrayList<Zone> createVisionField() {
+        HashMap<Integer,ArrayList<Block>> blZones = createZone(blList);
+        HashMap<Integer,ArrayList<Block>> brZones = createZone(brList);
+        HashMap<Integer,ArrayList<Block>> eZones = createZone(eList);
+        HashMap<Integer,ArrayList<Block>> deZones = createZone(deList);
+
+        ArrayList<Zone> zones = new ArrayList<>();
+        Set<Integer> blSet = blZones.keySet();
+        Set<Integer> brSet = brZones.keySet();
+        Set<Integer> eSet = eZones.keySet();
+        Set<Integer> deSet = deZones.keySet();
+        for (Integer i : blSet) {
+            zones.add(new Zone(blZones.get(i), Type.BLOCK));
+        }
+        for (Integer i : brSet) {
+            zones.add(new Zone(brZones.get(i), Type.BRIDGE));
+        }
+        for (Integer i : eSet) {
+            zones.add(new Zone(eZones.get(i), Type.ENEMY));
+        }
+        for (Integer i : deSet) {
+            zones.add(new Zone(deZones.get(i), Type.DETAILEDENEMY));
+        }
+
+        int envExp = eSet.size() + deSet.size();
+        int marioExp = envExp + blSet.size() + brSet.size();
+
+        rlGlueService.setEnvironmentMul(exp(envExp));
+        rlGlueService.setMarioMul(exp(marioExp));
+
+        return zones;
+    }
+
+    private HashMap<Integer,ArrayList<Block>> createZone(ArrayList<JTextField> textFields) {
+        HashMap<Integer,ArrayList<Block>> zones = new HashMap<>();
+        for (JTextField textField : textFields) {
+            if (!textField.getText().equals("")) {
+                if (zones.get(Integer.parseInt(textField.getText())) != null) {
+                    Block block = new Block((Integer.parseInt(textField.getName().substring(9,10))+(-3)),(Integer.parseInt(textField.getName().substring(10,11))+(-2)));
+                    ArrayList<Block> blockList = zones.get(Integer.parseInt(textField.getText()));
+                    blockList.add(block);
+                    zones.put(Integer.parseInt(textField.getText()),blockList);
+                } else {
+                    ArrayList<Block> blockList = new ArrayList<>();
+                    Block block = new Block((Integer.parseInt(textField.getName().substring(9,10))+(-3)),(Integer.parseInt(textField.getName().substring(10,11))+(-2)));
+                    blockList.add(block);
+                    zones.put(Integer.parseInt(textField.getText()),blockList);
+                }
+            }
+        }
+        return zones;
+    }
+
+    private long exp(int x) {
+        long res = 1;
+        for (int i=0;i<x;i++) {
+            res *= 10;
+        }
+        return res;
+    }
+
+    private ArrayList<Zone> createDefaultVisionField(){
+
+        Block s1b1 = new Block(0,4);
+        Block s1b2 = new Block(0,3);
+        Block s1b3 = new Block(0,2);
+
+        Block s2b1 = new Block(1,2);
+
+        Block s3b1 = new Block(1,1);
+
+        Block s4b1 = new Block(1,0);
+
+        Block s5b1 = new Block(1,-1);
+        Block s5b2 = new Block(1,-2);
+
+        Block s6b1 = new Block(0,-1);
+
+        Block s7b1 = new Block(-1,2);
+
+        Block s8b1 = new Block(0,2);
+
+        Block s9b1 = new Block(1,2);
+
+        Block e1b1 = new Block(0,2);
+        Block e1b2 = new Block(1,2);
+
+        Block e2b1 = new Block(1,1);
+        Block e2b2 = new Block(1,0);
+        Block e2b3 = new Block(1,-1);
+
+        Block e3b1 = new Block(2,1);
+        Block e3b2 = new Block(2,0);
+        Block e3b3 = new Block(2,-1);
+
+        Block e4b1 = new Block(0,-1);
+
+        Block e5b1 = new Block(-1,1);
+        Block e5b2 = new Block(-1,0);
+
+        Block e6b1 = new Block(0,0);
+        Block e6b2 = new Block(0,1);
+
+        ArrayList<Block> s1b = new ArrayList<>();
+        s1b.add(s1b1);
+        s1b.add(s1b2);
+        s1b.add(s1b3);
+
+        ArrayList<Block> s2b = new ArrayList<>();
+        s2b.add(s2b1);
+
+        ArrayList<Block> s3b = new ArrayList<>();
+        s3b.add(s3b1);
+
+        ArrayList<Block> s4b = new ArrayList<>();
+        s4b.add(s4b1);
+
+        ArrayList<Block> s5b = new ArrayList<>();
+        s5b.add(s5b1);
+        s5b.add(s5b2);
+
+        ArrayList<Block> s6b = new ArrayList<>();
+        s6b.add(s6b1);
+
+        ArrayList<Block> s7b = new ArrayList<>();
+        s7b.add(s7b1);
+
+        ArrayList<Block> s8b = new ArrayList<>();
+        s8b.add(s8b1);
+
+        ArrayList<Block> s9b = new ArrayList<>();
+        s9b.add(s9b1);
+
+        ArrayList<Block> e1b = new ArrayList<>();
+        e1b.add(e1b1);
+        e1b.add(e1b2);
+
+        ArrayList<Block> e2b = new ArrayList<>();
+        e2b.add(e2b1);
+        e2b.add(e2b2);
+        e2b.add(e2b3);
+
+        ArrayList<Block> e3b = new ArrayList<>();
+        e3b.add(e3b1);
+        e3b.add(e3b2);
+        e3b.add(e3b3);
+
+        ArrayList<Block> e4b = new ArrayList<>();
+        e4b.add(e4b1);
+
+        ArrayList<Block> e5b = new ArrayList<>();
+        e5b.add(e5b1);
+        e5b.add(e5b2);
+
+        ArrayList<Block> e6b = new ArrayList<>();
+        e5b.add(e6b1);
+        e5b.add(e6b2);
+
+        Zone s1 = new Zone(s1b, Type.BRIDGE);
+        Zone s2 = new Zone(s2b, Type.BLOCK);
+        Zone s3 = new Zone(s3b, Type.BLOCK);
+        Zone s4 = new Zone(s4b, Type.BLOCK);
+        Zone s5 = new Zone(s5b, Type.BLOCK);
+        Zone s6 = new Zone(s6b, Type.BLOCK);
+        Zone s7 = new Zone(s7b, Type.BLOCK);
+        Zone s8 = new Zone(s8b, Type.BLOCK);
+        Zone s9 = new Zone(s9b, Type.BLOCK);
+
+        Zone e1 = new Zone(e1b, Type.ENEMY);
+        Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
+        Zone e3 = new Zone(e3b, Type.DETAILEDENEMY);
+        Zone e4 = new Zone(e4b, Type.DETAILEDENEMY);
+        Zone e5 = new Zone(e5b, Type.ENEMY);
+        Zone e6 = new Zone(e6b, Type.ENEMY);
+
+        ArrayList<Zone> visionField = new ArrayList<>();
+
+        visionField.add(s1);
+        visionField.add(s2);
+        visionField.add(s3);
+        visionField.add(s4);
+        visionField.add(s5);
+        visionField.add(s6);
+        visionField.add(s7);
+        visionField.add(s8);
+        visionField.add(s9);
+
+        visionField.add(e1);
+        visionField.add(e2);
+        visionField.add(e3);
+        visionField.add(e4);
+        visionField.add(e5);
+        visionField.add(e6);
+
+        return visionField;
+
+    }
+
+    private void setTextFieldNames() {
+        textField06bl.setName("textField06bl");
+        textField05bl.setName("textField05bl");
+        textField04bl.setName("textField04bl");
+        textField03bl.setName("textField03bl");
+        textField02bl.setName("textField02bl");
+        textField01bl.setName("textField01bl");
+        textField00bl.setName("textField00bl");
+        textField16bl.setName("textField16bl");
+        textField15bl.setName("textField15bl");
+        textField14bl.setName("textField14bl");
+        textField13bl.setName("textField13bl");
+        textField12bl.setName("textField12bl");
+        textField11bl.setName("textField11bl");
+        textField10bl.setName("textField10bl");
+        textField26bl.setName("textField26bl");
+        textField25bl.setName("textField25bl");
+        textField24bl.setName("textField24bl");
+        textField23bl.setName("textField23bl");
+        textField22bl.setName("textField22bl");
+        textField21bl.setName("textField21bl");
+        textField20bl.setName("textField20bl");
+        textField36bl.setName("textField36bl");
+        textField35bl.setName("textField35bl");
+        textField34bl.setName("textField34bl");
+        textField33bl.setName("textField33bl");
+        textField32bl.setName("textField32bl");
+        textField31bl.setName("textField31bl");
+        textField30bl.setName("textField30bl");
+        textField46bl.setName("textField46bl");
+        textField45bl.setName("textField45bl");
+        textField44bl.setName("textField44bl");
+        textField43bl.setName("textField43bl");
+        textField42bl.setName("textField42bl");
+        textField41bl.setName("textField41bl");
+        textField40bl.setName("textField40bl");
+        textField56bl.setName("textField56bl");
+        textField55bl.setName("textField55bl");
+        textField54bl.setName("textField54bl");
+        textField53bl.setName("textField53bl");
+        textField52bl.setName("textField52bl");
+        textField51bl.setName("textField51bl");
+        textField50bl.setName("textField50bl");
+        textField66bl.setName("textField66bl");
+        textField65bl.setName("textField65bl");
+        textField64bl.setName("textField64bl");
+        textField63bl.setName("textField63bl");
+        textField62bl.setName("textField62bl");
+        textField61bl.setName("textField61bl");
+        textField60bl.setName("textField60bl");
+
+        textField06br.setName("textField06br");
+        textField05br.setName("textField05br");
+        textField04br.setName("textField04br");
+        textField03br.setName("textField03br");
+        textField02br.setName("textField02br");
+        textField01br.setName("textField01br");
+        textField00br.setName("textField00br");
+        textField16br.setName("textField16br");
+        textField15br.setName("textField15br");
+        textField14br.setName("textField14br");
+        textField13br.setName("textField13br");
+        textField12br.setName("textField12br");
+        textField11br.setName("textField11br");
+        textField10br.setName("textField10br");
+        textField26br.setName("textField26br");
+        textField25br.setName("textField25br");
+        textField24br.setName("textField24br");
+        textField23br.setName("textField23br");
+        textField22br.setName("textField22br");
+        textField21br.setName("textField21br");
+        textField20br.setName("textField20br");
+        textField36br.setName("textField36br");
+        textField35br.setName("textField35br");
+        textField34br.setName("textField34br");
+        textField33br.setName("textField33br");
+        textField32br.setName("textField32br");
+        textField31br.setName("textField31br");
+        textField30br.setName("textField30br");
+        textField46br.setName("textField46br");
+        textField45br.setName("textField45br");
+        textField44br.setName("textField44br");
+        textField43br.setName("textField43br");
+        textField42br.setName("textField42br");
+        textField41br.setName("textField41br");
+        textField40br.setName("textField40br");
+        textField56br.setName("textField56br");
+        textField55br.setName("textField55br");
+        textField54br.setName("textField54br");
+        textField53br.setName("textField53br");
+        textField52br.setName("textField52br");
+        textField51br.setName("textField51br");
+        textField50br.setName("textField50br");
+        textField66br.setName("textField66br");
+        textField65br.setName("textField65br");
+        textField64br.setName("textField64br");
+        textField63br.setName("textField63br");
+        textField62br.setName("textField62br");
+        textField61br.setName("textField61br");
+        textField60br.setName("textField60br");
+
+        textField06e.setName("textField06e");
+        textField05e.setName("textField05e");
+        textField04e.setName("textField04e");
+        textField03e.setName("textField03e");
+        textField02e.setName("textField02e");
+        textField01e.setName("textField01e");
+        textField00e.setName("textField00e");
+        textField16e.setName("textField16e");
+        textField15e.setName("textField15e");
+        textField14e.setName("textField14e");
+        textField13e.setName("textField13e");
+        textField12e.setName("textField12e");
+        textField11e.setName("textField11e");
+        textField10e.setName("textField10e");
+        textField26e.setName("textField26e");
+        textField25e.setName("textField25e");
+        textField24e.setName("textField24e");
+        textField23e.setName("textField23e");
+        textField22e.setName("textField22e");
+        textField21e.setName("textField21e");
+        textField20e.setName("textField20e");
+        textField36e.setName("textField36e");
+        textField35e.setName("textField35e");
+        textField34e.setName("textField34e");
+        textField33e.setName("textField33e");
+        textField32e.setName("textField32e");
+        textField31e.setName("textField31e");
+        textField30e.setName("textField30e");
+        textField46e.setName("textField46e");
+        textField45e.setName("textField45e");
+        textField44e.setName("textField44e");
+        textField43e.setName("textField43e");
+        textField42e.setName("textField42e");
+        textField41e.setName("textField41e");
+        textField40e.setName("textField40e");
+        textField56e.setName("textField56e");
+        textField55e.setName("textField55e");
+        textField54e.setName("textField54e");
+        textField53e.setName("textField53e");
+        textField52e.setName("textField52e");
+        textField51e.setName("textField51e");
+        textField50e.setName("textField50e");
+        textField66e.setName("textField66e");
+        textField65e.setName("textField65e");
+        textField64e.setName("textField64e");
+        textField63e.setName("textField63e");
+        textField62e.setName("textField62e");
+        textField61e.setName("textField61e");
+        textField60e.setName("textField60e");
+
+        textField06de.setName("textField06de");
+        textField05de.setName("textField05de");
+        textField04de.setName("textField04de");
+        textField03de.setName("textField03de");
+        textField02de.setName("textField02de");
+        textField01de.setName("textField01de");
+        textField00de.setName("textField00de");
+        textField16de.setName("textField16de");
+        textField15de.setName("textField15de");
+        textField14de.setName("textField14de");
+        textField13de.setName("textField13de");
+        textField12de.setName("textField12de");
+        textField11de.setName("textField11de");
+        textField10de.setName("textField10de");
+        textField26de.setName("textField26de");
+        textField25de.setName("textField25de");
+        textField24de.setName("textField24de");
+        textField23de.setName("textField23de");
+        textField22de.setName("textField22de");
+        textField21de.setName("textField21de");
+        textField20de.setName("textField20de");
+        textField36de.setName("textField36de");
+        textField35de.setName("textField35de");
+        textField34de.setName("textField34de");
+        textField33de.setName("textField33de");
+        textField32de.setName("textField32de");
+        textField31de.setName("textField31de");
+        textField30de.setName("textField30de");
+        textField46de.setName("textField46de");
+        textField45de.setName("textField45de");
+        textField44de.setName("textField44de");
+        textField43de.setName("textField43de");
+        textField42de.setName("textField42de");
+        textField41de.setName("textField41de");
+        textField40de.setName("textField40de");
+        textField56de.setName("textField56de");
+        textField55de.setName("textField55de");
+        textField54de.setName("textField54de");
+        textField53de.setName("textField53de");
+        textField52de.setName("textField52de");
+        textField51de.setName("textField51de");
+        textField50de.setName("textField50de");
+        textField66de.setName("textField66de");
+        textField65de.setName("textField65de");
+        textField64de.setName("textField64de");
+        textField63de.setName("textField63de");
+        textField62de.setName("textField62de");
+        textField61de.setName("textField61de");
+        textField60de.setName("textField60de");
+    }
+
+    private void setTextFieldLists() {
         blList.add(textField06bl);
         blList.add(textField05bl);
         blList.add(textField04bl);
@@ -513,328 +1042,6 @@ public class Main_Frame {
         deList.add(textField62de);
         deList.add(textField61de);
         deList.add(textField60de);
-
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
-                rlGlueService.setRandomLevels(randomLevelsCheckBox.isSelected());
-                rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
-                rlGlueService.setExploration(noExplorationCheckBox.isSelected());
-                rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());
-                rlGlueService.setDifficult(difficultyComboBox.getSelectedIndex());
-                rlGlueService.setAgent(agentComboBox.getSelectedItem().toString());
-                rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
-                rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
-                rlGlueService.setFPS(Integer.parseInt(fpsTextField.getText()));
-
-
-                rlGlueService.startAgent();
-            }
-        });
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rlGlueService.playMario();
-            }
-        });
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e)  {
-                try {
-                    int winsInt  = Integer.parseInt(winTextField.getText());
-                    int lossInt  = Integer.parseInt(lossTextField.getText());
-                    int hurtInt  = Integer.parseInt(hurtTextField.getText());
-                    int stompInt = Integer.parseInt(stompTextField.getText());
-                    int frameInt = Integer.parseInt(frameTextField.getText());
-                    int rightInt = Integer.parseInt(rightTextField.getText());
-                    int leftInt  = Integer.parseInt(leftTextField.getText());
-                    int upInt    = Integer.parseInt(upTextField.getText());
-                    int downInt  = Integer.parseInt(downTextField.getText());
-
-                    List<Reward> rewards = new ArrayList<>();
-                    rewards.add(new Reward(winLable.getText(),winsInt));
-                    rewards.add(new Reward(lossLable.getText(),lossInt));
-                    rewards.add(new Reward(hurtLable.getText(),hurtInt));
-                    rewards.add(new Reward(stompLable.getText(),stompInt));
-                    rewards.add(new Reward(frameLable.getText(),frameInt));
-                    rewards.add(new Reward(rightLable.getText(),rightInt));
-                    rewards.add(new Reward(leftLable.getText(),leftInt));
-                    rewards.add(new Reward(upLable.getText(),upInt));
-                    rewards.add(new Reward(downLable.getText(),downInt));
-
-                    rlGlueService.saveRewards(rewards);
-                    rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
-                }catch (NumberFormatException nfe){
-
-                }
-
-            }
-        });
-        lookupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                State state = new State(
-                        Long.parseLong(modeTextField.getText()),
-                        Long.parseLong(sceneTextField.getText()),
-                        Long.parseLong(enemyTextField.getText()));
-                DatabaseImpl db = new DatabaseImpl();
-                double[] values = db.select(state,db.getLastRewardsGroup());
-                a1TextField.setText(""+values[0]);
-                a2TextField.setText(""+values[1]);
-                a3TextField.setText(""+values[2]);
-                a4TextField.setText(""+values[3]);
-                a5TextField.setText(""+values[4]);
-                a6TextField.setText(""+values[5]);
-                a7TextField.setText(""+values[6]);
-                a8TextField.setText(""+values[7]);
-                a9TextField.setText(""+values[8]);
-                a10TextField.setText(""+values[9]);
-                a11TextField.setText(""+values[10]);
-                a12TextField.setText(""+values[11]);
-            }
-        });
-        DBResetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame();
-                int confirm = JOptionPane.showOptionDialog(frame,
-                        "Are you sure you want to reset the DB?",
-                        "Reset Confirmation", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    rlGlueService.resetDB();
-                }
-            }
-        });
-        exportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rlGlueService.exportToPath(pathTextField.getText());
-            }
-        });
-        randomSeedButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Random generator = new Random();
-                seedTextField.setText(""+generator.nextInt());
-            }
-        });
-        saveVisionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Zone> visionField = new ArrayList<Zone>();
-                visionField = createVisionField();
-
-                rlGlueService.setVisionField(visionField);
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Main_Frame");
-        frame.setContentPane(new Main_Frame().main_frame);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
-    private ArrayList<Zone> createVisionField() {
-        HashMap<Integer,ArrayList<Block>> blZones = createZone(blList);
-        HashMap<Integer,ArrayList<Block>> brZones = createZone(brList);
-        HashMap<Integer,ArrayList<Block>> eZones = createZone(eList);
-        HashMap<Integer,ArrayList<Block>> deZones = createZone(deList);
-
-        ArrayList<Zone> zones = new ArrayList<>();
-        Set<Integer> blSet = blZones.keySet();
-        Set<Integer> brSet = brZones.keySet();
-        Set<Integer> eSet = eZones.keySet();
-        Set<Integer> deSet = deZones.keySet();
-        for (Integer i : blSet) {
-            zones.add(new Zone(blZones.get(i), Type.BLOCK));
-        }
-        for (Integer i : brSet) {
-            zones.add(new Zone(brZones.get(i), Type.BRIDGE));
-        }
-        for (Integer i : eSet) {
-            zones.add(new Zone(eZones.get(i), Type.ENEMY));
-        }
-        for (Integer i : deSet) {
-            zones.add(new Zone(deZones.get(i), Type.DETAILEDENEMY));
-        }
-
-        int envExp = eSet.size() + deSet.size();
-        int marioExp = envExp + blSet.size() + brSet.size();
-
-        rlGlueService.setEnvironmentMul(exp(envExp));
-        rlGlueService.setMarioMul(exp(marioExp));
-
-        return zones;
-    }
-
-    private HashMap<Integer,ArrayList<Block>> createZone(ArrayList<JTextField> textFields) {
-        HashMap<Integer,ArrayList<Block>> zones = new HashMap<>();
-        for (JTextField textField : textFields) {
-            if (textField.getText() != "") {
-                if (zones.get(Integer.parseInt(textField.getText())) != null) {
-                    Block block = new Block((Integer.parseInt(textField.getName().substring(9,10))+(-3)),(Integer.parseInt(textField.getName().substring(10,11))+(-2)));
-                    ArrayList<Block> blockList = zones.get(Integer.parseInt(textField.getText()));
-                    blockList.add(block);
-                    zones.put(Integer.parseInt(textField.getText()),blockList);
-                } else {
-                    ArrayList<Block> blockList = new ArrayList<>();
-                    Block block = new Block((Integer.parseInt(textField.getName().substring(9,10))+(-3)),(Integer.parseInt(textField.getName().substring(10,11))+(-2)));
-                    blockList.add(block);
-                    zones.put(Integer.parseInt(textField.getText()),blockList);
-                }
-            }
-        }
-        return zones;
-    }
-
-    private long exp(int x) {
-        long res = 1;
-        for (int i=0;i<x;i++) {
-            res *= 10;
-        }
-        return res;
-    }
-
-    private ArrayList<Zone> createDefaultVisionField(){
-
-        Block s1b1 = new Block(0,4);
-        Block s1b2 = new Block(0,3);
-        Block s1b3 = new Block(0,2);
-
-        Block s2b1 = new Block(1,2);
-
-        Block s3b1 = new Block(1,1);
-
-        Block s4b1 = new Block(1,0);
-
-        Block s5b1 = new Block(1,-1);
-        Block s5b2 = new Block(1,-2);
-
-        Block s6b1 = new Block(0,-1);
-
-        Block s7b1 = new Block(-1,2);
-
-        Block s8b1 = new Block(0,2);
-
-        Block s9b1 = new Block(1,2);
-
-        Block e1b1 = new Block(0,2);
-        Block e1b2 = new Block(1,2);
-
-        Block e2b1 = new Block(1,1);
-        Block e2b2 = new Block(1,0);
-        Block e2b3 = new Block(1,-1);
-
-        Block e3b1 = new Block(2,1);
-        Block e3b2 = new Block(2,0);
-        Block e3b3 = new Block(2,-1);
-
-        Block e4b1 = new Block(0,-1);
-
-        Block e5b1 = new Block(-1,1);
-        Block e5b2 = new Block(-1,0);
-
-        Block e6b1 = new Block(0,0);
-        Block e6b2 = new Block(0,1);
-
-        ArrayList<Block> s1b = new ArrayList<>();
-        s1b.add(s1b1);
-        s1b.add(s1b2);
-        s1b.add(s1b3);
-
-        ArrayList<Block> s2b = new ArrayList<>();
-        s2b.add(s2b1);
-
-        ArrayList<Block> s3b = new ArrayList<>();
-        s3b.add(s3b1);
-
-        ArrayList<Block> s4b = new ArrayList<>();
-        s4b.add(s4b1);
-
-        ArrayList<Block> s5b = new ArrayList<>();
-        s5b.add(s5b1);
-        s5b.add(s5b2);
-
-        ArrayList<Block> s6b = new ArrayList<>();
-        s6b.add(s6b1);
-
-        ArrayList<Block> s7b = new ArrayList<>();
-        s7b.add(s7b1);
-
-        ArrayList<Block> s8b = new ArrayList<>();
-        s8b.add(s8b1);
-
-        ArrayList<Block> s9b = new ArrayList<>();
-        s9b.add(s9b1);
-
-        ArrayList<Block> e1b = new ArrayList<>();
-        e1b.add(e1b1);
-        e1b.add(e1b2);
-
-        ArrayList<Block> e2b = new ArrayList<>();
-        e2b.add(e2b1);
-        e2b.add(e2b2);
-        e2b.add(e2b3);
-
-        ArrayList<Block> e3b = new ArrayList<>();
-        e3b.add(e3b1);
-        e3b.add(e3b2);
-        e3b.add(e3b3);
-
-        ArrayList<Block> e4b = new ArrayList<>();
-        e4b.add(e4b1);
-
-        ArrayList<Block> e5b = new ArrayList<>();
-        e5b.add(e5b1);
-        e5b.add(e5b2);
-
-        ArrayList<Block> e6b = new ArrayList<>();
-        e5b.add(e6b1);
-        e5b.add(e6b2);
-
-        Zone s1 = new Zone(s1b, Type.BRIDGE);
-        Zone s2 = new Zone(s2b, Type.BLOCK);
-        Zone s3 = new Zone(s3b, Type.BLOCK);
-        Zone s4 = new Zone(s4b, Type.BLOCK);
-        Zone s5 = new Zone(s5b, Type.BLOCK);
-        Zone s6 = new Zone(s6b, Type.BLOCK);
-        Zone s7 = new Zone(s7b, Type.BLOCK);
-        Zone s8 = new Zone(s8b, Type.BLOCK);
-        Zone s9 = new Zone(s9b, Type.BLOCK);
-
-        Zone e1 = new Zone(e1b, Type.ENEMY);
-        Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
-        Zone e3 = new Zone(e3b, Type.DETAILEDENEMY);
-        Zone e4 = new Zone(e4b, Type.DETAILEDENEMY);
-        Zone e5 = new Zone(e5b, Type.ENEMY);
-        Zone e6 = new Zone(e6b, Type.ENEMY);
-
-        ArrayList<Zone> visionField = new ArrayList<>();
-
-        visionField.add(s1);
-        visionField.add(s2);
-        visionField.add(s3);
-        visionField.add(s4);
-        visionField.add(s5);
-        visionField.add(s6);
-        visionField.add(s7);
-        visionField.add(s8);
-        visionField.add(s9);
-
-        visionField.add(e1);
-        visionField.add(e2);
-        visionField.add(e3);
-        visionField.add(e4);
-        visionField.add(e5);
-        visionField.add(e6);
-
-        return visionField;
-
     }
 
 }
