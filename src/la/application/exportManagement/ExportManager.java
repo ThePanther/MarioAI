@@ -68,13 +68,13 @@ public class ExportManager {
 		workbook.createSheet(SHEET_VALUES, 0);
         workbook.createSheet(SHEET_STATISTICS, 1);
         WritableSheet sheetValues = workbook.getSheet(0);
-        WritableSheet sheetStatistics = workbook.getSheet(1);
+        //WritableSheet sheetStatistics = workbook.getSheet(1);
 
         CSVSheetFormat csvSheetFormat = new CSVSheetFormat();
         csvSheetFormat.createLabelValues(sheetValues,rewards);
         csvSheetFormat.createContentValues(sheetValues,rewardGroupID,rewards,tries);
-        csvSheetFormat.createLabelStatistics(sheetStatistics);
-        csvSheetFormat.createContentStatistics(sheetValues,sheetStatistics,tries.size());
+        csvSheetFormat.createLabelStatistics(sheetValues);
+        csvSheetFormat.createContentStatistics(sheetValues, tries.size());
 
 		workbook.write();
 		workbook.close();

@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVSheetFormat {
-
     private final int COLUMN_VALUE_REWARDS_BEGIN = 0;
     private final int ROW_VALUE_REWARDS_BEGIN = 0;
-    private final int COLUMN_VALUE_TRIES_BEGIN = 0;
-    private final int ROW_VALUE_TRIES_BEGIN = 3;
 
     private final int COLUMN_STATISTIC_WINS_BEGIN = 0;
-    private final int ROW_STATISTIC_WINS_BEGIN = 0;
+    private final int ROW_STATISTIC_WINS_BEGIN = 3;
     private final int COLUMN_STATISTIC_LOSS_BEGIN = 0;
-    private final int ROW_STATISTIC_LOSS_BEGIN = 4;
+    private final int ROW_STATISTIC_LOSS_BEGIN = ROW_STATISTIC_WINS_BEGIN+4;
     private final int COLUMN_STATISTIC_REWARDS_BEGIN = 0;
-    private final int ROW_STATISTIC_REWARDS_BEGIN = 8;
+    private final int ROW_STATISTIC_REWARDS_BEGIN = ROW_STATISTIC_LOSS_BEGIN+4;
     private final int COLUMN_STATISTIC_STEPS_BEGIN = 0;
-    private final int ROW_STATISTIC_STEPS_BEGIN = 12;
+    private final int ROW_STATISTIC_STEPS_BEGIN = ROW_STATISTIC_REWARDS_BEGIN+4;
+
+    private final int COLUMN_VALUE_TRIES_BEGIN = 0;
+    private final int ROW_VALUE_TRIES_BEGIN = ROW_STATISTIC_STEPS_BEGIN+6;
 
 
     private WritableCellFormat timesBoldUnderline;
@@ -49,7 +49,7 @@ public class CSVSheetFormat {
      *  VALUES
      **********************************************************************************/
 
-    public void createLabelValues(WritableSheet sheet, List<Reward> rewards) throws WriteException {
+    public void createLabelValues(WritableSheet sheet, List<Reward> rewards ) throws WriteException {
         // Die Reward Gruppe
         addCaption(sheet, COLUMN_VALUE_REWARDS_BEGIN, ROW_VALUE_REWARDS_BEGIN, "RewardsGroup");
         // Alle Rewards
@@ -61,6 +61,16 @@ public class CSVSheetFormat {
         addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +1, ROW_VALUE_TRIES_BEGIN, "Win");
         addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +2, ROW_VALUE_TRIES_BEGIN, "Rewards");
         addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +3, ROW_VALUE_TRIES_BEGIN, "Steps");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +4, ROW_VALUE_TRIES_BEGIN, "reward_win");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +5, ROW_VALUE_TRIES_BEGIN, "reward_death");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +6, ROW_VALUE_TRIES_BEGIN, "reward_hurt");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +7, ROW_VALUE_TRIES_BEGIN, "reward_kill");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +8, ROW_VALUE_TRIES_BEGIN, "reward_elapsed_frame");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +9, ROW_VALUE_TRIES_BEGIN, "reward_move_right");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +10, ROW_VALUE_TRIES_BEGIN, "reward_move_left");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +11, ROW_VALUE_TRIES_BEGIN, "reward_move_up");
+        addCaption(sheet, COLUMN_VALUE_TRIES_BEGIN +12, ROW_VALUE_TRIES_BEGIN, "reward_move_down");
+
     }
 
     public void createContentValues(WritableSheet sheet, int rewardGroupID, List<Reward> rewards, List<Try> tries) throws WriteException {
@@ -70,10 +80,19 @@ public class CSVSheetFormat {
         }
 
         for (int i = 0; i < tries.size(); i++) {
-            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN,    ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getId());
-            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +1, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getWin());
-            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +2, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getRewards());
-            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +3, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getSteps());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN,     ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getId());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +1,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getWin());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +2,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getRewards());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +3,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getSteps());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +4,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_win_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +5,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_death_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +6,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_hurt_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +7,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_kill_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +8,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_elapsed_frame_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +9,  ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_move_right_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +10, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_move_left_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +11, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_move_up_count());
+            addNumber(sheet, COLUMN_VALUE_TRIES_BEGIN +12, ROW_VALUE_TRIES_BEGIN +1+i, tries.get(i).getReward_move_up_count());
         }
     }
 
@@ -81,38 +100,36 @@ public class CSVSheetFormat {
      *  Statistics
      **********************************************************************************/
 
-    public void createLabelStatistics(WritableSheet sheetStatistics) throws WriteException {
+    public void createLabelStatistics(WritableSheet sheet) throws WriteException {
         // Wins
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN, ROW_STATISTIC_WINS_BEGIN, "WINS");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN, ROW_STATISTIC_WINS_BEGIN + 1, "Max");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 1, ROW_STATISTIC_WINS_BEGIN + 1, "Min");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 2, ROW_STATISTIC_WINS_BEGIN + 1, "Durchschnitt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 3, ROW_STATISTIC_WINS_BEGIN + 1, "Gesamt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 4, ROW_STATISTIC_WINS_BEGIN + 1, "Prozent");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 5, ROW_STATISTIC_WINS_BEGIN + 1, "Max in Folge");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN, ROW_STATISTIC_WINS_BEGIN, "WINS");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN, ROW_STATISTIC_WINS_BEGIN + 1, "Max");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN + 1, ROW_STATISTIC_WINS_BEGIN + 1, "Min");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN + 2, ROW_STATISTIC_WINS_BEGIN + 1, "Durchschnitt");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN + 3, ROW_STATISTIC_WINS_BEGIN + 1, "Gesamt");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN + 4, ROW_STATISTIC_WINS_BEGIN + 1, "Prozent");
+        addCaption(sheet, COLUMN_STATISTIC_WINS_BEGIN + 5, ROW_STATISTIC_WINS_BEGIN + 1, "Max in Folge");
         // Loss
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN, ROW_STATISTIC_LOSS_BEGIN, "LOSS");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN, ROW_STATISTIC_LOSS_BEGIN + 1, "Max");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 1, ROW_STATISTIC_LOSS_BEGIN + 1, "Min");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 2, ROW_STATISTIC_LOSS_BEGIN + 1, "Durchschnitt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 3, ROW_STATISTIC_LOSS_BEGIN + 1, "Gesamt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 4, ROW_STATISTIC_LOSS_BEGIN + 1, "Prozent");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 5, ROW_STATISTIC_LOSS_BEGIN + 1, "in Folge");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN, ROW_STATISTIC_LOSS_BEGIN, "LOSS");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN, ROW_STATISTIC_LOSS_BEGIN + 1, "Max");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 1, ROW_STATISTIC_LOSS_BEGIN + 1, "Min");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 2, ROW_STATISTIC_LOSS_BEGIN + 1, "Durchschnitt");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 3, ROW_STATISTIC_LOSS_BEGIN + 1, "Gesamt");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 4, ROW_STATISTIC_LOSS_BEGIN + 1, "Prozent");
+        addCaption(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 5, ROW_STATISTIC_LOSS_BEGIN + 1, "in Folge");
         // Rewards
-        addCaption(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN, ROW_STATISTIC_REWARDS_BEGIN, "REWARDS");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN, ROW_STATISTIC_REWARDS_BEGIN + 1, "Max");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN + 1, ROW_STATISTIC_REWARDS_BEGIN + 1, "Min");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN + 2, ROW_STATISTIC_REWARDS_BEGIN + 1, "Durchschnitt");
+        addCaption(sheet, COLUMN_STATISTIC_REWARDS_BEGIN, ROW_STATISTIC_REWARDS_BEGIN, "REWARDS");
+        addCaption(sheet, COLUMN_STATISTIC_REWARDS_BEGIN, ROW_STATISTIC_REWARDS_BEGIN + 1, "Max");
+        addCaption(sheet, COLUMN_STATISTIC_REWARDS_BEGIN + 1, ROW_STATISTIC_REWARDS_BEGIN + 1, "Min");
+        addCaption(sheet, COLUMN_STATISTIC_REWARDS_BEGIN + 2, ROW_STATISTIC_REWARDS_BEGIN + 1, "Durchschnitt");
         // Steps
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN, ROW_STATISTIC_STEPS_BEGIN, "STEPS");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN, ROW_STATISTIC_STEPS_BEGIN + 1, "Max");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 1, ROW_STATISTIC_STEPS_BEGIN + 1, "Min");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 2, ROW_STATISTIC_STEPS_BEGIN + 1, "Durchschnitt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 3, ROW_STATISTIC_STEPS_BEGIN + 1, "Gesamt");
-        addCaption(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 4, ROW_STATISTIC_STEPS_BEGIN + 1, "Prozent");
+        addCaption(sheet, COLUMN_STATISTIC_STEPS_BEGIN, ROW_STATISTIC_STEPS_BEGIN, "STEPS");
+        addCaption(sheet, COLUMN_STATISTIC_STEPS_BEGIN, ROW_STATISTIC_STEPS_BEGIN + 1, "Max");
+        addCaption(sheet, COLUMN_STATISTIC_STEPS_BEGIN + 1, ROW_STATISTIC_STEPS_BEGIN + 1, "Min");
+        addCaption(sheet, COLUMN_STATISTIC_STEPS_BEGIN + 2, ROW_STATISTIC_STEPS_BEGIN + 1, "Durchschnitt");
 
     }
-    public void createContentStatistics(WritableSheet sheetValues, WritableSheet sheetStatistics, int tryCount) throws WriteException {
+    public void createContentStatistics(WritableSheet sheet, int tryCount) throws WriteException {
         double winMax = 0;
         double winMin = 0;
         double winAverage = 0;
@@ -133,10 +150,11 @@ public class CSVSheetFormat {
 
         boolean firstWin = true;
         boolean firstLoss = true;
-        for (int i = ROW_VALUE_TRIES_BEGIN+1; i < ROW_VALUE_TRIES_BEGIN+tryCount; i++){
-            double winValue = Double.parseDouble(sheetValues.getCell(COLUMN_VALUE_TRIES_BEGIN+1,i).getContents().replace(",","."));
-            double reward = Double.parseDouble(sheetValues.getCell(COLUMN_VALUE_TRIES_BEGIN+2,i).getContents().replace(",","."));
-            int step = Integer.parseInt(sheetValues.getCell(COLUMN_VALUE_TRIES_BEGIN+3,i).getContents());
+        boolean first = true;
+        for (int i = ROW_VALUE_TRIES_BEGIN+1; i < ROW_VALUE_TRIES_BEGIN+1+tryCount; i++){
+            double winValue = Double.parseDouble(sheet.getCell(COLUMN_VALUE_TRIES_BEGIN+1,i).getContents().replace(",","."));
+            double reward = Double.parseDouble(sheet.getCell(COLUMN_VALUE_TRIES_BEGIN+2,i).getContents().replace(",","."));
+            int step = Integer.parseInt(sheet.getCell(COLUMN_VALUE_TRIES_BEGIN+3,i).getContents());
 
             if (winValue == 1){
 
@@ -162,13 +180,14 @@ public class CSVSheetFormat {
 
             lossMaxInFolge = Math.max(lossInFolge,lossMaxInFolge);
 
-            rewardMax = Math.max(reward,rewardMax);
-            rewardMin = Math.min(reward,rewardMax);
+            rewardMax = (first) ? reward : Math.max(reward,rewardMax);
+            rewardMin = (first) ? reward : Math.min(reward,rewardMin);
             rewardAverage += reward;
 
-            stepMax = Math.max(step,stepMax);
-            stepMin = Math.min(step,stepMax);
+            stepMax = (first) ? step : Math.max(step,stepMax);
+            stepMin = (first) ? step : Math.min(step,stepMin);
             stepAverage += step;
+            first = false;
         }
         double winProzent = ((winGesamtInt/tryCount)*100);
         winAverage = winAverage/tryCount;
@@ -177,33 +196,29 @@ public class CSVSheetFormat {
         lossAverage= lossAverage/tryCount;
         rewardAverage = rewardAverage/tryCount;
         stepAverage = stepAverage/tryCount;
-        double stepGesamtInt = stepAverage;
-        double stepProzent = ((stepGesamtInt/tryCount)*100);
 
         // Wins
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN    , ROW_STATISTIC_WINS_BEGIN + 2, winMax);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 1, ROW_STATISTIC_WINS_BEGIN + 2, winMin);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 2, ROW_STATISTIC_WINS_BEGIN + 2, winAverage);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 3, ROW_STATISTIC_WINS_BEGIN + 2, winGesamtInt);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 4, ROW_STATISTIC_WINS_BEGIN + 2, winProzent);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_WINS_BEGIN + 5, ROW_STATISTIC_WINS_BEGIN + 2, winMaxInFolge);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN    , ROW_STATISTIC_WINS_BEGIN + 2, winMax);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN + 1, ROW_STATISTIC_WINS_BEGIN + 2, winMin);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN + 2, ROW_STATISTIC_WINS_BEGIN + 2, winAverage);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN + 3, ROW_STATISTIC_WINS_BEGIN + 2, winGesamtInt);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN + 4, ROW_STATISTIC_WINS_BEGIN + 2, winProzent);
+        addNumber(sheet, COLUMN_STATISTIC_WINS_BEGIN + 5, ROW_STATISTIC_WINS_BEGIN + 2, winMaxInFolge);
         // Loss
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN    , ROW_STATISTIC_LOSS_BEGIN + 2, lossMax);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 1, ROW_STATISTIC_LOSS_BEGIN + 2, lossMin);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 2, ROW_STATISTIC_LOSS_BEGIN + 2, lossAverage);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 3, ROW_STATISTIC_LOSS_BEGIN + 2, lossGesamtInt);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 4, ROW_STATISTIC_LOSS_BEGIN + 2, lossProzent);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_LOSS_BEGIN + 5, ROW_STATISTIC_LOSS_BEGIN + 2, lossMaxInFolge);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN    , ROW_STATISTIC_LOSS_BEGIN + 2, lossMax);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 1, ROW_STATISTIC_LOSS_BEGIN + 2, lossMin);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 2, ROW_STATISTIC_LOSS_BEGIN + 2, lossAverage);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 3, ROW_STATISTIC_LOSS_BEGIN + 2, lossGesamtInt);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 4, ROW_STATISTIC_LOSS_BEGIN + 2, lossProzent);
+        addNumber(sheet, COLUMN_STATISTIC_LOSS_BEGIN + 5, ROW_STATISTIC_LOSS_BEGIN + 2, lossMaxInFolge);
         // Rewards
-        addNumber(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN    , ROW_STATISTIC_REWARDS_BEGIN + 2, rewardMax);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN + 1, ROW_STATISTIC_REWARDS_BEGIN + 2, rewardMin);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_REWARDS_BEGIN + 2, ROW_STATISTIC_REWARDS_BEGIN + 2, rewardAverage);
+        addNumber(sheet, COLUMN_STATISTIC_REWARDS_BEGIN    , ROW_STATISTIC_REWARDS_BEGIN + 2, rewardMax);
+        addNumber(sheet, COLUMN_STATISTIC_REWARDS_BEGIN + 1, ROW_STATISTIC_REWARDS_BEGIN + 2, rewardMin);
+        addNumber(sheet, COLUMN_STATISTIC_REWARDS_BEGIN + 2, ROW_STATISTIC_REWARDS_BEGIN + 2, rewardAverage);
         // Steps
-        addNumber(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN    , ROW_STATISTIC_STEPS_BEGIN + 2, stepMax);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 1, ROW_STATISTIC_STEPS_BEGIN + 2, stepMin);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 2, ROW_STATISTIC_STEPS_BEGIN + 2, stepAverage);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 3, ROW_STATISTIC_STEPS_BEGIN + 2, stepGesamtInt);
-        addNumber(sheetStatistics, COLUMN_STATISTIC_STEPS_BEGIN + 4, ROW_STATISTIC_STEPS_BEGIN + 2, stepProzent);
+        addNumber(sheet, COLUMN_STATISTIC_STEPS_BEGIN    , ROW_STATISTIC_STEPS_BEGIN + 2, stepMax);
+        addNumber(sheet, COLUMN_STATISTIC_STEPS_BEGIN + 1, ROW_STATISTIC_STEPS_BEGIN + 2, stepMin);
+        addNumber(sheet, COLUMN_STATISTIC_STEPS_BEGIN + 2, ROW_STATISTIC_STEPS_BEGIN + 2, stepAverage);
 
     }
 
