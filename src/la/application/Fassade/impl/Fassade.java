@@ -97,7 +97,7 @@ public class Fassade implements RLGlueService {
 
     @Override
     public RewardsGroup getCurrentReward() {
-        return null;
+        return db.getLastRewardsGroup();
     }
 
     @Override

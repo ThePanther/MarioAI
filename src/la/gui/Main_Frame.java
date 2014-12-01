@@ -281,6 +281,15 @@ public class Main_Frame {
         episodesTextField.setText("10");
         seedTextField.setText("0");
         fpsTextField.setText("1000");
+
+        db = ManagerFactory.getManager(Database.class);
+
+        if(db.getLastRewardsGroup().getRewards().isEmpty()) {
+            rlGlueService.saveRewards(rlGlueService.getRewards());
+        }
+
+        rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
+
         winTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(winLable.getText()).getReward()));
         lossTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(lossLable.getText()).getReward()));
         hurtTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(hurtLable.getText()).getReward()));
@@ -290,14 +299,6 @@ public class Main_Frame {
         leftTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(leftLable.getText()).getReward()));
         upTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(upLable.getText()).getReward()));
         downTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(downLable.getText()).getReward()));
-
-        db = ManagerFactory.getManager(Database.class);
-
-        if(db.getLastRewardsGroup() == null) {
-            rlGlueService.saveRewards(rlGlueService.getRewards());
-        }
-
-        rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
 
         for(String s: rlGlueService.getAllMarioModes()) {
             startmodeComboBox.addItem(s);
