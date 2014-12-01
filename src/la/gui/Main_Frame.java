@@ -8,9 +8,13 @@ import la.persistence.database.impl.DatabaseImpl;
 
 import javax.swing.*;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.List;
 
 import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
@@ -318,6 +322,22 @@ public class Main_Frame {
         setTextFieldNames();
         setTextFieldLists();
 
+        setKeyListeners();
+
+        resetColours();
+
+        setYellow(textField33bl);
+        setYellow(textField32bl);
+
+        setYellow(textField33br);
+        setYellow(textField32br);
+
+        setYellow(textField33e);
+        setYellow(textField32e);
+
+        setYellow(textField33de);
+        setYellow(textField32de);
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -421,16 +441,17 @@ public class Main_Frame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Random generator = new Random();
-                seedTextField.setText(""+generator.nextInt());
+                seedTextField.setText("" + generator.nextInt());
             }
         });
         saveVisionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Zone> visionField = new ArrayList<Zone>();
+                ArrayList<Zone> visionField;
                 visionField = createVisionField();
 
                 rlGlueService.setVisionField(visionField);
+                resetColours();
             }
         });
         resetToDefaultButton.addActionListener(new ActionListener() {
@@ -438,6 +459,7 @@ public class Main_Frame {
             public void actionPerformed(ActionEvent e) {
                 rlGlueService.setVisionField(createDefaultVisionField());
                 setDefaultVisionTextFields();
+                resetColours();
             }
         });
     }
@@ -639,6 +661,100 @@ public class Main_Frame {
 
         return visionField;
 
+    }
+
+    private void setGreen(JTextField textField) {
+        textField.setBackground(new Color(0,255,0));
+        textField.setForeground(new Color(0,0,0));
+    }
+
+    private void setRed(JTextField textField) {
+        textField.setBackground(new Color(255,0,0));
+        textField.setForeground(new Color(0,0,0));
+    }
+
+    private void setYellow(JTextField textField) {
+        textField.setBackground(new Color(255,255,0));
+        textField.setForeground(new Color(0,0,0));
+    }
+
+    private void setWhite(JTextField textField) {
+        textField.setBackground(new Color(255,255,255));
+        textField.setForeground(new Color(0,0,0));
+    }
+
+    private void setKeyListeners() {
+        for (final JTextField field : blList) {
+            field.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    setGreen(field);
+                }
+            });
+        }
+        for (final JTextField field : brList) {
+            field.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    setGreen(field);
+                }
+            });
+        }
+        for (final JTextField field : eList) {
+            field.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    setRed(field);
+                }
+            });
+        }
+        for (final JTextField field : deList) {
+            field.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    setRed(field);
+                }
+            });
+        }
+    }
+
+    private void resetColours() {
+        for (JTextField field : blList) {
+            if (!(field.getName().equals("textField33bl") || field.getName().equals("textField32bl"))) {
+                if (!field.getText().isEmpty()) {
+                    setGreen(field);
+                } else {
+                    setWhite(field);
+                }
+            }
+        }
+        for (JTextField field : brList) {
+            if (!(field.getName().equals("textField33br") || field.getName().equals("textField32br"))) {
+                if (!field.getText().isEmpty()) {
+                    setGreen(field);
+                } else {
+                    setWhite(field);
+                }
+            }
+        }
+        for (JTextField field : eList) {
+            if (!(field.getName().equals("textField33e") || field.getName().equals("textField32e"))) {
+                if (!field.getText().isEmpty()) {
+                    setRed(field);
+                } else {
+                    setWhite(field);
+                }
+            }
+        }
+        for (JTextField field : deList) {
+            if (!(field.getName().equals("textField33de") || field.getName().equals("textField32de"))) {
+                if (!field.getText().isEmpty()) {
+                    setRed(field);
+                } else {
+                    setWhite(field);
+                }
+            }
+        }
     }
 
     private void setDefaultVisionTextFields() {
