@@ -541,15 +541,15 @@ public class Main_Frame {
                     int downInt  = Integer.parseInt(downTextField.getText());
 
                     List<Reward> rewards = new ArrayList<>();
-                    rewards.add(new Reward(winLable.getName(),winsInt));
-                    rewards.add(new Reward(lossLable.getName(),lossInt));
-                    rewards.add(new Reward(hurtLable.getName(),hurtInt));
-                    rewards.add(new Reward(stompLable.getName(),stompInt));
-                    rewards.add(new Reward(frameLable.getName(),frameInt));
-                    rewards.add(new Reward(rightLable.getName(),rightInt));
-                    rewards.add(new Reward(leftLable.getName(),leftInt));
-                    rewards.add(new Reward(upLable.getName(),upInt));
-                    rewards.add(new Reward(downLable.getName(),downInt));
+                    rewards.add(new Reward(winLable.getText(),winsInt));
+                    rewards.add(new Reward(lossLable.getText(),lossInt));
+                    rewards.add(new Reward(hurtLable.getText(),hurtInt));
+                    rewards.add(new Reward(stompLable.getText(),stompInt));
+                    rewards.add(new Reward(frameLable.getText(),frameInt));
+                    rewards.add(new Reward(rightLable.getText(),rightInt));
+                    rewards.add(new Reward(leftLable.getText(),leftInt));
+                    rewards.add(new Reward(upLable.getText(),upInt));
+                    rewards.add(new Reward(downLable.getText(),downInt));
 
                     rlGlueService.saveRewards(rewards);
                     rlGlueService.setRewards(db.getLastRewardsGroup().getRewards());
