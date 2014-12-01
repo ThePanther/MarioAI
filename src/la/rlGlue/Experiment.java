@@ -45,7 +45,7 @@ public class Experiment {
     /* Run One Episode of length maximum cutOff*/
     private void runEpisode(int stepLimit) {
     	if(Config.RANDOM_LEVELS) {
-        	Config.LEVEL_SEED = randGenerator.nextInt();
+    		Config.LEVEL_SEED = randGenerator.nextInt();
     	}
 
         //Starten der Episode
