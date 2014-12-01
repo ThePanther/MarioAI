@@ -20,6 +20,19 @@ public class RewardsGroup {
 	public List<Reward> getRewards() {
 		return rewards;
 	}
+
+	public Reward getReward(String name) {
+		Reward returnReward = null;
+
+		for(Reward reward : rewards) {
+			if(reward.getName().equals(name)) {
+				returnReward = reward;
+			}
+		}
+
+		return returnReward;
+	}
+
 	public void setRewards(List<Reward> rewards) {
 		this.rewards = rewards;
 	} 

@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
+
 
 public class Main_Frame {
     private JButton startButton;
@@ -279,6 +281,15 @@ public class Main_Frame {
         episodesTextField.setText("10");
         seedTextField.setText("0");
         fpsTextField.setText("1000");
+        winTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(winTextField.getName()).getReward()));
+        lossTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(lossTextField.getName()).getReward()));
+        hurtTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(hurtTextField.getName()).getReward()));
+        rightTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(rightTextField.getName()).getReward()));
+        leftTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(leftTextField.getName()).getReward()));
+        stompTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(stompTextField.getName()).getReward()));
+        frameTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(frameTextField.getName()).getReward()));
+        upTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(upTextField.getName()).getReward()));
+        downTextField.setText(String.valueOf(rlGlueService.getCurrentReward().getReward(downTextField.getName()).getReward()));
 
         db = ManagerFactory.getManager(Database.class);
 
