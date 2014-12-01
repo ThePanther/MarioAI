@@ -267,6 +267,7 @@ public class Main_Frame {
     private JTextField textField62de;
     private JTextField textField61de;
     private JTextField textField60de;
+    private JButton resetToDefaultButton;
     private RLGlueService rlGlueService;
 
     private Database db;
@@ -313,7 +314,7 @@ public class Main_Frame {
         }
 
         rlGlueService.setVisionField(createDefaultVisionField());
-
+        setDefaultVisionTextFields();
         setTextFieldNames();
         setTextFieldLists();
 
@@ -432,6 +433,13 @@ public class Main_Frame {
                 rlGlueService.setVisionField(visionField);
             }
         });
+        resetToDefaultButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rlGlueService.setVisionField(createDefaultVisionField());
+                setDefaultVisionTextFields();
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -524,8 +532,6 @@ public class Main_Frame {
 
         Block s8b1 = new Block(0,2);
 
-        Block s9b1 = new Block(1,2);
-
         Block e1b1 = new Block(0,2);
         Block e1b2 = new Block(1,2);
 
@@ -572,9 +578,6 @@ public class Main_Frame {
         ArrayList<Block> s8b = new ArrayList<>();
         s8b.add(s8b1);
 
-        ArrayList<Block> s9b = new ArrayList<>();
-        s9b.add(s9b1);
-
         ArrayList<Block> e1b = new ArrayList<>();
         e1b.add(e1b1);
         e1b.add(e1b2);
@@ -608,7 +611,6 @@ public class Main_Frame {
         Zone s6 = new Zone(s6b, Type.BLOCK);
         Zone s7 = new Zone(s7b, Type.BLOCK);
         Zone s8 = new Zone(s8b, Type.BLOCK);
-        Zone s9 = new Zone(s9b, Type.BLOCK);
 
         Zone e1 = new Zone(e1b, Type.ENEMY);
         Zone e2 = new Zone(e2b, Type.DETAILEDENEMY);
@@ -627,7 +629,6 @@ public class Main_Frame {
         visionField.add(s6);
         visionField.add(s7);
         visionField.add(s8);
-        visionField.add(s9);
 
         visionField.add(e1);
         visionField.add(e2);
@@ -638,6 +639,46 @@ public class Main_Frame {
 
         return visionField;
 
+    }
+
+    private void setDefaultVisionTextFields() {
+        textField36br.setText("1");
+        textField35br.setText("1");
+        textField34br.setText("1");
+
+        textField44bl.setText("1");
+
+        textField43bl.setText("2");
+
+        textField42bl.setText("3");
+
+        textField41bl.setText("4");
+        textField40bl.setText("4");
+
+        textField31bl.setText("5");
+
+        textField24bl.setText("6");
+
+        textField34bl.setText("7");
+
+        textField34e.setText("1");
+        textField44e.setText("1");
+
+        textField23e.setText("2");
+        textField22e.setText("2");
+
+        textField33e.setText("3");
+        textField32e.setText("3");
+
+        textField43de.setText("1");
+        textField42de.setText("1");
+        textField41de.setText("1");
+
+        textField53de.setText("2");
+        textField52de.setText("2");
+        textField51de.setText("2");
+
+        textField31de.setText("3");
     }
 
     private void setTextFieldNames() {
