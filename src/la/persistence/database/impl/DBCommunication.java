@@ -361,6 +361,7 @@ public class DBCommunication {
 	private int reward_move_up_count;
 	private int reward_move_down_count;
 			 */
+
 			String sql = "INSERT INTO "
 					+ TABLE_TRY
 					+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "

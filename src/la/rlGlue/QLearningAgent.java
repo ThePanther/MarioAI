@@ -154,8 +154,17 @@ public class QLearningAgent implements AgentInterface {
         if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
-
-        db.saveAll(new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario alive?")), RLGlue.RL_return(), RLGlue.RL_num_steps()), rewardsGroup);
+        Try aTry = new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario alive?")), RLGlue.RL_return(), RLGlue.RL_num_steps()); 
+		aTry.setReward_win_count(5);
+		aTry.setReward_death_count(6);
+		aTry.setReward_hurt_count(7);
+		aTry.setReward_kill_count(8);
+		aTry.setReward_elapsed_frame_count(9);
+		aTry.setReward_move_right_count(10);
+		aTry.setReward_move_left_count(11);
+		aTry.setReward_move_up_count(12);
+		aTry.setReward_move_down_count(13);
+        db.saveAll(aTry, rewardsGroup);
         lastState = new State(0);
         lastAction = 0;
     }
