@@ -758,6 +758,19 @@ public class Main_Frame {
     }
 
     private void setDefaultVisionTextFields() {
+        for (JTextField field : blList) {
+            field.setText("");
+        }
+        for (JTextField field : brList) {
+            field.setText("");
+        }
+        for (JTextField field : eList) {
+            field.setText("");
+        }
+        for (JTextField field : deList) {
+            field.setText("");
+        }
+
         textField36br.setText("1");
         textField35br.setText("1");
         textField34br.setText("1");
