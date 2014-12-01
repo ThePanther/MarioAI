@@ -14,6 +14,8 @@ public class Config {
 
 	public static String AGENT = SARSAAgent.NAME;
 
+	public static double DISCOUNT_FACTOR = 1.0;
+
 	public static boolean VISUALIZATION = true;
 	public static boolean RANDOM_LEVELS = true;
 	public static boolean FREEZE_EXPLORATION = false;

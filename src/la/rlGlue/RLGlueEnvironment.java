@@ -59,8 +59,6 @@ public class RLGlueEnvironment implements EnvironmentInterface {
     private final static int ZLEVEL_SCENE = 1;
     private final static int ZLEVEL_ENEMIES = 1;
 
-    private final static double DISCOUNT_FACTOR = 1.0;
-
     private float[] oldMarioFloatPos = new float[2];
 
     private int oldMarioMode;
@@ -80,7 +78,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
 
         theTaskSpecObject.setEpisodic();
-        theTaskSpecObject.setDiscountFactor(DISCOUNT_FACTOR);
+        theTaskSpecObject.setDiscountFactor(Config.DISCOUNT_FACTOR);
         theTaskSpecObject.addDiscreteObservation(new IntRange(0, STATES_COUNT));
         theTaskSpecObject.addDiscreteAction(new IntRange(0, ACTIONS_COUNT));
 //        theTaskSpecObject.setRewardRange(new DoubleRange(Config.REWARD_DEATH, Config.REWARD_WIN));
