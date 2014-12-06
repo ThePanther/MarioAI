@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
+//import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 
 public class Main_Frame {
@@ -465,7 +465,7 @@ public class Main_Frame {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Main_Frame");
+        JFrame frame = new JFrame("Mario AI 2014/2015");
         frame.setContentPane(new Main_Frame().main_frame);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
