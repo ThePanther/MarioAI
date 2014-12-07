@@ -5,8 +5,8 @@ import la.common.Reward;
 import la.common.RewardsGroup;
 import la.common.Try;
 import la.persistence.database.Database;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
@@ -49,6 +49,7 @@ public class ExportManager {
         readDataFromDB();
         Workbook wb = new XSSFWorkbook();
         Sheet sheetValues = wb.createSheet(SHEET_VALUES);
+        Sheet sheetChart = wb.createSheet(SHEET_CHART);
 
         SheetFormater sheetFormater = new SheetFormater(wb);
         sheetFormater.createLabelValues(sheetValues, rewards);
@@ -56,27 +57,14 @@ public class ExportManager {
         sheetFormater.createLabelStatistics(sheetValues);
         sheetFormater.createContentStatistics(sheetValues, tries.size());
 
+        ScatterChart chart = new ScatterChart(wb);
+        chart.createAllRewardsChart(sheetChart, sheetValues, tries.size());
 
         FileOutputStream fileOut = new FileOutputStream(createFileName());
         wb.write(fileOut);
         fileOut.close();
     }
 
-	private void readDataFromDB() {
-		RewardsGroup currentRewardGroup = db.getLastRewardsGroup();
-		rewards = currentRewardGroup.getRewards();
-		tries = db.getTries(currentRewardGroup);
-		rewardGroupID = currentRewardGroup.getId();
-		tryCount = tries.size();
-		for (int i = 0; i < tryCount; i++) {
-			Try t = tries.get(i);
-			wins = wins + t.getWin();
-			rewardSum = rewardSum + t.getRewards();
-			steps = steps + t.getSteps();
-		}
-		rewardDiff = rewardSum / tryCount;
-
-	}
 
 	/***************************************************************************************************************/
 
@@ -84,6 +72,21 @@ public class ExportManager {
         return path + FILENAME_HEAD + System.currentTimeMillis() + FILENAME_ENDING;
     }
 
+    private void readDataFromDB() {
+        RewardsGroup currentRewardGroup = db.getLastRewardsGroup();
+        rewards = currentRewardGroup.getRewards();
+        tries = db.getTries(currentRewardGroup);
+        rewardGroupID = currentRewardGroup.getId();
+        tryCount = tries.size();
+        for (int i = 0; i < tryCount; i++) {
+            Try t = tries.get(i);
+            wins = wins + t.getWin();
+            rewardSum = rewardSum + t.getRewards();
+            steps = steps + t.getSteps();
+        }
+        rewardDiff = rewardSum / tryCount;
+
+    }
 
 	public static void main(String[] args) {
         new ExportManager("");
