@@ -59,6 +59,7 @@ public class ExportManager {
 
         ScatterChart chart = new ScatterChart(wb);
         chart.createAllRewardsChart(sheetChart, sheetValues, tries.size());
+        chart.createAnyRewardsChart(sheetChart, sheetValues, tries.size());
 
         FileOutputStream fileOut = new FileOutputStream(createFileName());
         wb.write(fileOut);
