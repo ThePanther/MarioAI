@@ -27,7 +27,7 @@ public class Config {
 	public static int LEVEL_SEED = 0;
 	public static int DIFFICULTY = 0;
 
-	public static int REWARD_WIN = 1000;
+	public static int REWARD_WIN = 2500;
 	public static int REWARD_DEATH = -1000;
 	public static int REWARD_HURT = -850;
 	public static int REWARD_KILL = 85;

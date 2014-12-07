@@ -27,6 +27,7 @@ package la.rlGlue;
 
 import la.application.configManagement.Config;
 import la.common.Block;
+//import la.common.State;
 import la.common.Type;
 import la.common.Zone;
 import la.common.MarioAction;
@@ -81,15 +82,12 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         theTaskSpecObject.setDiscountFactor(Config.DISCOUNT_FACTOR);
         theTaskSpecObject.addDiscreteObservation(new IntRange(0, STATES_COUNT));
         theTaskSpecObject.addDiscreteAction(new IntRange(0, ACTIONS_COUNT));
-//        theTaskSpecObject.setRewardRange(new DoubleRange(Config.REWARD_DEATH, Config.REWARD_WIN));
-        theTaskSpecObject.setRewardRange(new DoubleRange(Config.REWARD_DEATH, Config.REWARD_KILL));
+        theTaskSpecObject.setRewardRange(new DoubleRange(Config.REWARD_DEATH, Config.REWARD_WIN));
 
         String taskSpecString = theTaskSpecObject.toTaskSpec();
 
         TaskSpec.checkTaskSpec(taskSpecString);
 
-        //Blocksichtfeld erzeugen
-        //createVisionField();
         visionField = Config.VISIONFIELD;
 
         return taskSpecString;
@@ -228,7 +226,7 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         	}
 		}
 
-//      for (int x = 0; x < levelScene.length; x++) {
+//        for (int x = 0; x < levelScene.length; x++) {
 //			for (int y = 0; y < levelScene[x].length; y++) {
 //				if(x == marioEgoPos[0] && y == marioEgoPos[1]) {
 //					System.out.print("   M");
@@ -245,8 +243,8 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 //				}
 //			}
 //			System.out.println("");
-//      }
-//      System.out.println(returnObservation.intArray[0] * 1000000000000L + returnObservation.intArray[1] * 1000000L + returnObservation.intArray[2]);
+//        }
+//        System.out.println(new State(returnObservation.intArray[0], returnObservation.intArray[1], returnObservation.intArray[2]).getStateId());
         return returnObservation;
     }
 
@@ -256,10 +254,10 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         Observation observation = getObservation();
 
-//        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
-//        	theReward += Config.REWARD_WIN;
-//        	reward_win_count++;
-//        }
+        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
+        	theReward += Config.REWARD_WIN;
+        	reward_win_count++;
+        }
 
         if(environment.getMarioState()[0] == Mario.STATUS_DEAD && environment.getTimeLeft() > 0) {
         	theReward += Config.REWARD_DEATH;
