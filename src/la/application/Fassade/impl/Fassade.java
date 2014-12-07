@@ -60,22 +60,16 @@ public class Fassade implements RLGlueService {
         return db.getRewardsGroup(rewards);
     }
 
-    public String[] getMarioStartState(){
-        // TODO: getMarioStartState
-        String[] marioStateArr = new String[0];
-        return marioStateArr;
+    public int getMarioStartState(){
+        return Config.MARIO_STARTMODE;
     }
 
-    public Integer[] getDifficult(){
-        // TODO: getDifficult
-        Integer[] difficultArr = new Integer[0];
-        return difficultArr;
+    public int getDifficulty(){
+        return Config.DIFFICULTY;
     }
 
-    public String[] getAgentNames(){
-        // TODO: getAgentNames
-        String[] agentNameArr = new String[0];
-        return agentNameArr;
+    public String getAgentName(){
+        return Config.AGENT;
     }
 
     public void startAgent(){

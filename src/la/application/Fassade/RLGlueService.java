@@ -32,27 +32,9 @@ public interface RLGlueService {
 
     public RewardsGroup saveRewards(List<Reward> rewards);
 
-
-    /**
-     * liefert alle moeglichen Mario-Startzustaende
-     *
-     * @return Array von Strings
-     */
-    public String[] getMarioStartState();
-
-    /**
-     * liefert alle moeglichen Schwierigkeitsgrade
-     *
-     * @return Array von Integer
-     */
-    public Integer[] getDifficult();
-
-    /**
-     * liefert alle vorhandenen Agentennamen
-     *
-     * @return Array von Strings
-     */
-    public String[] getAgentNames();
+    public int getMarioStartState();
+    public int getDifficulty();
+    public String getAgentName();
 
     /**
      * Startet das Spiel mit einem bestimmten Agenten

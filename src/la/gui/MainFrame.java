@@ -171,6 +171,10 @@ public class MainFrame {
     	difficultyComboBox = new JComboBox<Integer>(rlGlueService.getAllDifficulties());
     	agentComboBox = new JComboBox<String>(rlGlueService.getAllAgents());
 
+    	startmodeComboBox.setSelectedIndex(rlGlueService.getMarioStartState());
+    	difficultyComboBox.setSelectedIndex(rlGlueService.getDifficulty());
+    	agentComboBox.setSelectedItem(rlGlueService.getAgentName());
+
     	centerConstraints.anchor = GridBagConstraints.CENTER;
 		leftConstraints.gridx = 0;
 		centerConstraints.gridx = 0;
