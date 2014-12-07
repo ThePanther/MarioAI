@@ -8,7 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="MarioAI" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="MarioAI" level="project" />
+    <orderEntry type="library" name="poi-3.11-beta3-20141111" level="project" />
   </component>
 </module>
+
