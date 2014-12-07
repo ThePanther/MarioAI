@@ -1,12 +1,13 @@
 package la.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Benjamin on 18.10.2014.
  */
-public class Zone {
-
+@SuppressWarnings("serial")
+public class Zone implements Serializable {
     private ArrayList<Block> blocks;
     private Type type;
 

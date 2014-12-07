@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -343,6 +344,8 @@ public class MainFrame {
     }
 
     private void createVisionFieldPanel() {
+		ArrayList<Zone> visionField;
+
         GridBagConstraints constraints = new GridBagConstraints();
         GridBagConstraints centerConstraints = new GridBagConstraints();
     	JLabel emptyLabel = new JLabel("");
@@ -395,25 +398,26 @@ public class MainFrame {
 		centerConstraints.gridy = 17;
 		visionFieldPanel.add(resetToDefaultButton, centerConstraints);
 
-        rlGlueService.setVisionField(createDefaultVisionField());
+		try {
+			visionField = VisionFieldPersistence.loadVisionField();
+		} catch(ClassNotFoundException | IOException e1) {
+			visionField = createDefaultVisionField();
+		}
 
-        setDefaultVisionTextFields();
+		rlGlueService.setVisionField(visionField);
+		setVisionTextFields(visionField);
         setKeyListeners();
         resetColours();
-
-	    setYellow(getTextField(blList, "textField33bl"));
-	    setYellow(getTextField(blList, "textField32bl"));
-	    setYellow(getTextField(brList, "textField33br"));
-	    setYellow(getTextField(brList, "textField32br"));
-	    setYellow(getTextField(eList, "textField33e"));
-	    setYellow(getTextField(eList, "textField32e"));
-	    setYellow(getTextField(deList, "textField33de"));
-	    setYellow(getTextField(deList, "textField32de"));
 
         saveVisionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<Zone> visionField = createVisionField();
+
+                try {
+					VisionFieldPersistence.saveVisionField(visionField);
+				} catch(IOException e1) {
+				}
 
                 rlGlueService.setVisionField(visionField);
 
@@ -424,9 +428,11 @@ public class MainFrame {
         resetToDefaultButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rlGlueService.setVisionField(createDefaultVisionField());
+            	ArrayList<Zone> visionField = createDefaultVisionField();
 
-                setDefaultVisionTextFields();
+            	rlGlueService.setVisionField(visionField);
+
+            	setVisionTextFields(visionField);
 
                 resetColours();
             }
@@ -764,8 +770,8 @@ public class MainFrame {
         e5b.add(e5b2);
 
         ArrayList<Block> e6b = new ArrayList<>();
-        e5b.add(e6b1);
-        e5b.add(e6b2);
+        e6b.add(e6b1);
+        e6b.add(e6b2);
 
         Zone s1 = new Zone(s1b, Type.BRIDGE);
         Zone s2 = new Zone(s2b, Type.BLOCK);
@@ -828,8 +834,8 @@ public class MainFrame {
         for(final JTextField field : blList) {
             field.addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyTyped(KeyEvent e) {
-                    setGreen(field);
+                public void keyReleased(KeyEvent e) {
+                	resetColours();
                 }
             });
         }
@@ -837,8 +843,8 @@ public class MainFrame {
         for(final JTextField field : brList) {
             field.addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyTyped(KeyEvent e) {
-                    setGreen(field);
+                public void keyReleased(KeyEvent e) {
+                	resetColours();
                 }
             });
         }
@@ -846,8 +852,8 @@ public class MainFrame {
         for(final JTextField field : eList) {
             field.addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyTyped(KeyEvent e) {
-                    setRed(field);
+                public void keyReleased(KeyEvent e) {
+                	resetColours();
                 }
             });
         }
@@ -855,14 +861,23 @@ public class MainFrame {
         for(final JTextField field : deList) {
             field.addKeyListener(new KeyAdapter() {
                 @Override
-                public void keyTyped(KeyEvent e) {
-                    setRed(field);
+                public void keyReleased(KeyEvent e) {
+                	resetColours();
                 }
             });
         }
     }
 
     private void resetColours() {
+	    setYellow(getTextField(blList, "textField33bl"));
+	    setYellow(getTextField(blList, "textField32bl"));
+	    setYellow(getTextField(brList, "textField33br"));
+	    setYellow(getTextField(brList, "textField32br"));
+	    setYellow(getTextField(eList, "textField33e"));
+	    setYellow(getTextField(eList, "textField32e"));
+	    setYellow(getTextField(deList, "textField33de"));
+	    setYellow(getTextField(deList, "textField32de"));
+
         for(JTextField field : blList) {
             if(!(field.getName().equals("textField33bl") || field.getName().equals("textField32bl"))) {
                 if(!field.getText().isEmpty()) {
@@ -904,7 +919,7 @@ public class MainFrame {
         }
     }
 
-    private void setDefaultVisionTextFields() {
+    private void setVisionTextFields(ArrayList<Zone> visionField) {
         for (JTextField field : blList) {
             field.setText("");
         }
@@ -918,33 +933,37 @@ public class MainFrame {
             field.setText("");
         }
 
-        getTextField(brList, "textField36br").setText("1");
-        getTextField(brList, "textField35br").setText("1");
-        getTextField(brList, "textField34br").setText("1");
+        int i = 0;
 
-        getTextField(blList, "textField44bl").setText("1");
-        getTextField(blList, "textField43bl").setText("2");
-        getTextField(blList, "textField42bl").setText("3");
-        getTextField(blList, "textField41bl").setText("4");
-        getTextField(blList, "textField40bl").setText("4");
-        getTextField(blList, "textField31bl").setText("5");
-        getTextField(blList, "textField24bl").setText("6");
-        getTextField(blList, "textField34bl").setText("7");
+        for(Zone zone : visionField) {
+        	ArrayList<JTextField> list = null;
+    		String namePostfix = null;
 
-        getTextField(eList, "textField34e").setText("1");
-        getTextField(eList, "textField44e").setText("1");
-        getTextField(eList, "textField23e").setText("2");
-        getTextField(eList, "textField22e").setText("2");
-        getTextField(eList, "textField33e").setText("3");
-        getTextField(eList, "textField32e").setText("3");
+    		i++;
 
-        getTextField(deList, "textField43de").setText("1");
-        getTextField(deList, "textField42de").setText("1");
-        getTextField(deList, "textField41de").setText("1");
-        getTextField(deList, "textField53de").setText("2");
-        getTextField(deList, "textField52de").setText("2");
-        getTextField(deList, "textField51de").setText("2");
-        getTextField(deList, "textField31de").setText("3");
+    		switch (zone.getType()) {
+				case BLOCK:
+					list = blList;
+					namePostfix = "bl";
+					break;
+				case BRIDGE:
+					list = brList;
+					namePostfix = "br";
+					break;
+				case ENEMY:
+					list = eList;
+					namePostfix = "e";
+					break;
+				case DETAILEDENEMY:
+					list = deList;
+					namePostfix = "de";
+					break;
+			}
+
+    		for(Block block : zone.getBlocks()) {
+        		getTextField(list, "textField" + (block.getX() + 3) + "" + (block.getY() + 2) + namePostfix).setText(Integer.toString(i));
+			}
+		}
     }
 
 	public static void main(String[] args) {

@@ -1,9 +1,12 @@
 package la.common;
 
+import java.io.Serializable;
+
 /**
  * Created by Benjamin on 18.10.2014.
  */
-public class Block {
+@SuppressWarnings("serial")
+public class Block implements Serializable {
     private int x = 0;
     private int y = 0;
 
