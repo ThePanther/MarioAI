@@ -253,7 +253,17 @@ public class MainFrame {
 		playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rlGlueService.playMario();
+				rlGlueService.setVisualisation(visualisationCheckBox.isSelected());
+				rlGlueService.setRandomLevels(randomLevelsCheckBox.isSelected());
+				rlGlueService.setFreezPolicy(freezPolicyCheckBox.isSelected());
+				rlGlueService.setExploration(noExplorationCheckBox.isSelected());
+				rlGlueService.setStartMode(startmodeComboBox.getSelectedIndex());
+				rlGlueService.setDifficult(difficultyComboBox.getSelectedIndex());
+				rlGlueService.setAgent(agentComboBox.getSelectedItem().toString());
+				rlGlueService.setEpisodes(Integer.parseInt(episodesTextField.getText()));
+				rlGlueService.setLevelSeed(Integer.parseInt(seedTextField.getText()));
+				rlGlueService.setFPS(Integer.parseInt(fpsTextField.getText()));
+				rlGlueService.playMario();
             }
         });
     }

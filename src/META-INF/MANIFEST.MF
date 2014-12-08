@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: la.gui.Main_Frame
+Main-Class: la.gui.MainFrame
 

@@ -11,6 +11,18 @@
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="MarioAI" level="project" />
     <orderEntry type="library" name="poi-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="asm-all-3.3 (2)" level="project" />
+    <orderEntry type="library" name="JavaRLGlueCodec (2)" level="project" />
+    <orderEntry type="library" name="jdom (2)" level="project" />
+    <orderEntry type="library" name="junit-4.8.2 (2)" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.33-bin (2)" level="project" />
+    <orderEntry type="library" name="poi-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="testng-5.0 (2)" level="project" />
+    <orderEntry type="library" name="xmlbeans-2.6.0" level="project" />
+    <orderEntry type="library" name="poi-examples-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="poi-excelant-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="poi-ooxml-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="poi-ooxml-schemas-3.11-beta3-20141111" level="project" />
+    <orderEntry type="library" name="poi-scratchpad-3.11-beta3-20141111" level="project" />
   </component>
 </module>
-

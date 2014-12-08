@@ -4,6 +4,7 @@ import ch.idsia.benchmark.tasks.BasicTask;
 import ch.idsia.benchmark.tasks.MarioCustomSystemOfValues;
 import ch.idsia.tools.MarioAIOptions;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
+import la.application.configManagement.Config;
 
 public class Play extends Thread{
     public MarioAIOptions marioAIOptions;
@@ -20,6 +21,10 @@ public class Play extends Thread{
         marioAIOptions = new MarioAIOptions(options);
         basicTask = new BasicTask(marioAIOptions);
         marioAIOptions.setVisualization(true);
+        marioAIOptions.setFPS(Config.FPS);
+        marioAIOptions.setMarioMode(Config.MARIO_STARTMODE);
+        marioAIOptions.setLevelDifficulty(Config.DIFFICULTY);
+        marioAIOptions.setLevelRandSeed(Config.LEVEL_SEED);
         // basicTask.reset(marioAIOptions);
         mcsov = new MarioCustomSystemOfValues();
         // basicTask.runSingleEpisode();
