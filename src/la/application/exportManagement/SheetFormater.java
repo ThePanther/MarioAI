@@ -64,7 +64,7 @@ public class SheetFormater {
         
         for (int i = 0; i < tries.size(); i++) {
             Row rowTries = sheet.createRow(ROW_VALUE_TRIES_BEGIN + 1 + i);
-            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN, tries.get(i).getId());
+            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN, 	  tries.get(i).getId());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +1,  tries.get(i).getWin());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +2,  tries.get(i).getRewards());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +3,  tries.get(i).getSteps());
@@ -76,7 +76,7 @@ public class SheetFormater {
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +9,  tries.get(i).getReward_move_right_count());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +10, tries.get(i).getReward_move_left_count());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +11, tries.get(i).getReward_move_up_count());
-            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +12, tries.get(i).getReward_move_up_count());
+            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +12, tries.get(i).getReward_move_down_count());
 
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +14, tries.get(i).getReward_win_count() * rewards.get(0).getReward());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +15, tries.get(i).getReward_death_count() * rewards.get(1).getReward());
@@ -86,7 +86,7 @@ public class SheetFormater {
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +19, tries.get(i).getReward_move_right_count() * rewards.get(5).getReward());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +20, tries.get(i).getReward_move_left_count() * rewards.get(6).getReward());
             addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +21, tries.get(i).getReward_move_up_count() * rewards.get(7).getReward());
-            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +22, tries.get(i).getReward_move_up_count() * rewards.get(8).getReward());
+            addNumber(rowTries, COLUMN_VALUE_TRIES_BEGIN +22, tries.get(i).getReward_move_down_count() * rewards.get(8).getReward());
         }
     }
 
