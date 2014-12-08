@@ -172,4 +172,24 @@ public class Fassade implements RLGlueService {
     public long getEnemyMul() {
         return Config.ENEMY_MUL;
     }
+
+    @Override
+    public boolean isVisual() {
+    	return Config.VISUALIZATION;
+    }
+
+    @Override
+    public boolean isLevelRandom() {
+    	return Config.RANDOM_LEVELS;
+    }
+
+    @Override
+    public boolean isExplorationFreezed() {
+    	return Config.FREEZE_EXPLORATION;
+    }
+
+    @Override
+    public boolean isPolicyFreezed() {
+    	return Config.FREEZE_POLICY;
+    }
 }
