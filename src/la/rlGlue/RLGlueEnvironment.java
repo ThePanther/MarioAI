@@ -211,10 +211,6 @@ public class RLGlueEnvironment implements EnvironmentInterface {
 
         int[] state = observate(marioEgoPos,levelScene,enemies);
 
-        if(environment.getMarioState()[0] == Mario.STATUS_WIN) {
-        	state[0] = 5;
-        }
-
         int levelSceneMultiplier = 1;
         int enemyMultiplier = 1;
 
