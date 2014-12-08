@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -46,7 +47,6 @@ public class MainFrame {
 	private JPanel visionFieldPanel = new JPanel();
 	private JPanel lookupPanel = new JPanel();
 	private JPanel statisticPanel = new JPanel();
-	private JPanel mainCheckBoxPanel = new JPanel();
 	private JLabel mainLabel = new JLabel("Mario AI");
 
 	private JCheckBox visualisationCheckBox = new JCheckBox("Visualisation");
@@ -133,7 +133,7 @@ public class MainFrame {
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		mainLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		tabbedPane.setPreferredSize(new Dimension(550, 500));
+		tabbedPane.setPreferredSize(new Dimension(600, 500));
 		tabbedPane.addTab("Main", mainPanel);
 		tabbedPane.addTab("Set Rewards", rewardsPanel);
 		tabbedPane.addTab("VisionField", visionFieldPanel);
@@ -165,6 +165,7 @@ public class MainFrame {
 	}
 
     private void createMainPanel() {
+    	JPanel mainCheckBoxPanel = new JPanel();
     	JLabel startmodeLabel = new JLabel("Mario Startmode");
     	startmodeLabel.setPreferredSize(new Dimension(100, 10));
 
@@ -175,11 +176,16 @@ public class MainFrame {
     	startmodeComboBox.setSelectedIndex(rlGlueService.getMarioStartState());
     	difficultyComboBox.setSelectedIndex(rlGlueService.getDifficulty());
     	agentComboBox.setSelectedItem(rlGlueService.getAgentName());
+    	visualisationCheckBox.setSelected(rlGlueService.isVisual());
+    	randomLevelsCheckBox.setSelected(rlGlueService.isLevelRandom());
+    	freezPolicyCheckBox.setSelected(rlGlueService.isPolicyFreezed());
+    	noExplorationCheckBox.setSelected(rlGlueService.isExplorationFreezed());
 
     	centerConstraints.anchor = GridBagConstraints.CENTER;
 		leftConstraints.gridx = 0;
 		centerConstraints.gridx = 0;
 		rightConstraints.gridx = 1;
+		mainCheckBoxPanel.setLayout(new GridLayout(1, 4));
 		mainCheckBoxPanel.add(visualisationCheckBox);
 		mainCheckBoxPanel.add(randomLevelsCheckBox);
 		mainCheckBoxPanel.add(freezPolicyCheckBox);
@@ -348,7 +354,6 @@ public class MainFrame {
 
         GridBagConstraints constraints = new GridBagConstraints();
         GridBagConstraints centerConstraints = new GridBagConstraints();
-    	JLabel emptyLabel = new JLabel("");
     	JLabel blockLabel = new JLabel("Block");
     	JLabel bridgeLabel = new JLabel("Bridge");
     	JLabel enemyLabel = new JLabel("Enemy");
@@ -373,8 +378,9 @@ public class MainFrame {
 
 		constraints.gridx = 7;
 		constraints.gridy = 0;
-		emptyLabel.setMinimumSize(new Dimension(20, 20));
-		visionFieldPanel.add(emptyLabel, constraints);
+		constraints.ipadx = 30;
+		visionFieldPanel.add(new JLabel(""), constraints);
+		constraints.ipadx = 0;
 
 		centerConstraints.gridx = 0;
 		centerConstraints.gridy = 0;

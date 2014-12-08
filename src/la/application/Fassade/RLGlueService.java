@@ -107,4 +107,8 @@ public interface RLGlueService {
 
     public long getEnemyMul();
 
+    public boolean isVisual();
+    public boolean isLevelRandom();
+    public boolean isExplorationFreezed();
+    public boolean isPolicyFreezed();
 }
