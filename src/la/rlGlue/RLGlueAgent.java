@@ -52,6 +52,7 @@ public abstract class RLGlueAgent implements AgentInterface {
     protected State lastState;
     protected double[] valueFunction;
     protected Database db;
+	private RewardsGroup rewardsGroup;
 
     public void agent_init(String taskSpecification) {
         TaskSpec theTaskSpec=new TaskSpec(taskSpecification);
@@ -77,7 +78,7 @@ public abstract class RLGlueAgent implements AgentInterface {
     public Action agent_start(Observation observation) {
         State state = extractState(observation);        
         
-		RewardsGroup rewardsGroup = db.getLastRewardsGroup();
+		rewardsGroup = db.getLastRewardsGroup();
         valueFunction = db.select(state, rewardsGroup); 
         
         int theIntAction = egreedy(valueFunction);
@@ -94,7 +95,7 @@ public abstract class RLGlueAgent implements AgentInterface {
     public Action agent_step(double reward, Observation observation) {
         State newState = extractState(observation);
         
-		RewardsGroup rewardsGroup = db.getLastRewardsGroup(); 
+//		RewardsGroup rewardsGroup = db.getLastRewardsGroup(); 
         
         double[] newValueFunction = db.select(newState, rewardsGroup);
         valueFunction = db.select(lastState, rewardsGroup);
