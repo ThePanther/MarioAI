@@ -25,11 +25,19 @@
 
 package la.rlGlue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import la.application.configManagement.Config;
+import la.common.RewardsGroup;
+import la.common.Try;
+import la.persistence.database.Database;
+import la.persistence.database.impl.DBCommunication;
 
 import org.rlcommunity.rlglue.codec.RLGlue;
+
+import context.ManagerFactory;
 
 /**
  *
@@ -37,10 +45,14 @@ import org.rlcommunity.rlglue.codec.RLGlue;
  */
 public class Experiment {
 
+	private Database db;
+	private List<Try> aTryList; 
+
 	private Random randGenerator = new Random();
 
 	private int numOfEpisodes = Config.EDISODES;
     private int whichEpisode = 0;
+	private RewardsGroup rewardsGroup;
 
     /* Run One Episode of length maximum cutOff*/
     private void runEpisode(int stepLimit) {
@@ -55,7 +67,21 @@ public class Experiment {
         double totalReward = RLGlue.RL_return();
 
         System.out.println("Episode " + whichEpisode + "\t " + totalSteps + " steps \t" + totalReward + " total reward\t " + terminal + " natural end");
+        
+        
+        Try aTry = new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario alive?")), RLGlue.RL_return(), RLGlue.RL_num_steps()); 
+		aTry.setReward_win_count(Integer.valueOf(RLGlue.RL_env_message("reward win count")));
+		aTry.setReward_death_count(Integer.valueOf(RLGlue.RL_env_message("reward death count")));
+		aTry.setReward_hurt_count(Integer.valueOf(RLGlue.RL_env_message("reward hurt count")));
+		aTry.setReward_kill_count(Integer.valueOf(RLGlue.RL_env_message("reward kill count")));
+		aTry.setReward_elapsed_frame_count(Integer.valueOf(RLGlue.RL_env_message("reward elapsed frame count")));
+		aTry.setReward_move_right_count(Integer.valueOf(RLGlue.RL_env_message("reward move right count")));
+		aTry.setReward_move_left_count(Integer.valueOf(RLGlue.RL_env_message("reward move left count")));
+		aTry.setReward_move_up_count(Integer.valueOf(RLGlue.RL_env_message("reward move up count")));
+		aTry.setReward_move_down_count(Integer.valueOf(RLGlue.RL_env_message("reward move down count")));
+		aTryList.add(aTry); 
 
+        
         whichEpisode++;
     }
 
@@ -85,6 +111,11 @@ public class Experiment {
             runEpisode(0);
         }
 
+        for (Try aTry : aTryList) {
+            db.saveAll(aTry, rewardsGroup);			
+		}
+        aTryList.clear();
+        
         System.out.println("\n\n----------Summary----------");
 
         int totalSteps = RLGlue.RL_num_steps();
@@ -93,6 +124,11 @@ public class Experiment {
         RLGlue.RL_cleanup();
 
     }
+    public Experiment() {
+        db = ManagerFactory.getManager(Database.class);
+        aTryList = new ArrayList<Try>(); 
+    	rewardsGroup = db.getLastRewardsGroup();
+   	}
 
     public static void main(String[] args) {
         Experiment theExperiment = new Experiment();

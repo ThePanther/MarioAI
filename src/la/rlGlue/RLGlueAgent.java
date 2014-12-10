@@ -128,17 +128,17 @@ public abstract class RLGlueAgent implements AgentInterface {
         if (!Config.FREEZE_POLICY) {
             db.update(lastState, rewardsGroup, lastAction, new_Q_sa);
         }
-        Try aTry = new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario alive?")), RLGlue.RL_return(), RLGlue.RL_num_steps()); 
-		aTry.setReward_win_count(Integer.valueOf(RLGlue.RL_env_message("reward win count")));
-		aTry.setReward_death_count(Integer.valueOf(RLGlue.RL_env_message("reward death count")));
-		aTry.setReward_hurt_count(Integer.valueOf(RLGlue.RL_env_message("reward hurt count")));
-		aTry.setReward_kill_count(Integer.valueOf(RLGlue.RL_env_message("reward kill count")));
-		aTry.setReward_elapsed_frame_count(Integer.valueOf(RLGlue.RL_env_message("reward elapsed frame count")));
-		aTry.setReward_move_right_count(Integer.valueOf(RLGlue.RL_env_message("reward move right count")));
-		aTry.setReward_move_left_count(Integer.valueOf(RLGlue.RL_env_message("reward move left count")));
-		aTry.setReward_move_up_count(Integer.valueOf(RLGlue.RL_env_message("reward move up count")));
-		aTry.setReward_move_down_count(Integer.valueOf(RLGlue.RL_env_message("reward move down count")));
-        db.saveAll(aTry, rewardsGroup);
+//        Try aTry = new Try(Integer.valueOf(RLGlue.RL_env_message("is Mario alive?")), RLGlue.RL_return(), RLGlue.RL_num_steps()); 
+//		aTry.setReward_win_count(Integer.valueOf(RLGlue.RL_env_message("reward win count")));
+//		aTry.setReward_death_count(Integer.valueOf(RLGlue.RL_env_message("reward death count")));
+//		aTry.setReward_hurt_count(Integer.valueOf(RLGlue.RL_env_message("reward hurt count")));
+//		aTry.setReward_kill_count(Integer.valueOf(RLGlue.RL_env_message("reward kill count")));
+//		aTry.setReward_elapsed_frame_count(Integer.valueOf(RLGlue.RL_env_message("reward elapsed frame count")));
+//		aTry.setReward_move_right_count(Integer.valueOf(RLGlue.RL_env_message("reward move right count")));
+//		aTry.setReward_move_left_count(Integer.valueOf(RLGlue.RL_env_message("reward move left count")));
+//		aTry.setReward_move_up_count(Integer.valueOf(RLGlue.RL_env_message("reward move up count")));
+//		aTry.setReward_move_down_count(Integer.valueOf(RLGlue.RL_env_message("reward move down count")));
+//        db.saveAll(aTry, rewardsGroup);
         lastState = new State(0);
         lastAction = 0;
     }
