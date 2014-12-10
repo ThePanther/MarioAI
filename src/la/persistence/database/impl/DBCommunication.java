@@ -346,21 +346,54 @@ public class DBCommunication {
 		}
 		return rewardGroupID;
 	}
+	
+
+	public synchronized void insertTry(List<Try> aTryList, RewardsGroup rewardsGroup) {
+		PreparedStatement pstmt;
+		try {
+			//(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			String values = "";
+			for (Try aTry : aTryList){
+				values += "( Null, " +aTry.getWin() + ", "
+									 +aTry.getRewards() + ", " 
+									 +aTry.getSteps() + ", "
+									 +rewardsGroup.getId() + ", "
+									 +aTry.getReward_win_count() + ", "
+									 +aTry.getReward_death_count() + ", "
+									 +aTry.getReward_hurt_count() + ", "
+									 +aTry.getReward_kill_count() + ", "
+									 +aTry.getReward_elapsed_frame_count() + ", "
+									 +aTry.getReward_move_right_count() + ", "
+									 +aTry.getReward_move_left_count() + ", "
+									 +aTry.getReward_move_up_count() + ", "
+									 + aTry.getReward_move_down_count() 
+									 +"),"; 
+			}
+			String sql = "INSERT INTO "
+					+ TABLE_TRY
+					+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "
+					+ "reward_kill_count, reward_elapsed_frame_count, reward_move_right_count, reward_move_left_count, "
+					+ "reward_move_up_count, reward_move_down_count) VALUES " + values.substring(0, values.length()-1);
+			System.out.println(sql);
+			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);								
+			int affectedRows = pstmt.executeUpdate();
+			
+			if (affectedRows == 0) {
+				throw new SQLException(
+						"Creating user failed, no rows affected.");
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
 	synchronized void insertTry(Try aTry, RewardsGroup rewardsGroup) {
 		PreparedStatement pstmt;
 		try {
-			/*
-			 * 	private int reward_win_count;
-	private int reward_death_count;
-	private int reward_hurt_count;
-	private int reward_kill_count; 
-	private int reward_elapsed_frame_count;
-	private int reward_move_right_count;
-	private int reward_move_left_count;
-	private int reward_move_up_count;
-	private int reward_move_down_count;
-			 */
 
 			String sql = "INSERT INTO "
 					+ TABLE_TRY

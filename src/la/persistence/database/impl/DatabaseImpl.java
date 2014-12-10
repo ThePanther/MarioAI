@@ -95,6 +95,24 @@ public class DatabaseImpl implements Database {
 		
 		return true;
 	}
+	
+
+	@Override
+	public void saveAll(List<Try> aTryList, RewardsGroup rewardsGroup) {
+		dbCommunication.insertTry(aTryList, rewardsGroup); 
+		dbCommunication.updateRewardsGroup(rewardsGroup);
+		Iterator it = knowledge.keySet().iterator();
+		while (it.hasNext()){
+			long stateID = (Long) it.next(); 
+		    Iterator it2 = knowledge.get(stateID).keySet().iterator(); 
+		    while (it2.hasNext()){
+		    	int rgID = (Integer) it2.next(); 
+			    double[] rewardsList = knowledge.getRewardsList(stateID, rgID);
+				dbCommunication.inserKnowledge(stateID, rgID, rewardsList);		
+		    }
+		}
+	}
+
 
 	@Override
 	public void reset() {

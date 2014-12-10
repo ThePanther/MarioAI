@@ -111,9 +111,7 @@ public class Experiment {
             runEpisode(0);
         }
 
-        for (Try aTry : aTryList) {
-            db.saveAll(aTry, rewardsGroup);			
-		}
+        db.saveAll(aTryList, rewardsGroup);			
         aTryList.clear();
         
         System.out.println("\n\n----------Summary----------");

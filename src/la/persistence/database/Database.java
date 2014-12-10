@@ -16,11 +16,13 @@ public interface Database {
 	boolean update(State state, RewardsGroup rewardsGroup, int action, double value);
 	
 	public boolean saveAll(Try aTry, RewardsGroup rewardsGroup);
-	
+	public void saveAll(List<Try> aTryList, RewardsGroup rewardsGroup); 
+
 	public List<Try> getTries(RewardsGroup rewardsGroup); 
 	
 	public RewardsGroup getLastRewardsGroup(); 
 	
-	public void reset(); 
+	public void reset();
+
 
 }
