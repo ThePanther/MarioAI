@@ -50,16 +50,21 @@ public class ExportManager {
         Workbook wb = new XSSFWorkbook();
         Sheet sheetValues = wb.createSheet(SHEET_VALUES);
         Sheet sheetChart = wb.createSheet(SHEET_CHART);
+        Sheet sheetRewardsStep = wb.createSheet(SHEET_REWARDS_STEPS);
 
         SheetFormater sheetFormater = new SheetFormater(wb);
         sheetFormater.createLabelValues(sheetValues, rewards);
         sheetFormater.createContentValues(sheetValues, rewardGroupID, rewards, tries);
         sheetFormater.createLabelStatistics(sheetValues);
         sheetFormater.createContentStatistics(sheetValues, tries.size());
+        sheetFormater.createLabelRewardSteps(sheetRewardsStep);
+        sheetFormater.createContentRewardSteps(sheetValues, sheetRewardsStep, tries.size());
+
 
         ScatterChart chart = new ScatterChart(wb);
         chart.createAllRewardsChart(sheetChart, sheetValues, tries.size());
         chart.createAnyRewardsChart(sheetChart, sheetValues, tries.size());
+        chart.createRewardStepsChart(sheetRewardsStep, tries.size());
 
         FileOutputStream fileOut = new FileOutputStream(createFileName());
         wb.write(fileOut);

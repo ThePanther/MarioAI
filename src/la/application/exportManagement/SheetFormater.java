@@ -90,6 +90,25 @@ public class SheetFormater {
         }
     }
 
+
+    /**********************************************************************************
+     *  Rewards X Steps
+     **********************************************************************************/
+
+    public void createLabelRewardSteps(Sheet sheetRewardsStep) {
+        Row rowRewardStepsLabel = sheetRewardsStep.createRow(ROW_REWARD_STEPS_TABLE_BEGIN);
+        addCaption(rowRewardStepsLabel, COLUMN_REWARD_STEPS_TABLE_BEGIN,    "All Steps");
+        addCaption(rowRewardStepsLabel, COLUMN_REWARD_STEPS_TABLE_BEGIN + 1,    "All Rewards");
+    }
+
+    public void createContentRewardSteps(Sheet sheetValues, Sheet sheetRewardsStep, int size) {
+        for (int i = 0; i < size; i++) {
+            Row rowRewardStepsContent = sheetRewardsStep.createRow(ROW_REWARD_STEPS_TABLE_BEGIN+1+i);
+            addNumber(rowRewardStepsContent, COLUMN_REWARD_STEPS_TABLE_BEGIN, sheetValues.getRow(ROW_VALUE_TRIES_BEGIN+1+i).getCell(COLUMN_VALUE_TRIES_BEGIN+3).getNumericCellValue());
+            addNumber(rowRewardStepsContent, COLUMN_REWARD_STEPS_TABLE_BEGIN +1, sheetValues.getRow(ROW_VALUE_TRIES_BEGIN+1+i).getCell(COLUMN_VALUE_TRIES_BEGIN+2).getNumericCellValue());
+        }
+    }
+
     /**********************************************************************************
      *  Statistics
      **********************************************************************************/
@@ -105,6 +124,9 @@ public class SheetFormater {
         addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 3, "Gesamt [Win]");
         addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 4, "Prozent [Win]");
         addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 5, "Max in Folge [Win]");
+        addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 6, "Max [Step]");
+        addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 7, "Min [Step]");
+        addCaption(rowWinsContent, COLUMN_STATISTIC_WINS_BEGIN + 8, "Durchschnitt [Step]");
         // Loss
         Row rowLossLabel = sheet.createRow(ROW_STATISTIC_LOSS_BEGIN);
         Row rowLossContent = sheet.createRow(ROW_STATISTIC_LOSS_BEGIN + 1);
@@ -130,6 +152,7 @@ public class SheetFormater {
         addCaption(rowStepsContent, COLUMN_STATISTIC_STEPS_BEGIN + 1,   "Min [Step]");
         addCaption(rowStepsContent, COLUMN_STATISTIC_STEPS_BEGIN + 2,   "Durchschnitt [Step]");
 
+
     }
 
     public void createContentStatistics( Sheet sheet, int tryCount)   {
@@ -150,6 +173,9 @@ public class SheetFormater {
         double stepMax = 0;
         double stepMin = 0;
         double stepAverage = 0;
+        double stepByWinsMax = 0;
+        double stepByWinsMin = 0;
+        double stepByWinsAverage = 0;
 
         boolean firstWin = true;
         boolean firstLoss = true;
@@ -167,6 +193,9 @@ public class SheetFormater {
                 winMax = (firstWin) ? reward : Math.max(winMax, reward);
                 winMin = (firstWin) ? reward : Math.min(winMin, reward);
                 winAverage += reward;
+                stepByWinsMax = (firstWin) ? step : Math.max(step,stepByWinsMax);
+                stepByWinsMin = (firstWin) ? step : Math.min(step,stepByWinsMin);
+                stepByWinsAverage += step;
 
                 lossInFolge = 0;
                 firstWin = false;
@@ -201,6 +230,7 @@ public class SheetFormater {
         lossAverage= lossAverage/tryCount;
         rewardAverage = rewardAverage/tryCount;
         stepAverage = stepAverage/tryCount;
+        stepByWinsAverage = stepByWinsAverage/winGesamtInt;
 
         // Wins
         Row rowWins = sheet.createRow(ROW_STATISTIC_WINS_BEGIN + 2);
@@ -210,6 +240,9 @@ public class SheetFormater {
         addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 3, winGesamtInt);
         addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 4, winProzent);
         addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 5, winMaxInFolge);
+        addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 6, stepByWinsMax);
+        addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 7, stepByWinsMin);
+        addNumber(rowWins, COLUMN_STATISTIC_WINS_BEGIN + 8, stepByWinsAverage);
         // Loss
         Row rowLoss = sheet.createRow(ROW_STATISTIC_LOSS_BEGIN + 2);
         addNumber(rowLoss, COLUMN_STATISTIC_LOSS_BEGIN    , lossMax);
@@ -268,7 +301,6 @@ public class SheetFormater {
         Cell cell = row.createCell(columnIndex);
         cell.setCellValue(value);
     }
-
 
 
 }

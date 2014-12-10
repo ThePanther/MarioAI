@@ -172,4 +172,46 @@ public class ScatterChart {
 
         chart.plot(data, bottomAxis, leftAxis);
     }
+
+    public void createRewardStepsChart(Sheet sheetRewardStep, int triesSize) {
+        Drawing drawing = sheetRewardStep.createDrawingPatriarch();
+        ClientAnchor anchor = drawing.createAnchor(
+                ANCHOR_DX1_CHART_REWARD_STEPS,
+                ANCHOR_DY1_CHART_REWARD_STEPS,
+                ANCHOR_DX2_CHART_REWARD_STEPS,
+                ANCHOR_DY2_CHART_REWARD_STEPS,
+                ANCHOR_COL1_CHART_REWARD_STEPS,
+                ANCHOR_ROW1_CHART_REWARD_STEPS,
+                ANCHOR_COL2_CHART_REWARD_STEPS,
+                ANCHOR_ROW2_CHART_REWARD_STEPS);
+
+        Chart chart = drawing.createChart(anchor);
+        ChartLegend legend = chart.getOrCreateLegend();
+        legend.setPosition(LegendPosition.TOP_RIGHT);
+
+        LineChartData data = chart.getChartDataFactory().createLineChartData();
+
+        ValueAxis bottomAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.BOTTOM);
+        ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
+        leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
+
+        // All Steps
+        ChartDataSource<Number> xs = DataSources.fromNumericCellRange(sheetRewardStep,
+                new CellRangeAddress(
+                        CELL_RANGE_FIRST_ROW_CHART_REWARD_STEPS_XS,
+                        CELL_RANGE_LAST_ROW_CHART_REWARD_STEPS_XS +triesSize-1,
+                        CELL_RANGE_FIRST_COL_CHART_REWARD_STEPS_XS,
+                        CELL_RANGE_LAST_COL_CHART_REWARD_STEPS_XS));
+        // All Rewards
+        ChartDataSource<Number> ys = DataSources.fromNumericCellRange(sheetRewardStep,
+                new CellRangeAddress(
+                        CELL_RANGE_FIRST_ROW_CHART_REWARD_STEPS_YS,
+                        CELL_RANGE_LAST_ROW_CHART_REWARD_STEPS_YS+triesSize-1,
+                        CELL_RANGE_FIRST_COL_CHART_REWARD_STEPS_YS,
+                        CELL_RANGE_LAST_COL_CHART_REWARD_STEPS_YS));
+        data.addSeries(xs, ys);
+        data.getSeries().get(0).setTitle("Rewards");
+
+        chart.plot(data, bottomAxis, leftAxis);
+    }
 }

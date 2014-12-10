@@ -6,6 +6,11 @@ public abstract class ExportCommon {
     public static final String FILENAME_ENDING = ".xlsx";
     public static final String SHEET_VALUES = "Werte";
     public static final String SHEET_CHART = "Charts";
+    public static final String SHEET_REWARDS_STEPS = "Reward_X_Steps";
+
+    /**************************************************************************************
+     *                                  VALUES
+     **************************************************************************************/
 
     public static final int COLUMN_VALUE_REWARDS_BEGIN = 0;
     public static final int ROW_VALUE_REWARDS_BEGIN = 0;
@@ -21,6 +26,14 @@ public abstract class ExportCommon {
 
     public  static final int COLUMN_VALUE_TRIES_BEGIN = 0;
     public  static final int ROW_VALUE_TRIES_BEGIN = ROW_STATISTIC_STEPS_BEGIN+6;
+
+    public  static final int ROW_REWARD_STEPS_TABLE_BEGIN = 0;
+    public  static final int COLUMN_REWARD_STEPS_TABLE_BEGIN = 0;
+
+
+    /**************************************************************************************
+     *                                  Charts
+     **************************************************************************************/
 
     public  static final int ANCHOR_DX1_CHART_ALL_REWARDS = 0;
     public  static final int ANCHOR_DY1_CHART_ALL_REWARDS = 0;
@@ -94,4 +107,24 @@ public abstract class ExportCommon {
     public  static final int CELL_RANGE_LAST_ROW_CHART_YS_DOWN = ROW_VALUE_TRIES_BEGIN+1;
     public  static final int CELL_RANGE_FIRST_COL_CHART_YS_DOWN = COLUMN_VALUE_TRIES_BEGIN +22;
     public  static final int CELL_RANGE_LAST_COL_CHART_YS_DOWN = COLUMN_VALUE_TRIES_BEGIN +22;
+
+
+    public  static final int ANCHOR_DX1_CHART_REWARD_STEPS = 0;
+    public  static final int ANCHOR_DY1_CHART_REWARD_STEPS = 0;
+    public  static final int ANCHOR_DX2_CHART_REWARD_STEPS = 0;
+    public  static final int ANCHOR_DY2_CHART_REWARD_STEPS = 0;
+    public  static final int ANCHOR_COL1_CHART_REWARD_STEPS = 6;
+    public  static final int ANCHOR_ROW1_CHART_REWARD_STEPS = 6;
+    public  static final int ANCHOR_COL2_CHART_REWARD_STEPS = ANCHOR_COL1_CHART_REWARD_STEPS + 20;
+    public  static final int ANCHOR_ROW2_CHART_REWARD_STEPS = ANCHOR_ROW1_CHART_REWARD_STEPS + 10;
+
+    public  static final int CELL_RANGE_FIRST_ROW_CHART_REWARD_STEPS_XS = ROW_REWARD_STEPS_TABLE_BEGIN+1;
+    public  static final int CELL_RANGE_LAST_ROW_CHART_REWARD_STEPS_XS = ROW_REWARD_STEPS_TABLE_BEGIN+1;
+    public  static final int CELL_RANGE_FIRST_COL_CHART_REWARD_STEPS_XS = COLUMN_REWARD_STEPS_TABLE_BEGIN  ;
+    public  static final int CELL_RANGE_LAST_COL_CHART_REWARD_STEPS_XS = COLUMN_REWARD_STEPS_TABLE_BEGIN ;
+
+    public  static final int CELL_RANGE_FIRST_ROW_CHART_REWARD_STEPS_YS = ROW_REWARD_STEPS_TABLE_BEGIN+1;
+    public  static final int CELL_RANGE_LAST_ROW_CHART_REWARD_STEPS_YS = ROW_REWARD_STEPS_TABLE_BEGIN+1;
+    public  static final int CELL_RANGE_FIRST_COL_CHART_REWARD_STEPS_YS = COLUMN_REWARD_STEPS_TABLE_BEGIN + 1;
+    public  static final int CELL_RANGE_LAST_COL_CHART_REWARD_STEPS_YS = COLUMN_REWARD_STEPS_TABLE_BEGIN + 1;
 }
