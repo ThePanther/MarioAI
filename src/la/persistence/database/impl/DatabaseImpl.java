@@ -3,6 +3,7 @@ package la.persistence.database.impl;
 import context.ManagerFactory;
 import la.persistence.database.Database;
 import la.persistence.entities.Knowledge;
+import la.persistence.entities.RewardsForAction;
 import la.common.Reward;
 import la.common.RewardsGroup;
 import la.common.State;
@@ -62,17 +63,17 @@ public class DatabaseImpl implements Database {
 			for (int i = 0; i < NUM_ACTIONS; i++) {
 				rewardsList[i] = 0;
 			}
-			knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList);
+			knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList, true);
 		}
-		return knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId());
+		return knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId()).getActionValues();
 	}
 
 	@Override
 	public boolean update(State state, RewardsGroup rewardsGroup, int action,
 			double value) {
-		double[] rewardsList = knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId());
+		double[] rewardsList = knowledge.getRewardsList(state.getStateId(), rewardsGroup.getId()).getActionValues();
 		rewardsList[action] = value;
-		knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList);
+		knowledge.put(state.getStateId(), rewardsGroup.getId(), rewardsList, true);
 		return true;
 	}
 
@@ -87,7 +88,7 @@ public class DatabaseImpl implements Database {
 		    Iterator it2 = knowledge.get(stateID).keySet().iterator(); 
 		    while (it2.hasNext()){
 		    	int rgID = (Integer) it2.next(); 
-			    double[] rewardsList = knowledge.getRewardsList(stateID, rgID);
+			    RewardsForAction rewardsList = knowledge.getRewardsList(stateID, rgID);
 				dbCommunication.insertKnowledge(stateID, rgID, rewardsList);		
 		    }
 		}
@@ -99,9 +100,14 @@ public class DatabaseImpl implements Database {
 
 	@Override
 	public void saveAll(List<Try> aTryList, RewardsGroup rewardsGroup) {
+		System.out.println("insert Try to DB...");
 		dbCommunication.insertTry(aTryList, rewardsGroup); 
+		System.out.println("update RewardsGroup...");
 		dbCommunication.updateRewardsGroup(rewardsGroup);
-		dbCommunication.insertKnowledge(knowledge); 
+		System.out.println("insert Knowledge to DB...");
+		dbCommunication.insertKnowledge(knowledge, rewardsGroup); 
+		System.out.println("DB complete...");	
+		knowledge.setAllRewardsForAction(false); 
 	}
 
 

@@ -4,6 +4,7 @@ import java.util.*;
 import java.sql.*;
 
 import la.persistence.entities.Knowledge;
+import la.persistence.entities.RewardsForAction;
 import la.common.Reward;
 import la.common.RewardsGroup;
 import la.common.State;
@@ -267,7 +268,7 @@ public class DBCommunication {
 	}
 
 	
-	public void insertKnowledge(Knowledge knowledge) {
+	public void insertKnowledge(Knowledge knowledge, RewardsGroup rewardsGroup) {
 		
 		PreparedStatement pstmt;
 		try {
@@ -276,48 +277,56 @@ public class DBCommunication {
 			int index = 0; 
 			Iterator it = knowledge.keySet().iterator();
 			while (it.hasNext()){
+//				System.out.print(".");
 				long stateID = (Long) it.next(); 
-			    Iterator it2 = knowledge.get(stateID).keySet().iterator(); 
-			    while (it2.hasNext()){
+//				knowledge.get(stateID).get(rewardsGroup.getId()); 
+//			    Iterator it2 = knowledge.get(stateID).keySet().iterator(); 
+//			    while (it2.hasNext()){
 			    	index++; 
-			    	int rgID = (Integer) it2.next(); 
-				    double[] rewardsList = knowledge.getRewardsList(stateID, rgID);			    
-			
+//			    	int rgID = (Integer) it2.next(); 
+//			    	System.out.print(".");
+				    RewardsForAction rewardsList = knowledge.getRewardsList(stateID, rewardsGroup.getId());			    
+//				    System.out.println();
 				// openDB();
 				// REPLACE INTO knowledge SET state=2, rgid=2 ,a1=1000
-				values += " (" + stateID + ", " 
-							+ rgID + ", " 
-							+ rewardsList[0] + ", " 
-							+ rewardsList[1] + ", " 
-							+ rewardsList[2] + ", "
-							+ rewardsList[3] + ", " 
-							+ rewardsList[4] + ", " 
-							+ rewardsList[5] + ", "
-							+ rewardsList[6] + ", " 
-							+ rewardsList[7] + ", " 
-							+ rewardsList[8] + ", "
-							+ rewardsList[9] + ", " 
-							+ rewardsList[10] + ", " 
-							+ rewardsList[11] 
-						+"),";
-				
-					if (index == 800){
-						String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " (state,rgid,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12) VALUES " + values.substring(0, values.length()-1);
-//						System.out.println("sql= " + sql);
-						pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-						int affectedRows = pstmt.executeUpdate();
-						if (affectedRows == 0) {
-							throw new SQLException(
-									"Creating user failed, no rows affected.");
+				if (rewardsList.isChange()){
+					values += " (" + stateID + ", " 
+								+ rewardsGroup.getId() + ", " 
+								+ rewardsList.getActionValues()[0] + ", " 
+								+ rewardsList.getActionValues()[1] + ", " 
+								+ rewardsList.getActionValues()[2] + ", "
+								+ rewardsList.getActionValues()[3] + ", " 
+								+ rewardsList.getActionValues()[4] + ", " 
+								+ rewardsList.getActionValues()[5] + ", "
+								+ rewardsList.getActionValues()[6] + ", " 
+								+ rewardsList.getActionValues()[7] + ", " 
+								+ rewardsList.getActionValues()[8] + ", "
+								+ rewardsList.getActionValues()[9] + ", " 
+								+ rewardsList.getActionValues()[10] + ", " 
+								+ rewardsList.getActionValues()[11] 
+							+"),";
+					
+						if (index == 5000){
+							String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " (state,rgid,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12) VALUES " + values.substring(0, values.length()-1);
+//							System.out.println(sql.substring(0,100));						
+							pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+							int affectedRows = pstmt.executeUpdate();
+							if (affectedRows == 0) {
+								throw new SQLException(
+										"Creating user failed, no rows affected.");
+							}
+							values =""; 
+							index = 0; 
 						}
-						values =""; 
-						index = 0; 
-					}
 				}
+//				}
 			}
+			
+			
 			if (index != 0){
 				String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " (state,rgid,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12) VALUES " + values.substring(0, values.length()-1); 
 				pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+//				System.out.println(sql.substring(0,100));
 				int affectedRows = pstmt.executeUpdate();
 				if (affectedRows == 0) {
 					throw new SQLException(
@@ -335,21 +344,21 @@ public class DBCommunication {
 	}
 	
 	public void insertKnowledge(long stateId, int rewardsGroupId,
-			double[] rewardsList) {
+			RewardsForAction rewardsList) {
 		PreparedStatement pstmt;
 		try {
 			// openDB();
 			// REPLACE INTO knowledge SET state=2, rgid=2 ,a1=1000
 			String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " SET "
 					+ " state= " + stateId + ", " + " rgid= " + rewardsGroupId
-					+ ", " + " a1 = " + rewardsList[0] + ", " + " a2 = "
-					+ rewardsList[1] + ", " + " a3 = " + rewardsList[2] + ", "
-					+ " a4 = " + rewardsList[3] + ", " + " a5 = "
-					+ rewardsList[4] + ", " + " a6 = " + rewardsList[5] + ", "
-					+ " a7 = " + rewardsList[6] + ", " + " a8 = "
-					+ rewardsList[7] + ", " + " a9 = " + rewardsList[8] + ", "
-					+ " a10 = " + rewardsList[9] + ", " + " a11 = "
-					+ rewardsList[10] + ", " + " a12 = " + rewardsList[11];
+					+ ", " + " a1 = " + rewardsList.getActionValues()[0] + ", " + " a2 = "
+					+ rewardsList.getActionValues()[1] + ", " + " a3 = " + rewardsList.getActionValues()[2] + ", "
+					+ " a4 = " + rewardsList.getActionValues()[3] + ", " + " a5 = "
+					+ rewardsList.getActionValues()[4] + ", " + " a6 = " + rewardsList.getActionValues()[5] + ", "
+					+ " a7 = " + rewardsList.getActionValues()[6] + ", " + " a8 = "
+					+ rewardsList.getActionValues()[7] + ", " + " a9 = " + rewardsList.getActionValues()[8] + ", "
+					+ " a10 = " + rewardsList.getActionValues()[9] + ", " + " a11 = "
+					+ rewardsList.getActionValues()[10] + ", " + " a12 = " + rewardsList.getActionValues()[11];
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			int affectedRows = pstmt.executeUpdate();
 			if (affectedRows == 0) {
@@ -421,7 +430,9 @@ public class DBCommunication {
 		try {
 			//(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			String values = "";
+			int index = 0; 
 			for (Try aTry : aTryList){
+				index++; 
 				values += "( Null, " +aTry.getWin() + ", "
 									 +aTry.getRewards() + ", " 
 									 +aTry.getSteps() + ", "
@@ -436,20 +447,43 @@ public class DBCommunication {
 									 +aTry.getReward_move_up_count() + ", "
 									 + aTry.getReward_move_down_count() 
 									 +"),"; 
+				
+				if (index == 5000){
+					String sql = "INSERT INTO "
+							+ TABLE_TRY
+							+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "
+							+ "reward_kill_count, reward_elapsed_frame_count, reward_move_right_count, reward_move_left_count, "
+							+ "reward_move_up_count, reward_move_down_count) VALUES " + values.substring(0, values.length()-1);
+//					System.out.println(sql.substring(0,100));
+					pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);								
+					int affectedRows = pstmt.executeUpdate();
+					
+					if (affectedRows == 0) {
+						throw new SQLException(
+								"Creating user failed, no rows affected.");
+					}
+					values = ""; 
+					index = 0; 
+				}
+				
 			}
-			String sql = "INSERT INTO "
-					+ TABLE_TRY
-					+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "
-					+ "reward_kill_count, reward_elapsed_frame_count, reward_move_right_count, reward_move_left_count, "
-					+ "reward_move_up_count, reward_move_down_count) VALUES " + values.substring(0, values.length()-1);
-			System.out.println(sql);
-			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);								
-			int affectedRows = pstmt.executeUpdate();
 			
-			if (affectedRows == 0) {
-				throw new SQLException(
-						"Creating user failed, no rows affected.");
+			if (index != 0){
+				String sql = "INSERT INTO "
+						+ TABLE_TRY
+						+ " (tid, win, rewards, steps, rgid, reward_win_count, reward_death_count, reward_hurt_count, "
+						+ "reward_kill_count, reward_elapsed_frame_count, reward_move_right_count, reward_move_left_count, "
+						+ "reward_move_up_count, reward_move_down_count) VALUES " + values.substring(0, values.length()-1);
+//				System.out.println(sql.substring(0,100));
+				pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);								
+				int affectedRows = pstmt.executeUpdate();
+				
+				if (affectedRows == 0) {
+					throw new SQLException(
+							"Creating user failed, no rows affected.");
+				}
 			}
+
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} catch (Exception e) {
@@ -536,7 +570,7 @@ public class DBCommunication {
 				}
 				State state = new State(stateId);
 				knowledge.put(state.getStateId(), rewardsGroup.getId(),
-						actionValues);
+						actionValues, false);
 
 			}
 			// closeDB();
