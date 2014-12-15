@@ -306,7 +306,7 @@ public class DBCommunication {
 								+ rewardsList.getActionValues()[11] 
 							+"),";
 					
-						if (index == 5000){
+						if (index == 500){
 							String sql = "REPLACE INTO " + TABLE_KNOWLEDGE + " (state,rgid,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12) VALUES " + values.substring(0, values.length()-1);
 //							System.out.println(sql.substring(0,100));						
 							pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
