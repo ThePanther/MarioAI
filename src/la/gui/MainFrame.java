@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 
 import context.ManagerFactory;
 import la.application.Fassade.RLGlueService;
+import la.application.configManagement.Config;
 import la.common.Block;
 import la.common.Reward;
 import la.common.State;
@@ -53,9 +54,9 @@ public class MainFrame {
     private JCheckBox randomLevelsCheckBox = new JCheckBox("Random Levels");
     private JCheckBox freezPolicyCheckBox = new JCheckBox("Freez Policy");
     private JCheckBox noExplorationCheckBox = new JCheckBox("No Exploration");
-    private JTextField episodesTextField = new JTextField("10");
-    private JTextField seedTextField = new JTextField("0");
-    private JTextField fpsTextField = new JTextField("1000");
+    private JTextField episodesTextField = new JTextField("" + Config.EDISODES);
+    private JTextField seedTextField = new JTextField("" + Config.LEVEL_SEED);
+    private JTextField fpsTextField = new JTextField("" + Config.FPS);
     private JButton randomSeedButton = new JButton("Random Seed");
     private JButton startButton = new JButton("Start Agent");
     private JButton playButton = new JButton("Play");
