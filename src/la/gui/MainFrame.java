@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,6 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import context.ManagerFactory;
 import la.application.Fassade.RLGlueService;
@@ -89,6 +92,7 @@ public class MainFrame {
     private ArrayList<JTextField> eList = new ArrayList<>();
     private ArrayList<JTextField> deList = new ArrayList<>();
     private JButton saveVisionButton = new JButton("Save");
+    private JButton openVisionButton = new JButton("Open");
     private JButton resetToDefaultButton = new JButton("Reset to Default");
 
     private JButton lookupButton = new JButton("Lookup");
@@ -413,10 +417,12 @@ public class MainFrame {
 		centerConstraints.gridy = 16;
 		visionFieldPanel.add(saveVisionButton, centerConstraints);
 		centerConstraints.gridy = 17;
+		visionFieldPanel.add(openVisionButton, centerConstraints);
+		centerConstraints.gridy = 18;
 		visionFieldPanel.add(resetToDefaultButton, centerConstraints);
 
 		try {
-			visionField = VisionFieldPersistence.loadVisionField();
+			visionField = VisionFieldPersistence.loadLastModifiedVisionField();
 		} catch(ClassNotFoundException | IOException e1) {
 			visionField = createDefaultVisionField();
 		}
@@ -439,6 +445,26 @@ public class MainFrame {
                 rlGlueService.setVisionField(visionField);
 
                 resetColours();
+            }
+        });
+
+        openVisionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	JFileChooser fileChooser = new JFileChooser(VisionFieldPersistence.PATH);
+
+            	if(fileChooser.showOpenDialog(mainFrame) == JFileChooser.APPROVE_OPTION) {
+                	try {
+                		ArrayList<Zone> visionField = VisionFieldPersistence.loadVisionField(fileChooser.getSelectedFile());
+
+                		rlGlueService.setVisionField(visionField);
+
+                    	setVisionTextFields(visionField);
+
+                        resetColours();
+            		} catch(ClassNotFoundException | IOException e1) {
+            		}
+            	}
             }
         });
 
@@ -984,6 +1010,11 @@ public class MainFrame {
     }
 
 	public static void main(String[] args) {
+        try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+		}
+
 		new MainFrame();
 	}
 }
