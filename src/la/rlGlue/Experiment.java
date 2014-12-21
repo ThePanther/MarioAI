@@ -33,7 +33,6 @@ import la.application.configManagement.Config;
 import la.common.RewardsGroup;
 import la.common.Try;
 import la.persistence.database.Database;
-import la.persistence.database.impl.DBCommunication;
 
 import org.rlcommunity.rlglue.codec.RLGlue;
 

@@ -17,12 +17,12 @@ public class Config {
 	public static double DISCOUNT_FACTOR = 1.0;
 
 	public static boolean VISUALIZATION = false;
-	public static boolean RANDOM_LEVELS = true;
+	public static boolean RANDOM_LEVELS = false;
 	public static boolean FREEZE_EXPLORATION = false;
 	public static boolean FREEZE_POLICY = false;
 
 	public static int FPS = 1000;
-	public static int EDISODES = 1000;
+	public static int EDISODES = 10000;
 	public static int MARIO_STARTMODE = 2; // 0 = small, 1 = large, 2 = fire
 	public static int LEVEL_SEED = 0;
 	public static int DIFFICULTY = 0;
@@ -36,6 +36,16 @@ public class Config {
 	public static int REWARD_MOVE_LEFT = -2;
 	public static int REWARD_MOVE_UP = 2;
 	public static int REWARD_MOVE_DOWN = 0;
+
+	public static double DISTANCE_SECTOR1_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR2_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR3_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR4_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR5_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR6_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR7_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR8_WIDTH = 7.0;
+	public static double DISTANCE_SECTOR9_WIDTH = 7.0;
 
 	public static String REWARD_NAME_WIN = "Win";
 	public static String REWARD_NAME_DEATH = "Loss";

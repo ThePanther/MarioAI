@@ -43,6 +43,7 @@ import org.rlcommunity.rlglue.codec.taskspec.ranges.IntRange;
 import org.rlcommunity.rlglue.codec.taskspec.ranges.DoubleRange;
 
 import ch.idsia.benchmark.mario.engine.GeneralizerLevelScene;
+import ch.idsia.benchmark.mario.engine.sprites.Enemy;
 import ch.idsia.benchmark.mario.engine.sprites.Mario;
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
@@ -248,6 +249,83 @@ public class RLGlueEnvironment implements EnvironmentInterface {
         return returnObservation;
     }
 
+    private double getMarioDistanceToNearestEnemy() {
+    	double distanceToNearestEnemy = Double.MAX_VALUE;
+
+    	Mario mario = environment.getMario();
+//		System.out.printf("Mario    x: %7.2f    y: %7.2f    w: %2d    h: %2d\n", mario.x, mario.y, mario.width, mario.height);
+
+    	for(Sprite sprite : environment.getSprites()) {
+    		if(sprite instanceof Enemy) {
+        		Enemy enemy = (Enemy) sprite;
+
+        		if(!enemy.isDead()) {
+//            		System.out.printf("Enemy    x: %7.2f    y: %7.2f    w: %2d    h: %2d\n", enemy.x, enemy.y, enemy.width, enemy.height);
+            		double distance;
+            		double width;
+            		double height;
+        			double xDistance = mario.x - enemy.x;
+        			double yDistance = mario.y - enemy.y;
+
+        			if(mario.x > enemy.x) {
+        				width = enemy.width;
+        			} else {
+        				width = mario.width;
+        			}
+
+        			if(mario.y > enemy.y) {
+        				height = mario.height;
+        			} else {
+        				height = enemy.height;
+        			}
+
+        			xDistance = xDistance - (width * Math.signum(xDistance));
+        			yDistance = yDistance - (height * Math.signum(yDistance));
+
+        			if((enemy.x > mario.x && enemy.x < mario.x + mario.width) || (enemy.x + enemy.width > mario.x && enemy.x + enemy.width < mario.x + mario.width)) {
+        				xDistance = 0;
+    				}
+
+        			if((enemy.y < mario.y && enemy.y > mario.y - mario.height) || (enemy.y - enemy.height < mario.y && enemy.y - enemy.height > mario.y - mario.height)) {
+        				yDistance = 0;
+    				}
+
+        			distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+        	    	if(distance < distanceToNearestEnemy) {
+        	    		distanceToNearestEnemy = distance;
+        	    	}
+        	    }
+    		}
+		}
+//		System.out.println(distanceToNearestEnemy);
+//    	System.out.println("---------------------------------------------------");
+
+    	return distanceToNearestEnemy;
+    }
+
+    private int getEnemyDistanceIndex() {
+    	final double[] DISTANCE_SECTORS_WIDTH = {Config.DISTANCE_SECTOR1_WIDTH, Config.DISTANCE_SECTOR2_WIDTH, Config.DISTANCE_SECTOR3_WIDTH, Config.DISTANCE_SECTOR4_WIDTH, Config.DISTANCE_SECTOR5_WIDTH, Config.DISTANCE_SECTOR6_WIDTH, Config.DISTANCE_SECTOR7_WIDTH, Config.DISTANCE_SECTOR8_WIDTH, Config.DISTANCE_SECTOR9_WIDTH};
+    	double distanceRange = 0.0;
+    	double distanceToNearestEnemy = getMarioDistanceToNearestEnemy();
+    	int enemyDistanceIndex = DISTANCE_SECTORS_WIDTH.length;
+
+    	for(int i = 0; i < DISTANCE_SECTORS_WIDTH.length; i++) {
+    		distanceRange += DISTANCE_SECTORS_WIDTH[i];
+
+        	if(distanceToNearestEnemy < distanceRange) {
+        		enemyDistanceIndex = i;
+        		break;
+        	}
+		}
+
+    	if(environment.getMarioMode() < oldMarioMode || environment.getMarioState()[0] == Mario.STATUS_DEAD) {
+    		enemyDistanceIndex = 0;
+    	}
+
+    	return enemyDistanceIndex;
+    }
+
     private double calculateReward() {
         double theReward = Config.REWARD_ELAPSED_FRAME;
         reward_elapsed_frame_count++;
@@ -326,6 +404,9 @@ public class RLGlueEnvironment implements EnvironmentInterface {
                 state[0]=0;
             }
         }
+
+        state[0] *= 10;
+        state[0] += getEnemyDistanceIndex();
 
         int i = 1;
         for(Zone z : visionField) {

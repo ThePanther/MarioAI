@@ -125,8 +125,8 @@ private float yJumpSpeed;
 
 private boolean ableToShoot = false;
 
-int width = 4;
-int height = 24;
+public int width = 4;
+public int height = 24;
 
 private static LevelScene levelScene;
 public int facing;

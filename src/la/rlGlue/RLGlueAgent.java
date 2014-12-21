@@ -30,7 +30,6 @@ import java.util.Random;
 import context.ManagerFactory;
 
 import org.rlcommunity.rlglue.codec.AgentInterface;
-import org.rlcommunity.rlglue.codec.RLGlue;
 import org.rlcommunity.rlglue.codec.types.Action;
 import org.rlcommunity.rlglue.codec.types.Observation;
 import org.rlcommunity.rlglue.codec.util.AgentLoader;
@@ -42,7 +41,6 @@ import la.persistence.database.Database;
 import la.application.configManagement.Config;
 import la.common.RewardsGroup;
 import la.common.State;
-import la.common.Try;
 
 public abstract class RLGlueAgent implements AgentInterface {
     private Random randGenerator = new Random();

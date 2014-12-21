@@ -50,8 +50,8 @@ public boolean onGround = false;
 //    private float xJumpSpeed;
 //    private float yJumpSpeed;
 
-int width = 4;
-int height = 24;
+public int width = 4;
+public int height = 24;
 
 public float yaa = 1;
 
