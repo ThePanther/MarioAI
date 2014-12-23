@@ -18,7 +18,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import la.common.Zone;
 
 public class VisionFieldPersistence {
-	public static String PATH = "visionfields\\";
+	public static String PATH = "visionfields/";
 	public static String EXTENSION = "visionfield";
 
 	public static void saveVisionField(ArrayList<Zone> visionField) throws IOException {
